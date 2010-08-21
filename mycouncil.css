@@ -1,0 +1,211 @@
+#bubbleBack
+{
+background: black;
+}
+#headerButtonBack
+{
+background: black;
+}
+.button
+{
+font-size: 14px;
+background: DarkRed;
+padding:5px 5px 5px 5px;
+color: white;
+}
+.reverseButton
+{
+font-size: 14px;
+background: #A89D1A;
+padding:5px 5px 5px 5px;
+color: white;
+}
+.buttonConservative
+{
+font-size: 14px;
+background: blue;
+padding:5px 5px 5px 5px;
+color: white;
+}
+
+.buttonConservativeReversed
+{
+font-size: 14px;
+background: white;
+padding:5px 5px 5px 5px;
+color: blue;
+}
+.buttonIndependent
+{
+font-size: 14px;
+background: white;
+padding:5px 5px 5px 5px;
+color: black;
+}
+.buttonJoint
+{
+font-size: 14px;
+background: grey;
+padding:5px 5px 5px 5px;
+color: white;
+}
+.buttonIndependentReversed
+{
+font-size: 14px;
+background: black;
+padding:5px 5px 5px 5px;
+color: white;
+}
+.buttonLabour
+{
+font-size: 14px;
+background: red;
+padding:5px 5px 5px 5px;
+color: white;
+}
+.buttonLabourReversed
+{
+font-size: 14px;
+background: white;
+padding:5px 5px 5px 5px;
+color: red;
+}
+.buttonLiberal
+{
+font-size: 14px;
+background: yellow;
+padding:5px 5px 5px 5px;
+color: black;
+}
+
+.buttonLiberalReversed
+{
+font-size: 14px;
+background: black;
+padding:5px 5px 5px 5px;
+color: yellow;
+}
+.bubbleMiniText
+{
+font-size: 8px;
+background: black;
+Color: #FFFFFF;
+}
+.formDefault
+{
+font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
+font-style:italic;
+color:#989898;
+font-size: 12px;
+}
+.formActive
+{
+font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
+color: black;
+font-size: 12px;
+}
+.miniFormDefault
+{
+font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
+font-style:italic;
+color:#989898;
+font-size: 10px;
+}
+.miniFormActive
+{
+font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
+color: black;
+font-size: 10px;
+}
+.header 
+{
+font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
+background: #A89D1A;
+Color: #FFFFFF;
+font-size: 20px;
+margin: 5px;
+text-align: center;
+}
+.hiddenPic 
+{
+display: none;
+}
+.logo
+{
+border: none;
+background: white;
+}
+.map
+{
+border-style: groove;
+width: 99%; 
+height: 420px;
+}
+.menuContents
+{
+font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
+font-size: 14px;
+text-align: left;
+}
+.menuMiniContents
+{
+font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
+font-size: 12px;
+text-align: left;
+}
+.messageBar
+{
+font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
+background: white;
+Color: black;
+font-size: 12px;
+margin: 5px;
+text-align: center;    
+}
+.sidePanel
+{
+font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
+background: #F0F0F0;
+Color: black;
+margin: 0px;
+text-align: center;  
+border-style: groove; 
+}
+.sidePanelDetails
+{
+font-size: 12px;
+}
+.sidePanelList
+{
+font-size: 15px;
+}
+.sidePanelMainTitle
+{
+font-size: 20px;
+background: #A89D1A;
+Color: #FFFFFF;
+}
+.sidePanelSubTitle
+{
+font-size: 20px;
+background: black;
+Color: #FFFFFF;
+}
+.shadowed 
+{
+float:right;
+background: url(Images/drop-shadow.png) no-repeat bottom right !important;
+background: url(Images/drop-shadow.gif) no-repeat bottom right;
+margin: 10px 0 0 10px !important;
+margin: 10px 0 0 5px;
+text-align: center;  
+}
+.shadowed img {
+display: block;
+position: relative;
+background-color: #fff;
+border: 1px solid #999;
+margin: -6px 6px 6px -6px;
+padding: 4px;
+text-align: center;
+}
