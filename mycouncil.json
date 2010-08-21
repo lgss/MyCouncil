@@ -5,7 +5,7 @@
 //
 {"showOperationalInformation":"false",
  "showContactScreen":"true",
- "showReportIT":"false",
+ "showReportIT":"true",
  "showExternalPages":"true",
  "mapCenter" : new google.maps.LatLng(52.237178, -0.894635),
  "defaultZoom" : 12,
