@@ -131,34 +131,8 @@ Ext.onReady(function() {
     var showInformation = false;
     var showFeedback = false;
     var feedbackEmailAddress;
- 
-    var formWithStreetview = '<form action="#" onsubmit="process(this); return false" action="#">'
-                + '<table border="0" width="100%" cellpadding="10">'
-                + '<td width="50%" valign="top" halign="center">'
-                + 'Choose the type of problem :<br>'
-                + '<select class="miniFormActive" name="problemtype"><option value="1">Fly Tipping</option><option value="2">Graffiti</option><option value="3">Dog Fouling</option><option value="4">Dead Animals</option><option value="5">Other</option></select>'
-                + '<BR>'
-   //             + 'Tell us about the problem:<br>'
-                + '<textarea class="miniFormActive" name="data" id="dataID" rows="5" cols="30"><\/textarea><br>'
-   //             + 'Your email address (optional):<br>'
-                + '<input class="miniFormActive" name="email" size="30" maxlength="53"><\/input><br>'
-   //             + 'Your phone number (optional):<br>'
-    //            + '<BR>'
-                + '<input class="miniFormActive" name="phone" size="30" maxlength="53"><\/input><br>'
-    //            + '<BR>'
-    //            + '<center><input type="submit" value="Report it!"/></center>'
-                + '<\/td>'
-                + '<td style="white-space:nowrap" valign="top" halign="center">'
-                + 'Drag the camera picture around so that it shows where the problem is :<br>'
-    //            + '<input size="40"><\/input><br>'
-    //            + '<div style="height:200px;width:200px" style="height:200px" id="formID">'
-                + '<div style="height:180px" id="formID">'
-                + '<\/div>'
-    //            + 'Does this show where the problem is?'
-    //            + '<input type="checkbox" name="streetviewed" value="true" />'
-                + '<\/td>'
-                + '<\/table'
-                + '</form>';
+    var menuLocation;
+    var clickSearch = false;
 
     var formWithoutStreetview = '<form action="#" onsubmit="process(this); return false" action="#">'
                 + 'Choose the type of problem :<br>'
@@ -327,10 +301,10 @@ Ext.onReady(function() {
                 for (var currentSocialNetwork = 0; currentSocialNetwork < jsonData.social_networks.length; currentSocialNetwork++) {
                     social_Networks[currentSocialNetwork] = jsonData.social_networks[currentSocialNetwork].name;
                 }
-//                for (var currentMeeting = 0; currentMeeting < jsonData.meetings.length; currentMeeting++) {
-//                    messages_array.push(jsonData.meetings[currentMeeting].html);
-//                }
-//                start_messages();
+                //                for (var currentMeeting = 0; currentMeeting < jsonData.meetings.length; currentMeeting++) {
+                //                    messages_array.push(jsonData.meetings[currentMeeting].html);
+                //                }
+                //                start_messages();
                 for (var currentParty = 0; currentParty < jsonData.parties.length; currentParty++) {
                     var partyID = jsonData.parties[currentParty].partyID;
                     parties[partyID] = jsonData.parties[currentParty].name;
@@ -531,7 +505,7 @@ Ext.onReady(function() {
                         map.controls[google.maps.ControlPosition.LEFT].removeAt(0);
                         createMenu();
                         highlightHelp = false;
-                        panelClick(true,false,false);
+                        panelClick(true, false, false);
                     }
                 }, 4000);
                 window.setTimeout(function() {
@@ -540,7 +514,7 @@ Ext.onReady(function() {
                         map.controls[google.maps.ControlPosition.LEFT].removeAt(0);
                         createMenu();
                         highlightHelp = false;
-                        panelClick(true,false,false);
+                        panelClick(true, false, false);
                         startupAnimation = false;
                         var expiryDate = new Date();
                         expiryDate.setDate(expiryDate.getDate() + 365);
@@ -552,7 +526,7 @@ Ext.onReady(function() {
         //     t=setTimeout("update=true;timer()",10000);
     }
     timer();
-    
+
     function load_messages() {
         Ext.Ajax.request({
             url: 'meetings.json',
@@ -568,19 +542,19 @@ Ext.onReady(function() {
                     messages_array.push(jsonMeetingData.meetings[currentMeeting].html);
                 }
                 start_messages();
-            }    
-        });    
+            }
+        });
     };
-    
+
     function start_message_loader() {
         message_timer = Ext.TaskMgr.start({
             run: load_messages,
             interval: 36000000
         });
     };
-    
+
     start_message_loader();
-    
+
     function update_message() {
         if (!forcingScroll && (messageScroll || forceMessage)) {
             if (forceMessage) {
@@ -651,7 +625,7 @@ Ext.onReady(function() {
             interval: 10000
         });
     };
-    
+
     google.maps.event.addListener(map, "idle", function() {
         if (bounds) {
             if (!bounds.contains(map.getCenter()))
@@ -786,14 +760,14 @@ Ext.onReady(function() {
             document.getElementById("info_panel_title").innerHTML = "Led by " + ledByDescriptions[leadBy];
             document.getElementById("info_panel_details").innerHTML = "";
             if (politicalView || !showOperationalInformation) {
-                if(!miniScreen){
+                if (!miniScreen) {
                     document.getElementById("info_panel_details").innerHTML += "<BR>";
-                    }
-                document.getElementById("info_panel_details").innerHTML += 
+                }
+                document.getElementById("info_panel_details").innerHTML +=
                             "<TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"Images/" + leaderImage + ".jpg\" alt=\"Councillor " + leaderName + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
                             "<B>Councillor " + leaderName + "</B><BR>Leader of the Council<BR>";
-                if(!miniScreen){
-                document.getElementById("info_panel_details").innerHTML += "<BR>";
+                if (!miniScreen) {
+                    document.getElementById("info_panel_details").innerHTML += "<BR>";
                 }
                 document.getElementById("info_panel_details").innerHTML += "<TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"Images/" + mayorImage + ".jpg\" alt=\"Councillor " + mayorName + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
                             "<B>Councillor " + mayorName + "</B><BR>Mayor<BR><BR>" +
@@ -910,7 +884,7 @@ Ext.onReady(function() {
         }
     }
 
-    function panelClick(help,information,feedback) {
+    function panelClick(help, information, feedback) {
         if (!panelAnimation) {
             panelAnimation = true;
             if (showPanel) {
@@ -919,32 +893,29 @@ Ext.onReady(function() {
             else {
                 showPanel = true;
             }
-            if(help)
-              {
-              if (showHelp) {
-                  showHelp = false;
-              }
-              else {
-                  showHelp = true;
-              }              
+            if (help) {
+                if (showHelp) {
+                    showHelp = false;
+                }
+                else {
+                    showHelp = true;
+                }
             }
-            if(information)
-              {
-              if (showInformation) {
-                  showInformation = false;
-              }
-              else {
-                  showInformation = true;
-              }              
+            if (information) {
+                if (showInformation) {
+                    showInformation = false;
+                }
+                else {
+                    showInformation = true;
+                }
             }
-            if(feedback)
-              {
-              if (showFeedback) {
-                  showFeedback = false;
-              }
-              else {
-                  showFeedback = true;
-              }              
+            if (feedback) {
+                if (showFeedback) {
+                    showFeedback = false;
+                }
+                else {
+                    showFeedback = true;
+                }
             }
             var panelDiv = document.getElementById("info_panel");
             var panelElement = Ext.get("info_panel");
@@ -953,24 +924,24 @@ Ext.onReady(function() {
                 panelElement.slideOut('r', { duration: 1 });
                 window.setTimeout(function() {
                     infoPanelContents = panelDiv.innerHTML;
-                    if(miniScreen){
-                    	if(internetExplorer && !Ext.isIE8){
-                    	    panelDiv.setAttribute('className', "menuMiniContents");
-                    	}
-                    	else{
-                    		panelDiv.setAttribute('class', "menuMiniContents");
-                    	}
+                    if (miniScreen) {
+                        if (internetExplorer && !Ext.isIE8) {
+                            panelDiv.setAttribute('className', "menuMiniContents");
+                        }
+                        else {
+                            panelDiv.setAttribute('class', "menuMiniContents");
+                        }
                     }
-                    else{
-                     	if(internetExplorer && !Ext.isIE8){
-                    	   panelDiv.setAttribute('className', "menuContents");
-                    	}
-                    	else{
-                    	   panelDiv.setAttribute('class', "menuContents");
-                    	}
+                    else {
+                        if (internetExplorer && !Ext.isIE8) {
+                            panelDiv.setAttribute('className', "menuContents");
+                        }
+                        else {
+                            panelDiv.setAttribute('class', "menuContents");
+                        }
                     }
-                    if(help){
-                       panelDiv.innerHTML = "<BR>" +
+                    if (help) {
+                        panelDiv.innerHTML = "<BR>" +
                                             "1. Move the mouse around the map. If this help screen is closed (click on the red 'Help' button " +
                                             "in the top left corner of the map) then moving the mouse around the map will show you the relevant " +
                                             "councillors for that area.<BR><BR>" +
@@ -980,8 +951,8 @@ Ext.onReady(function() {
                                             "4. Click on the map at that location. A menu will display and for that location you will be able to find out more details about the councillors, send them a message, tell " +
                                             "us your priorites you would like resolved, read documents about what we are already doing for the area or send a message to your local coordinator.";
                     }
-                    if(information){
-                       panelDiv.innerHTML = "<BR>" +
+                    if (information) {
+                        panelDiv.innerHTML = "<BR>" +
                                             "MyCouncil was developed using " +
                                             "<A HREF='http://en.wikipedia.org/wiki/Open-source_software' target='_blank'>Open Source</A> technologies.<BR><BR>" +
                                             "We therefore believe it is only right to put MyCouncil back into the public domain " +
@@ -990,17 +961,17 @@ Ext.onReady(function() {
                                             "We have made MyCouncil as easy to install as possible. You can have a template version of MyCouncil up and running in minutes, which " +
                                             "you can then configure to display information for your own council.<BR><BR>" +
                                             "<CENTER><a href='http://sourceforge.net/projects/mycouncil' target='_blank'><img src='http://sflogo.sourceforge.net/sflogo.php?group_id=342086&amp;type=14' width='150' height='40' alt='Get MyCouncil at SourceForge.net. Fast, secure and Free Open Source software downloads'></a></CENTER>";
-                   }
-                   if(feedback){
-                      var tempRows = 9;
-                      var defaultClassName = 'formDefault';
-                      var activeClassName = 'formActive';
-                      if(miniScreen){
-                        tempRows = 4;
-                        defaultClassName = 'miniFormDefault';
-                        activeClassName = 'miniFormActive';
-                      }
-                      panelDiv.innerHTML = "<BR>" 
+                    }
+                    if (feedback) {
+                        var tempRows = 9;
+                        var defaultClassName = 'formDefault';
+                        var activeClassName = 'formActive';
+                        if (miniScreen) {
+                            tempRows = 4;
+                            defaultClassName = 'miniFormDefault';
+                            activeClassName = 'miniFormActive';
+                        }
+                        panelDiv.innerHTML = "<BR>"
                                          + "We need your feedback to help us improve the MyCouncil application.<BR><BR>"
                                          + "Please tell us what you like, don't like or what you'd like to see.<BR><BR>"
                                          + "If you provide us with an email address (optional), we will respond to your feedback.<BR><BR>"
@@ -1033,20 +1004,20 @@ Ext.onReady(function() {
                                          + '</tr>'
                                          + '</table>'
                                          + '</div></div>';
-                       }                  
+                    }
                     panelElement.slideIn('r', { duration: 1 });
                 }, 1500);
-                window.setTimeout(function() { panelAnimation = false;  }, 2600);
+                window.setTimeout(function() { panelAnimation = false; }, 2600);
             }
             else {
                 panelElement.slideOut('r', { duration: 1 });
                 window.setTimeout(function() {
-                	if(internetExplorer){
-                 	   panelDiv.setAttribute('className', "");
-                 	}
-                 	else{
-                 	   panelDiv.setAttribute('class', "");
-                 	}
+                    if (internetExplorer) {
+                        panelDiv.setAttribute('className', "");
+                    }
+                    else {
+                        panelDiv.setAttribute('class', "");
+                    }
                     panelDiv.setAttribute('style', "text-align: centre;");
                     panelDiv.innerHTML = infoPanelContents;
                     panelElement.slideIn('r', { duration: 1 });
@@ -1054,7 +1025,7 @@ Ext.onReady(function() {
                         panelDiv.innerHTML = infoPanelContents;
                     }, 1100);
                 }, 1500);
-                window.setTimeout(function() { panelAnimation = false; map.controls[google.maps.ControlPosition.LEFT].removeAt(0); createMenu();}, 2700);
+                window.setTimeout(function() { panelAnimation = false; map.controls[google.maps.ControlPosition.LEFT].removeAt(0); createMenu(); }, 2700);
             }
         }
     }
@@ -1066,22 +1037,22 @@ Ext.onReady(function() {
         var buttonSelectedBackgroundColour = "red";
         var buttonSelectedTextColour = "black";
         if (!showHelp) {
-              new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Help", "Click here to show help information", 0, false, false, true, true, false, false, false);
-          }
-          else {
-              new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Help", "Click here to hide help information", 0, false, false, true, true, false, false, false);
+            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Help", "Click here to show help information", 0, false, false, true, true, false, false, false);
+        }
+        else {
+            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Help", "Click here to hide help information", 0, false, false, true, true, false, false, false);
         }
         if (!showInformation) {
-              new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Open Source", "Click here to show information about Open Source", 0, false, false, true, false, true, false, false);
-          }
-          else {
-              new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Open Source", "Click here to hide information about Open Source", 0, false, false, true, false, true, false, false);
+            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Open Source", "Click here to show information about Open Source", 0, false, false, true, false, true, false, false);
+        }
+        else {
+            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Open Source", "Click here to hide information about Open Source", 0, false, false, true, false, true, false, false);
         }
         if (!showFeedback) {
-              new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Send Feedback", "Click here to send us your feedback", 0, false, false, true, false, false, true, false);
-          }
-          else {
-              new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Send Feedback", "Click here to hide feedback form", 0, false, false, true, false, false, true, false);
+            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Send Feedback", "Click here to send us your feedback", 0, false, false, true, false, false, true, false);
+        }
+        else {
+            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Send Feedback", "Click here to hide feedback form", 0, false, false, true, false, false, true, false);
         }
         map.controls[google.maps.ControlPosition.LEFT].push(menuDiv);
     }
@@ -1097,6 +1068,7 @@ Ext.onReady(function() {
     }
 
     function singleClick(point) {
+        clickSearch = true;
         window.clearTimeout(clckTimeOut);
         clckTimeOut = null;
         clearBubble();
@@ -1186,6 +1158,9 @@ Ext.onReady(function() {
 
     function createBubble(point, location) {
         streetviewLatLng = point.latLng;
+        if (clickSearch || (!clickSearch && (menuLocation.substr(3, 2)).toLowerCase() == "nn")) {
+            menuLocation = "near " + location.substring(0, location.indexOf(","));
+        }
         gotoMainMenu(location, false, null, false)
         currentLocation = location;
         if (point.latLng) {
@@ -1215,7 +1190,7 @@ Ext.onReady(function() {
             tempText2 = "' ";
         }
         else {
-            tempText1 = "near ";
+            tempText1 = "";
             tempText2 = "";
         }
         bubbleMenu = '<BR><div class="header"><div id="bubbleBack">'
@@ -1223,7 +1198,7 @@ Ext.onReady(function() {
                    + '<tr>'
                    + '<td colspan="3" class="sidePanelSubTitle">'
                    + 'What would you like to do?<BR>'
-                   + '<DIV class="bubbleMiniText">' + tempText1 + location + tempText2;
+                   + '<DIV class="bubbleMiniText">' + tempText1 + menuLocation + tempText2;
 
         if (internal) {
             bubbleMenu += '<BR> in ' + internalLocationDescription;
@@ -1233,10 +1208,10 @@ Ext.onReady(function() {
                    + '</td>'
                    + '</tr>';
 
-        if(showReportIT){    
-          bubbleMenu += '<tr>'
+        if (showReportIT) {
+            bubbleMenu += '<tr>'
                      + '<td width="5%" style="background: black"></td>'
-                     + '<td onClick="gotoProblemMenu()" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report a problem</td>'
+                     + '<td onClick="gotoProblemMenu(\'' + location + '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report a problem</td>'
                      + '<td width="5%" style="background: black"></td>'
                      + '</tr>';
         }
@@ -1285,16 +1260,16 @@ Ext.onReady(function() {
                    + '<td onClick="gotoCouncillorDetailsSelector(' + displayWard + ',false)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Find out more about your councillors</td>'
                    + '<td width="5%" style="background: black"></td>'
                    + '</tr>';
-                   
-        if(showContactScreen){
-           bubbleMenu += '<tr>'
+
+        if (showContactScreen) {
+            bubbleMenu += '<tr>'
                       + '<td width="5%" style="background: black"></td>'
                       + '<td onClick="gotoCouncillorDetailsSelector(' + displayWard + ',true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Contact your councillors</td>'
                       + '<td width="5%" style="background: black"></td>'
                       + '</tr>';
         }
-                   
-                   
+
+
         bubbleMenu += '<tr>'
                    + '<td width="5%" style="background: black"></td>'
                    + '<td onClick="gotoMainMenu(\'' + currentLocation + '\',false,null,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Main Menu</td>'
@@ -1340,15 +1315,15 @@ Ext.onReady(function() {
                    + '<td onClick="gotoArea(' + displayWard + ')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">How we\'re dealing with your local priorities</td>'
                    + '<td width="5%" style="background: black"></td>'
                    + '</tr>';
-                   
-        if(showContactScreen){
-           bubbleMenu += '<tr>'
+
+        if (showContactScreen) {
+            bubbleMenu += '<tr>'
                    + '<td width="5%" style="background: black"></td>'
                    + '<td onClick="gotoContactMessage(' + displayWard + ',-1,false)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Contact neighbourhood management</td>'
                    + '<td width="5%" style="background: black"></td>'
                    + '</tr>';
         }
-         bubbleMenu += '<tr>'
+        bubbleMenu += '<tr>'
                    + '<td width="5%" style="background: black"></td>'
                    + '<td onClick="gotoMainMenu(\'' + currentLocation + '\',false,null,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Main Menu</td>'
                    + '<td width="5%" style="background: black"></td>'
@@ -1365,7 +1340,7 @@ Ext.onReady(function() {
 
     }
 
-    gotoProblemMenu = function() {
+    gotoProblemMenu = function(location) {
 
         var ward = displayWard;
 
@@ -1373,8 +1348,35 @@ Ext.onReady(function() {
             ward = displaySubWard;
         }
 
+        var formWithStreetview = '<form action="#" onsubmit="process(this); return false" action="#">'
+                + '<table border="0" width="100%" cellpadding="10">'
+                + '<tr>'
+                + '<td width="50%" valign="top" halign="center">'
+                + 'Choose the type of problem :<br>'
+                + '<select class="miniFormActive" name="problemtype"><option value="1">Fly Tipping</option><option value="2">Graffiti</option><option value="3">Dog Fouling</option><option value="4">Dead Animals</option><option value="5">Other</option></select>'
+                + '<BR><BR>'
+                + '<textarea class="miniFormDefault" name="problemDetails" id="problemDetails" rows="5" cols="34" onmousedown="if(this.className==\'miniFormDefault\'){this.value=\'\';this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.value=\'\';this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'">Please describe the problem here<\/textarea><br>'
+                + '<input class="miniFormDefault" name="problemLocation" id="problemLocation" size="35" maxlength="53" onmousedown="if(this.className==\'miniFormDefault\'){this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'" value="' + menuLocation + '"><\/input><br>'
+                + '<input class="miniFormDefault" name="emailAddress" id="emailAddress" size="35" maxlength="53" onmousedown="if(this.className==\'miniFormDefault\'){this.value=\'\';this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.value=\'\';this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'" value="Your email address here (optional)"><\/input><br>'
+                + '<input class="miniFormDefault" name="phoneNumber" id="phoneNumber" size="35" maxlength="53" onmousedown="if(this.className==\'miniFormDefault\'){this.value=\'\';this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.value=\'\';this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'" value="Your phone number here (optional)"><\/input><br>'
+                + '</td>'
+                + '<td style="white-space:nowrap" valign="top" halign="center">'
+                + 'Drag the camera picture below around so that it shows where the problem is (optional) :'
+                + '<div style="height:150px" id="formID">'
+                + '</div>'
+                + 'Does the image above now show where the problem is?&nbsp'
+                + '<input type="checkbox" name="streetviewed" value="true" />'
+                + '</td>'
+                + '</tr>'
+                + '<tr>'
+                + '<td colspan="2" onClick="formClick(false,document.getElementById(\'feedbackContactDetails\').value,document.getElementById(\'feedbackDetails\').value,0,\'\',\'\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report the problem</td>'
+                + '</tr>'
+                + '</table'
+                + '</form>';
+
         var bubbleMenu = '<BR><div class="header"><div id="bubbleBack">'
-                       + '<table width="350px" border="0" cellpadding="0" cellspacing="2">'
+        //+ '<table width="350px" border="0" cellpadding="0" cellspacing="2">'
+                       + '<table border="0" cellpadding="0" cellspacing="2">'
                        + '<tr>'
                        + '<td colspan="3" class="sidePanelSubTitle">'
                        + 'Report a problem<BR>'
@@ -1388,36 +1390,22 @@ Ext.onReady(function() {
                    + '<td><DIV class="bubbleMiniText">' + formWithStreetview + '</DIV></td>'
                    + '<td width="5%" style="background: black"></td>'
                    + '</tr>'
-//                   + '<tr>'
-//                   + '<td width="5%" style="background: black"></td>'
-//                   + '<td onClick="gotoMainMenu(\'' + currentLocation + '\',false,null,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Main Menu</td>'
-//                   + '<td width="5%" style="background: black"></td>'
-//                   + '</tr>'
-                   + '<tr>'
-                   + '<td width="5%" style="background: black"></td>'
-                   + '<td id="clearMap" style="text-align: centre" cstyle="background: black">&nbsp</td>'
-                   + '<td width="5%" style="background: black"></td>'
-                   + '</tr>'
                    + '</table>'
                    + '</div></div>';
-//        currentBubble.setContent("");
-//        alert("cp1");
-//         currentBubble.close();
-//         alert("cp2");
-         currentBubble.setContent(bubbleMenu);
+        currentBubble.setContent(bubbleMenu);
         currentBubble.open(map);
-//         currentBubble.setContent(bubbleMenu);
-//        alert("cp3");
+        //         currentBubble.setContent(bubbleMenu);
+        //        alert("cp3");
         //alert("setting streetview");
         var streetviewPOV = { yaw: 0, pitch: 0, zoom: 1 };
         var panoramaOptions = {
             position: streetviewLatLng,
             addressControl: false,
             linksControl: false,
-//            navigationControl: true,
-//            navigationControlOptions: {
-//            style: google.maps.NavigationControlStyle.ANDROID
-//            },
+            //            navigationControl: true,
+            //            navigationControlOptions: {
+            //            style: google.maps.NavigationControlStyle.ANDROID
+            //            },
             enableFullScreen: true,
             features: { userPhotos: false },
             pov: {
@@ -1452,29 +1440,29 @@ Ext.onReady(function() {
     }
 
     formClick = function(contact, contactDetails, messageDetails, ward, selection, councillor) {
-         if (messageDetails != 'Enter your message here' && messageDetails != '') {
+        if (messageDetails != 'Enter your message here' && messageDetails != '') {
             var emailAddress;
             var messageType;
-            if(contact){
-               if (councillor) {
-                   messageType = 1;
-                   var councillor_emails_array = councillor_emails[ward].toString().split(",");
-                   if (selection == -1) {
-                       emailAddress = councillor_emails_array;
-                   }
-                   else {
-                       emailAddress = councillor_emails_array[selection];
-                   }
-               }
-               else {
-                   messageType = 2;
-                   emailAddress = sectorEmails[wardSector[ward]];
-               }
+            if (contact) {
+                if (councillor) {
+                    messageType = 1;
+                    var councillor_emails_array = councillor_emails[ward].toString().split(",");
+                    if (selection == -1) {
+                        emailAddress = councillor_emails_array;
+                    }
+                    else {
+                        emailAddress = councillor_emails_array[selection];
+                    }
+                }
+                else {
+                    messageType = 2;
+                    emailAddress = sectorEmails[wardSector[ward]];
+                }
             }
-            else{
-            messageType = 3;
-               emailAddress=feedbackEmailAddress;
-            }   
+            else {
+                messageType = 3;
+                emailAddress = feedbackEmailAddress;
+            }
             var encodedContactDetails = encodeURIComponent(contactDetails);
             var encodedMessageDetails = encodeURIComponent(messageDetails);
             var encodedEmailTo = encodeURIComponent(emailAddress);
@@ -1487,28 +1475,28 @@ Ext.onReady(function() {
                     var sendEmailResponse;
                     try {
                         sendEmailResponse = Ext.util.JSON.decode(response.responseText);
-                        if(contact){
-                           redirectFromContact(councillor, sendEmailResponse.message);
+                        if (contact) {
+                            redirectFromContact(councillor, sendEmailResponse.message);
                         }
-                        else{
-                           Ext.MessageBox.alert('<CENTER>Hello</CENTER>', sendEmailResponse.message);
-                           panelClick(false,false,true);   
+                        else {
+                            Ext.MessageBox.alert('<CENTER>Hello</CENTER>', sendEmailResponse.message);
+                            panelClick(false, false, true);
                         }
                     }
                     catch (err) {
                         Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
                         sendEmailResponse = Ext.util.JSON.decode(response.responseText);
-//                        if(contact){
-//                           redirectFromContact(councillor, sendEmailResponse.message);
-//                        }
+                        //                        if(contact){
+                        //                           redirectFromContact(councillor, sendEmailResponse.message);
+                        //                        }
                     }
                 },
                 failure: function(response) {
                     Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
                     sendEmailResponse = Ext.util.JSON.decode(response.responseText);
-//                    if(contact){
-//                       redirectFromContact(councillor, sendEmailResponse.message);
-//                    }
+                    //                    if(contact){
+                    //                       redirectFromContact(councillor, sendEmailResponse.message);
+                    //                    }
                 }
             });
         }
@@ -1526,7 +1514,7 @@ Ext.onReady(function() {
     }
 
     gotoArea = function(ward) {
-         spawnWindow(wardDocumentsURL[displayWard]);
+        spawnWindow(wardDocumentsURL[displayWard]);
     }
 
     gotoPriorities = function(ward) {
@@ -1697,11 +1685,11 @@ Ext.onReady(function() {
     }
 
     spawnWindow = function(url) {
-            var subWindow = window.open(url);
-             window.setTimeout(function() {
-                   subWindow.focus();
-            }, 500);
-            }
+        var subWindow = window.open(url);
+        window.setTimeout(function() {
+            subWindow.focus();
+        }, 500);
+    }
 
     gotoCouncillorDetails = function(ward, selection) {
         var councillor_parties_array = councillor_parties[ward].toString().split(",");
@@ -1724,10 +1712,9 @@ Ext.onReady(function() {
                 councillorNeedsMenu = true;
             }
         }
-        if(!showExternalPages)
-          {
-          councillorNeedsMenu=false;
-          }
+        if (!showExternalPages) {
+            councillorNeedsMenu = false;
+        }
         if (councillorNeedsMenu) {
             var bubbleMenuCouncillorDetailsSelect =
               '<BR><div class="header"><div id="bubbleBack">'
@@ -1808,12 +1795,7 @@ Ext.onReady(function() {
             currentBubble.setContent(bubbleMenuCouncillorDetailsSelect);
         }
         else {
-//            window.open(councillor_main_url_base + councillor_main_url_array[selection]);
-//            var subWindow = window.open(councillor_main_url_base + councillor_main_url_array[selection]);
-//             window.setTimeout(function() {
-//                   subWindow.focus();
-//            }, 500);
-        spawnWindow(councillor_main_url_base + councillor_main_url_array[selection]);
+            spawnWindow(councillor_main_url_base + councillor_main_url_array[selection]);
         }
     }
 
@@ -1848,6 +1830,7 @@ Ext.onReady(function() {
         searchBoxActive = true;
         document.getElementById("searchBox").value = "";
         document.getElementById("searchBox").setAttribute('style', "");
+        //document.getElementById("searchBox").style.cssText = "";
         document.getElementById("searchBox").focus();
     });
 
@@ -1924,10 +1907,11 @@ Ext.onReady(function() {
 
     function findAddress(startup) {
         clearBubble();
+        clickSearch = false;
         bubbleActive = true;
         var addressTail = "";
         var addressCheck;
-        var searchAddress;
+        var searchAddress = "";
         if (startup) {
             addressCheck = startupSearchText.toLowerCase();
             searchAddress = startupSearchText
@@ -1935,6 +1919,7 @@ Ext.onReady(function() {
         else {
             addressCheck = document.getElementById("searchBox").value.toLowerCase();
             searchAddress = document.getElementById("searchBox").value;
+            menuLocation = "at " + searchAddress;
         }
         if (addressCheck.length > 0) {
             if (addressCheck.indexOf(findAddressTailCheck) == -1) {
@@ -2129,13 +2114,13 @@ Ext.onReady(function() {
                 viewClick();
             }
             if (help && !startupAnimation && !showInformation && !showFeedback) {
-                panelClick(true,false,false);
+                panelClick(true, false, false);
             }
             if (information && !startupAnimation && !showHelp && !showFeedback) {
-                panelClick(false,true,false);
+                panelClick(false, true, false);
             }
             if (feedback && !startupAnimation && !showHelp && !showInformation) {
-                panelClick(false,false,true);
+                panelClick(false, false, true);
             }
         });
     }
