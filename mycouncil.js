@@ -54,6 +54,9 @@ Ext.onReady(function() {
     var partyCount;
     var sortedParties = new Array();
     var sortedPartyCount = new Array();
+    var reportItNames = new Array();
+    var reportItTypes = new Array();
+    var reportItIncidents = new Array();
     var totalNumOfWards = 0;
     var mouseMoveHandler;
     var leadBy;
@@ -133,6 +136,12 @@ Ext.onReady(function() {
     var feedbackEmailAddress;
     var menuLocation;
     var clickSearch = false;
+    var jsonMeetingData;
+    var streetView;
+    var sectorName;
+    var callCenterNumber;
+    var reportItURL;
+    var version;
 
     var formWithoutStreetview = '<form action="#" onsubmit="process(this); return false" action="#">'
                 + 'Choose the type of problem :<br>'
@@ -271,8 +280,31 @@ Ext.onReady(function() {
                 googleDefaultLatLng = jsonData.googleDefaultLatLng;
                 googleDefaultLocationName = jsonData.googleDefaultLocationName;
                 feedbackEmailAddress = jsonData.feedbackEmailAddress;
+                callCenterNumber = jsonData.callCenterNumber;
                 centerPoint = map.getCenter();
-                emailURL = jsonData.emailURL;
+                version = jsonData.version;
+                switch (jsonData.environment) {
+                    case "local":
+                        emailURL = jsonData.localEmailURL;
+                        break;
+                    case "test":
+                        emailURL = jsonData.testEmailURL;
+                        break;
+                    case "live":
+                        emailURL = jsonData.liveEmailURL;
+                        break;
+                }
+                switch (jsonData.environment) {
+                    case "local":
+                        reportItURL = jsonData.localReportItURL;
+                        break;
+                    case "test":
+                        reportItURL = jsonData.testReportItURL;
+                        break;
+                    case "live":
+                        reportItURL = jsonData.liveReportItURL;
+                        break;
+                }
                 leaderName = jsonData.leader.name;
                 leaderImage = jsonData.leader.image;
                 mayorName = jsonData.mayor.name;
@@ -295,16 +327,17 @@ Ext.onReady(function() {
                 if (jsonData.showContactScreen == "true") {
                     showContactScreen = true;
                 }
+                for (var currentReportItEntry = 0; currentReportItEntry < jsonData.reportITentries.length; currentReportItEntry++) {
+                    reportItNames[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].name;
+                    reportItTypes[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].type;
+                    reportItIncidents[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].incident;
+                }
                 for (var currentPartiesURL = 0; currentPartiesURL < jsonData.partiesURL.length; currentPartiesURL++) {
                     partiesURL[currentPartiesURL] = jsonData.partiesURL[currentPartiesURL].url;
                 }
                 for (var currentSocialNetwork = 0; currentSocialNetwork < jsonData.social_networks.length; currentSocialNetwork++) {
                     social_Networks[currentSocialNetwork] = jsonData.social_networks[currentSocialNetwork].name;
                 }
-                //                for (var currentMeeting = 0; currentMeeting < jsonData.meetings.length; currentMeeting++) {
-                //                    messages_array.push(jsonData.meetings[currentMeeting].html);
-                //                }
-                //                start_messages();
                 for (var currentParty = 0; currentParty < jsonData.parties.length; currentParty++) {
                     var partyID = jsonData.parties[currentParty].partyID;
                     parties[partyID] = jsonData.parties[currentParty].name;
@@ -469,10 +502,10 @@ Ext.onReady(function() {
                                  "</table>" +
                                  "</td>" +
                                  "</tr>";
-                        new MapKey(wardKeyDiv, map, partyTextColour[sortedParties[currentParty]], partyColours[sortedParties[currentParty]], parties[sortedParties[currentParty]], "Wards held by " + partyWardDescriptions[sortedParties[currentParty]] + " are in " + partyColours[sortedParties[currentParty]], sortedParties[currentParty], true, false, false, false, false, false, true);
+                        new MapKey(wardKeyDiv, map, partyTextColour[sortedParties[currentParty]], partyColours[sortedParties[currentParty]], parties[sortedParties[currentParty]], "Wards held by " + partyWardDescriptions[sortedParties[currentParty]] + " are in " + partyColours[sortedParties[currentParty]], sortedParties[currentParty], true, false, false, false, false, false, true, false);
                     }
                 }
-                new MapKey(wardKeyDiv, map, "white", "gray", "Jointly Held", "Wards held by more than one party are in grey", 0, true, false, false, false, false, false, true);
+                new MapKey(wardKeyDiv, map, "white", "gray", "Jointly Held", "Wards held by more than one party are in grey", 0, true, false, false, false, false, false, true, false);
                 firstLoad = false;
                 if (!inWard) {
                     defaultStats();
@@ -487,18 +520,21 @@ Ext.onReady(function() {
                         buttonLabel += " Sector";
                     }
                     buttonLabel += " are in " + sectorBackgroundColours[currentSector];
-                    new MapKey(sectorKeyDiv, map, sectorTextColours[currentSector], sectorBackgroundColours[currentSector], buttonText, buttonLabel, currentSector, true, false, false, false, false, false, false);
+                    new MapKey(sectorKeyDiv, map, sectorTextColours[currentSector], sectorBackgroundColours[currentSector], buttonText, buttonLabel, currentSector, true, false, false, false, false, false, false, false);
                 }
                 createMenu();
                 if (politicalView) {
-                    new MapKey(switchDiv, map, "black", "white", "Switch to operational view", "Click here to switch to operational view", 0, false, true, false, false, false, false, false);
+                    new MapKey(switchDiv, map, "black", "white", "Switch to operational view", "Click here to switch to operational view", 0, false, true, false, false, false, false, false, false);
                     map.controls[google.maps.ControlPosition.RIGHT].push(wardKeyDiv);
                 }
                 else {
-                    new MapKey(switchDiv, map, "black", "white", "Switch to political view", "Click here to switch to political view", 0, false, true, false, false, false, false, false);
+                    new MapKey(switchDiv, map, "black", "white", "Switch to political view", "Click here to switch to political view", 0, false, true, false, false, false, false, false, false);
                     map.controls[google.maps.ControlPosition.RIGHT].push(sectorKeyDiv);
                 }
                 map.controls[google.maps.ControlPosition.TOP_LEFT].push(switchDiv);
+                var versionDiv = document.createElement('DIV');
+                new MapKey(versionDiv, map, "black", "white", version, "This is the version of MyCouncil you are using", 0, false, false, false, false, false, false, false, true);
+                map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(versionDiv);
                 window.setTimeout(function() {
                     if (startupAnimation) {
                         highlightHelp = true;
@@ -538,10 +574,12 @@ Ext.onReady(function() {
                 }
                 catch (err) {
                 }
-                for (var currentMeeting = 0; currentMeeting < jsonMeetingData.meetings.length; currentMeeting++) {
-                    messages_array.push(jsonMeetingData.meetings[currentMeeting].html);
+                if (jsonMeetingData) {
+                    for (var currentMeeting = 0; currentMeeting < jsonMeetingData.meetings.length; currentMeeting++) {
+                        messages_array.push(jsonMeetingData.meetings[currentMeeting].html);
+                    }
+                    start_messages();
                 }
-                start_messages();
             }
         });
     };
@@ -672,6 +710,13 @@ Ext.onReady(function() {
                     }
 
                     inWard = true;
+                }
+            }
+        };
+        for (var currentWard = 0; currentWard < totalNumOfWards; currentWard++) {
+            if (wardOperational[currentWard]) {
+                if (wards[currentWard].Contains(point)) {
+                    sectorName = sectorWardNames[currentWard];
                 }
             }
         };
@@ -847,7 +892,7 @@ Ext.onReady(function() {
         var switchDiv = document.createElement('DIV');
         if (politicalView) {
             document.getElementById("report_title").innerHTML = "Political Map";
-            new MapKey(switchDiv, map, "black", "white", "Switch to operational view", "Click here to switch to operational view", 0, false, true, false, false, false, true);
+            new MapKey(switchDiv, map, "black", "white", "Switch to operational view", "Click here to switch to operational view", 0, false, true, false, false, false, false, true, false);
             for (var currentWard = 0; currentWard < wards.length; currentWard++) {
                 wards[currentWard].setOptions({
                     fillColor: wardColour[currentWard]
@@ -863,7 +908,7 @@ Ext.onReady(function() {
         }
         else {
             document.getElementById("report_title").innerHTML = "Operational Map";
-            new MapKey(switchDiv, map, "black", "white", "Switch to political view", "Click here to switch to political view", 0, false, true, false, false, false, false);
+            new MapKey(switchDiv, map, "black", "white", "Switch to political view", "Click here to switch to political view", 0, false, true, false, false, false, false, false, false);
             for (var currentWard = 0; currentWard < wards.length; currentWard++) {
                 wards[currentWard].setOptions({
                     fillColor: sectorBackgroundColours[wardSector[currentWard]]
@@ -884,10 +929,11 @@ Ext.onReady(function() {
         }
     }
 
-    function panelClick(help, information, feedback) {
+    function panelClick(help, information, feedback, alreadyShowing) {
         if (!panelAnimation) {
             panelAnimation = true;
             if (showPanel) {
+                //            if (showPanel&&!alreadyShowing) {
                 showPanel = false;
             }
             else {
@@ -1037,22 +1083,22 @@ Ext.onReady(function() {
         var buttonSelectedBackgroundColour = "red";
         var buttonSelectedTextColour = "black";
         if (!showHelp) {
-            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Help", "Click here to show help information", 0, false, false, true, true, false, false, false);
+            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Help", "Click here to show help information", 0, false, false, true, true, false, false, false, false);
         }
         else {
-            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Help", "Click here to hide help information", 0, false, false, true, true, false, false, false);
+            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Help", "Click here to hide help information", 0, false, false, true, true, false, false, false, false);
         }
         if (!showInformation) {
-            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Open Source", "Click here to show information about Open Source", 0, false, false, true, false, true, false, false);
+            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Open Source", "Click here to show information about Open Source", 0, false, false, true, false, true, false, false, false);
         }
         else {
-            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Open Source", "Click here to hide information about Open Source", 0, false, false, true, false, true, false, false);
+            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Open Source", "Click here to hide information about Open Source", 0, false, false, true, false, true, false, false, false);
         }
         if (!showFeedback) {
-            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Send Feedback", "Click here to send us your feedback", 0, false, false, true, false, false, true, false);
+            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Send Feedback", "Click here to send us your feedback", 0, false, false, true, false, false, true, false, false);
         }
         else {
-            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Send Feedback", "Click here to hide feedback form", 0, false, false, true, false, false, true, false);
+            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Send Feedback", "Click here to hide feedback form", 0, false, false, true, false, false, true, false, false);
         }
         map.controls[google.maps.ControlPosition.LEFT].push(menuDiv);
     }
@@ -1211,7 +1257,7 @@ Ext.onReady(function() {
         if (showReportIT) {
             bubbleMenu += '<tr>'
                      + '<td width="5%" style="background: black"></td>'
-                     + '<td onClick="gotoProblemMenu(\'' + location + '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report a problem</td>'
+                     + '<td onClick="gotoProblemMenu()" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report a problem</td>'
                      + '<td width="5%" style="background: black"></td>'
                      + '</tr>';
         }
@@ -1340,7 +1386,7 @@ Ext.onReady(function() {
 
     }
 
-    gotoProblemMenu = function(location) {
+    gotoProblemMenu = function() {
 
         var ward = displayWard;
 
@@ -1348,12 +1394,17 @@ Ext.onReady(function() {
             ward = displaySubWard;
         }
 
+        var formEntries = "";
+        for (var currentReportItItem = 0; currentReportItItem < reportItNames.length; currentReportItItem++) {
+            formEntries += '<option value="' + currentReportItItem + '">' + reportItNames[currentReportItItem] + '</option>';
+        }
+
         var formWithStreetview = '<form action="#" onsubmit="process(this); return false" action="#">'
                 + '<table border="0" width="100%" cellpadding="10">'
                 + '<tr>'
                 + '<td width="50%" valign="top" halign="center">'
                 + 'Choose the type of problem :<br>'
-                + '<select class="miniFormActive" name="problemtype"><option value="1">Fly Tipping</option><option value="2">Graffiti</option><option value="3">Dog Fouling</option><option value="4">Dead Animals</option><option value="5">Other</option></select>'
+                + '<select class="miniFormActive" name="problemType" id="problemType">' + formEntries + '</select>'
                 + '<BR><BR>'
                 + '<textarea class="miniFormDefault" name="problemDetails" id="problemDetails" rows="5" cols="34" onmousedown="if(this.className==\'miniFormDefault\'){this.value=\'\';this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.value=\'\';this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'">Please describe the problem here<\/textarea><br>'
                 + '<input class="miniFormDefault" name="problemLocation" id="problemLocation" size="35" maxlength="53" onmousedown="if(this.className==\'miniFormDefault\'){this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'" value="' + menuLocation + '"><\/input><br>'
@@ -1365,17 +1416,16 @@ Ext.onReady(function() {
                 + '<div style="height:150px" id="formID">'
                 + '</div>'
                 + 'Does the image above now show where the problem is?&nbsp'
-                + '<input type="checkbox" name="streetviewed" value="true" />'
+                + '<input type="checkbox" name="streetviewed" id="streetviewed" value="true" />'
                 + '</td>'
                 + '</tr>'
                 + '<tr>'
-                + '<td colspan="2" onClick="formClick(false,document.getElementById(\'feedbackContactDetails\').value,document.getElementById(\'feedbackDetails\').value,0,\'\',\'\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report the problem</td>'
+                + '<td colspan="2" onClick="reportProblem(ward=\'' + ward + '\',document.getElementById(\'problemType\').value,document.getElementById(\'problemDetails\').value,document.getElementById(\'problemLocation\').value,document.getElementById(\'emailAddress\').value,document.getElementById(\'phoneNumber\').value,document.getElementById(\'streetviewed\').checked)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report the problem</td>'
                 + '</tr>'
                 + '</table'
                 + '</form>';
 
         var bubbleMenu = '<BR><div class="header"><div id="bubbleBack">'
-        //+ '<table width="350px" border="0" cellpadding="0" cellspacing="2">'
                        + '<table border="0" cellpadding="0" cellspacing="2">'
                        + '<tr>'
                        + '<td colspan="3" class="sidePanelSubTitle">'
@@ -1394,18 +1444,10 @@ Ext.onReady(function() {
                    + '</div></div>';
         currentBubble.setContent(bubbleMenu);
         currentBubble.open(map);
-        //         currentBubble.setContent(bubbleMenu);
-        //        alert("cp3");
-        //alert("setting streetview");
-        var streetviewPOV = { yaw: 0, pitch: 0, zoom: 1 };
         var panoramaOptions = {
             position: streetviewLatLng,
             addressControl: false,
             linksControl: false,
-            //            navigationControl: true,
-            //            navigationControlOptions: {
-            //            style: google.maps.NavigationControlStyle.ANDROID
-            //            },
             enableFullScreen: true,
             features: { userPhotos: false },
             pov: {
@@ -1414,29 +1456,124 @@ Ext.onReady(function() {
                 zoom: 1
             }
         };
-        //       streetView = new google.maps.StreetViewPanorama(document.getElementById("formID"), panoramaOptions);
         whenReady('formID', function(formID) {
-            //alert("formID Ready");
-            //document.getElementById("formID").innerHTML = "KW Wuz ere";
             document.getElementById("formID").innerHTML = ".";
             streetView = new google.maps.StreetViewPanorama(document.getElementById("formID"), panoramaOptions);
-            //currentBubble.close(map);
-            //currentBubble.open(map);
-            //google.maps.event.addListener(streetView, 'error', function() {
-            //    alert("error");
-            //});
-
-            //            streetView = new GStreetviewPanorama(document.getElementById("formID"), streetviewOptions);
-            //            GEvent.addListener(streetView, "error", streetviewError);
-            //            function streetviewError(errorCode) {
-            //                if (errorCode == 603) {
-            //                    alert("Error: Flash doesn't appear to be supported by your browser");
-            //                    return;
-            //                }
-            //            }
         });
-        //alert("finished streetview");
+    }
 
+    gotoConfirmationMenu = function(problemType, callNumber) {
+
+        var ward = displayWard;
+
+        if (displaySubWard != -1) {
+            ward = displaySubWard;
+        }
+
+        var confirmationText = "";
+
+        confirmationText = "Thank you for raising a call with us regarding ";
+        confirmationText += reportItTypes[problemType].toLowerCase() + ", the call number for this problem is shown above. ";
+        confirmationText += "<BR><BR>Please use this call number when enquiring about the status of the problem.";
+        confirmationText += "<BR><BR>If you have provided us with a telephone number or email address we will notify you when your problem has been resolved.";
+        confirmationText += "<BR><BR>If you wish to enquire about the status of the problem then use the search box at the top of this page. You can also call us on " + callCenterNumber + ".";
+
+        var bubbleMenu = '<BR><div class="header"><div id="bubbleBack">'
+                       + '<table border="0" cellpadding="0" cellspacing="2">'
+                       + '<tr>'
+                       + '<td colspan="3" class="sidePanelSubTitle">'
+                       + 'Report a problem<BR>'
+                       + '<DIV class="bubbleMiniText">' + wardNames[ward] + ' Ward'
+                       + '</DIV>'
+                       + '</td>'
+                       + '</tr>'
+                       + '<tr>'
+                       + '<td width="5%" style="background: black"></td>'
+                       + '<td style="text-align: centre" class="reverseButton">Your call number is : ' + callNumber + '</td>'
+                       + '<td width="5%" style="background: black"></td>'
+                       + '</tr>'
+                       + '<tr>'
+                       + '<td width="5%" style="background: black"></td>'
+                       + '<td><DIV class="bubbleMidiText">' + confirmationText + '</DIV></td>'
+                       + '<td width="5%" style="background: black"></td>'
+                       + '</tr>'
+                       + '<tr>'
+                       + '<td width="5%" style="background: black"></td>'
+                       + '<td onClick="gotoMainMenu(\'' + currentLocation + '\',false,null,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Main Menu</td>'
+                       + '<td width="5%" style="background: black"></td>'
+                       + '</tr>'
+                       + '<tr>'
+                       + '<td width="5%" style="background: black"></td>'
+                       + '<td id="clearMap" style="text-align: centre" cstyle="background: black">&nbsp</td>'
+                       + '<td width="5%" style="background: black"></td>'
+                       + '</tr>'
+                       + '</table>'
+                       + '</div></div>';
+        currentBubble.setContent(bubbleMenu);
+        currentBubble.open(map);
+    }
+
+    reportProblem = function(ward, problemType, problemDetails, problemLocation, emailAddress, phoneNumber, streetviewed) {
+        if (problemDetails == 'Please describe the problem here') {
+            problemDetails = "";
+        }
+        if (emailAddress == 'Your email address here (optional)') {
+            emailAddress = "";
+        }
+        if (phoneNumber == 'Your phone number here (optional)') {
+            phoneNumber = "";
+        }
+        var heading = "";
+        var pitch = "";
+        var zoom = "";
+        if (streetviewed) {
+            var streetviewPOV = streetView.getPov();
+            heading = streetviewPOV.heading;
+            pitch = streetviewPOV.pitch;
+            zoom = streetviewPOV.zoom;
+        }
+        var encodedProblemType = encodeURIComponent(problemType);
+        var encodedProblemDetails = encodeURIComponent(problemDetails);
+        var encodedProblemLocation = encodeURIComponent(problemLocation);
+        var encodedEmailAddress = encodeURIComponent(emailAddress);
+        var encodedPhoneNumber = encodeURIComponent(phoneNumber);
+        var encodedStreetviewed = encodeURIComponent(streetviewed);
+        var encodedLat = encodeURIComponent(currentPoint.latLng.lat());
+        var encodedLng = encodeURIComponent(currentPoint.latLng.lng());
+        var encodedHeading = encodeURIComponent(heading);
+        var encodedPitch = encodeURIComponent(pitch);
+        var encodedZoom = encodeURIComponent(zoom);
+        var encodedWard = encodeURIComponent(wardNames[ward]);
+        var encodedSector = encodeURIComponent(sectorName);
+        Ext.Ajax.request({
+            url: reportItURL +
+                 '&problemType=' + encodedProblemType +
+                 '&problemDetails=' + encodedProblemDetails +
+                 '&problemLocation=' + encodedProblemLocation +
+                 '&emailAddress=' + encodedEmailAddress +
+                 '&phoneNumber=' + encodedPhoneNumber +
+                 '&streetviewed=' + encodedStreetviewed +
+                 '&lat=' + encodedLat +
+                 '&lng=' + encodedLng +
+                 '&heading=' + encodedHeading +
+                 '&pitch=' + encodedPitch +
+                 '&zoom=' + encodedZoom +
+                 '&ward=' + encodedWard +
+                 '&sector=' + encodedSector,
+            timeout: 9000,
+            method: 'POST',
+            success: function(response) {
+                gotoConfirmationMenu(problemType, response.responseText.substring(response.responseText.length - 8));
+            },
+            failure: function(response) {
+                alert(response.responseText);
+                //                    Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
+                //                    sendEmailResponse = Ext.util.JSON.decode(response.responseText);
+                //                    //                    if(contact){
+                //                    //                       redirectFromContact(councillor, sendEmailResponse.message);
+                //                    //                    }
+            }
+        });
     }
 
     formClick = function(contact, contactDetails, messageDetails, ward, selection, councillor) {
@@ -1486,17 +1623,11 @@ Ext.onReady(function() {
                     catch (err) {
                         Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
                         sendEmailResponse = Ext.util.JSON.decode(response.responseText);
-                        //                        if(contact){
-                        //                           redirectFromContact(councillor, sendEmailResponse.message);
-                        //                        }
                     }
                 },
                 failure: function(response) {
                     Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
                     sendEmailResponse = Ext.util.JSON.decode(response.responseText);
-                    //                    if(contact){
-                    //                       redirectFromContact(councillor, sendEmailResponse.message);
-                    //                    }
                 }
             });
         }
@@ -2068,7 +2199,7 @@ Ext.onReady(function() {
         }
     }
 
-    function MapKey(keyDiv, map, text_colour, background_colour, text, title, selection, key, view, showPanel, help, information, feedback, political) {
+    function MapKey(keyDiv, map, text_colour, background_colour, text, title, selection, key, view, showPanel, help, information, feedback, political, version) {
 
         keyDiv.style.padding = '5px';
 
@@ -2109,6 +2240,9 @@ Ext.onReady(function() {
             }
             if (key && !political) {
                 spawnWindow(sectorURLs[selection]);
+            }
+            if (version) {
+                spawnWindow("http://sourceforge.net/projects/mycouncil");
             }
             if (view) {
                 viewClick();
