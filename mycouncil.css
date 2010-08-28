@@ -91,6 +91,13 @@ font-size: 8px;
 background: black;
 Color: #FFFFFF;
 }
+.bubbleMidiText
+{
+font-size: 12px;
+background: black;
+Color: #FFFFFF;
+text-align: left;
+}
 .formDefault
 {
 font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
