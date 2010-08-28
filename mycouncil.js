@@ -142,6 +142,7 @@ Ext.onReady(function() {
     var callCenterNumber;
     var reportItURL;
     var version;
+    var storePanel = false;
 
     var formWithoutStreetview = '<form action="#" onsubmit="process(this); return false" action="#">'
                 + 'Choose the type of problem :<br>'
@@ -929,17 +930,23 @@ Ext.onReady(function() {
         }
     }
 
-    function panelClick(help, information, feedback, alreadyShowing) {
+    function panelClick(help, information, feedback) {
         if (!panelAnimation) {
+            if (!showHelp && !showInformation && !showFeedback) {
+                storePanel = true;
+            }
+            else {
+                storePanel = false;
+            }
             panelAnimation = true;
-            if (showPanel) {
-                //            if (showPanel&&!alreadyShowing) {
+            //if (showPanel) {
+            if ((help && showHelp) || (information && showInformation) || (feedback && showFeedback)) {
                 showPanel = false;
             }
             else {
                 showPanel = true;
             }
-            if (help) {
+            if (help || showHelp) {
                 if (showHelp) {
                     showHelp = false;
                 }
@@ -947,7 +954,7 @@ Ext.onReady(function() {
                     showHelp = true;
                 }
             }
-            if (information) {
+            if (information || showInformation) {
                 if (showInformation) {
                     showInformation = false;
                 }
@@ -955,7 +962,7 @@ Ext.onReady(function() {
                     showInformation = true;
                 }
             }
-            if (feedback) {
+            if (feedback || showFeedback) {
                 if (showFeedback) {
                     showFeedback = false;
                 }
@@ -969,7 +976,9 @@ Ext.onReady(function() {
                 map.controls[google.maps.ControlPosition.LEFT].removeAt(0); createMenu();
                 panelElement.slideOut('r', { duration: 1 });
                 window.setTimeout(function() {
-                    infoPanelContents = panelDiv.innerHTML;
+                    if (storePanel) {
+                        infoPanelContents = panelDiv.innerHTML;
+                    }
                     if (miniScreen) {
                         if (internetExplorer && !Ext.isIE8) {
                             panelDiv.setAttribute('className', "menuMiniContents");
@@ -2247,13 +2256,16 @@ Ext.onReady(function() {
             if (view) {
                 viewClick();
             }
-            if (help && !startupAnimation && !showInformation && !showFeedback) {
+            //if (help && !startupAnimation && !showInformation && !showFeedback) {
+            if (help && !startupAnimation) {
                 panelClick(true, false, false);
             }
-            if (information && !startupAnimation && !showHelp && !showFeedback) {
+            //if (information && !startupAnimation && !showHelp && !showFeedback) {
+            if (information && !startupAnimation) {
                 panelClick(false, true, false);
             }
-            if (feedback && !startupAnimation && !showHelp && !showInformation) {
+            //if (feedback && !startupAnimation && !showHelp && !showInformation) {
+            if (feedback && !startupAnimation) {
                 panelClick(false, false, true);
             }
         });
