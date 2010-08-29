@@ -939,7 +939,6 @@ Ext.onReady(function() {
                 storePanel = false;
             }
             panelAnimation = true;
-            //if (showPanel) {
             if ((help && showHelp) || (information && showInformation) || (feedback && showFeedback)) {
                 showPanel = false;
             }
@@ -1525,6 +1524,7 @@ Ext.onReady(function() {
     }
 
     reportProblem = function(ward, problemType, problemDetails, problemLocation, emailAddress, phoneNumber, streetviewed) {
+        Ext.MessageBox.wait('Please wait whilst the problem is being registered...');
         if (problemDetails == 'Please describe the problem here') {
             problemDetails = "";
         }
@@ -1557,32 +1557,29 @@ Ext.onReady(function() {
         var encodedWard = encodeURIComponent(wardNames[ward]);
         var encodedSector = encodeURIComponent(sectorName);
         Ext.Ajax.request({
-            url: reportItURL +
-                 '&problemType=' + encodedProblemType +
-                 '&problemDetails=' + encodedProblemDetails +
-                 '&problemLocation=' + encodedProblemLocation +
-                 '&emailAddress=' + encodedEmailAddress +
-                 '&phoneNumber=' + encodedPhoneNumber +
-                 '&streetviewed=' + encodedStreetviewed +
-                 '&lat=' + encodedLat +
-                 '&lng=' + encodedLng +
-                 '&heading=' + encodedHeading +
-                 '&pitch=' + encodedPitch +
-                 '&zoom=' + encodedZoom +
-                 '&ward=' + encodedWard +
-                 '&sector=' + encodedSector,
+            url: reportItURL,
+            params: { problemType: encodedProblemType,
+                problemDetails: encodedProblemDetails,
+                problemLocation: encodedProblemLocation,
+                emailAddress: encodedEmailAddress,
+                phoneNumber: encodedPhoneNumber,
+                streetviewed: encodedStreetviewed,
+                lat: encodedLat,
+                lng: encodedLng,
+                heading: encodedHeading,
+                pitch: encodedPitch,
+                zoom: encodedZoom,
+                ward: encodedWard,
+                sector: encodedSector
+            },
             timeout: 9000,
             method: 'POST',
             success: function(response) {
+                Ext.MessageBox.hide();
                 gotoConfirmationMenu(problemType, response.responseText.substring(response.responseText.length - 8));
             },
             failure: function(response) {
-                alert(response.responseText);
-                //                    Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
-                //                    sendEmailResponse = Ext.util.JSON.decode(response.responseText);
-                //                    //                    if(contact){
-                //                    //                       redirectFromContact(councillor, sendEmailResponse.message);
-                //                    //                    }
+                Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
             }
         });
     }
