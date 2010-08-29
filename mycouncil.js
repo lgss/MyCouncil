@@ -1212,7 +1212,9 @@ Ext.onReady(function() {
     };
 
     function createBubble(point, location) {
-        streetviewLatLng = point.latLng;
+        if (clickSearch) {
+            streetviewLatLng = point.latLng;
+        }
         if (clickSearch || (!clickSearch && (menuLocation.substr(3, 2)).toLowerCase() == "nn")) {
             menuLocation = "near " + location.substring(0, location.indexOf(","));
         }
@@ -2119,6 +2121,7 @@ Ext.onReady(function() {
                     }
                     else {
                         currentPoint = point;
+                        streetviewLatLng = point;
                         var nearestStreetView = new google.maps.StreetViewService().getPanoramaByLocation(point, 50, checkStreetViewLocation);
                     }
                 }
