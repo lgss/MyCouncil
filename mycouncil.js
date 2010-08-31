@@ -1409,7 +1409,10 @@ Ext.onReady(function() {
             formEntries += '<option value="' + currentReportItItem + '">' + reportItNames[currentReportItItem] + '</option>';
         }
 
-        var formWithStreetview = '<form action="#" onsubmit="process(this); return false" action="#">'
+        var form = "";
+
+        if (streetviewAvailable) {
+            form = '<form action="#" onsubmit="process(this); return false" action="#">'
                 + '<table border="0" width="100%" cellpadding="10">'
                 + '<tr>'
                 + '<td width="50%" valign="top" halign="center">'
@@ -1434,6 +1437,27 @@ Ext.onReady(function() {
                 + '</tr>'
                 + '</table'
                 + '</form>';
+        }
+        else {
+            form = '<form action="#" onsubmit="process(this); return false" action="#">'
+                + '<table border="0" width="100%" cellpadding="10">'
+                + '<tr>'
+                + '<td width="50%" valign="top" halign="center">'
+                + 'Choose the type of problem :<br>'
+                + '<select class="miniFormActive" name="problemType" id="problemType">' + formEntries + '</select>'
+                + '<BR><BR>'
+                + '<textarea class="miniFormDefault" name="problemDetails" id="problemDetails" rows="5" cols="34" onmousedown="if(this.className==\'miniFormDefault\'){this.value=\'\';this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.value=\'\';this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'">Please describe the problem here<\/textarea><br>'
+                + '<input class="miniFormDefault" name="problemLocation" id="problemLocation" size="35" maxlength="53" onmousedown="if(this.className==\'miniFormDefault\'){this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'" value="' + menuLocation + '"><\/input><br>'
+                + '<input class="miniFormDefault" name="emailAddress" id="emailAddress" size="35" maxlength="53" onmousedown="if(this.className==\'miniFormDefault\'){this.value=\'\';this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.value=\'\';this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'" value="Your email address here (optional)"><\/input><br>'
+                + '<input class="miniFormDefault" name="phoneNumber" id="phoneNumber" size="35" maxlength="53" onmousedown="if(this.className==\'miniFormDefault\'){this.value=\'\';this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.value=\'\';this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'" value="Your phone number here (optional)"><\/input><br>'
+                + '</td>'
+                + '</tr>'
+                + '<tr>'
+                + '<td colspan="2" onClick="reportProblem(ward=\'' + ward + '\',document.getElementById(\'problemType\').value,document.getElementById(\'problemDetails\').value,document.getElementById(\'problemLocation\').value,document.getElementById(\'emailAddress\').value,document.getElementById(\'phoneNumber\').value)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report the problem</td>'
+                + '</tr>'
+                + '</table'
+                + '</form>';       
+        }
 
         var bubbleMenu = '<BR><div class="header"><div id="bubbleBack">'
                        + '<table border="0" cellpadding="0" cellspacing="2">'
@@ -1447,7 +1471,7 @@ Ext.onReady(function() {
                    + '</tr>'
                    + '<tr>'
                    + '<td width="5%" style="background: black"></td>'
-                   + '<td><DIV class="bubbleMiniText">' + formWithStreetview + '</DIV></td>'
+                   + '<td><DIV class="bubbleMiniText">' + form + '</DIV></td>'
                    + '<td width="5%" style="background: black"></td>'
                    + '</tr>'
                    + '</table>'
@@ -1579,7 +1603,7 @@ Ext.onReady(function() {
                 gotoConfirmationMenu(problemType, response.responseText.substring(response.responseText.length - 8));
             },
             failure: function(response) {
-                Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
+                Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error reporting your problem. Please try again later.');
             }
         });
     }
