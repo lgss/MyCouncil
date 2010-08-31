@@ -1066,7 +1066,7 @@ Ext.onReady(function() {
             else {
                 panelElement.slideOut('r', { duration: 1 });
                 window.setTimeout(function() {
-                    if (internetExplorer) {
+                if (internetExplorer && !Ext.isIE8) {
                         panelDiv.setAttribute('className', "");
                     }
                     else {
