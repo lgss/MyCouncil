@@ -139,10 +139,15 @@ Ext.onReady(function() {
     var jsonMeetingData;
     var streetView;
     var sectorName;
+    var sectorID;
     var callCenterNumber;
     var reportItURL;
     var version;
     var storePanel = false;
+    var codesType = new Array();
+    var codesIncident = new Array();
+    var codesSectorID = new Array();
+    var codesClassificationCodes = new Array();
 
     var formWithoutStreetview = '<form action="#" onsubmit="process(this); return false" action="#">'
                 + 'Choose the type of problem :<br>'
@@ -332,6 +337,12 @@ Ext.onReady(function() {
                     reportItNames[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].name;
                     reportItTypes[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].type;
                     reportItIncidents[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].incident;
+                }
+                for (var currentCode = 0; currentCode < jsonData.classificationCodes.length; currentCode++) {
+                    codesType[currentCode] = jsonData.classificationCodes[currentCode].type;
+                    codesIncident[currentCode] = jsonData.classificationCodes[currentCode].incident;
+                    codesSectorID[currentCode] = jsonData.classificationCodes[currentCode].sectorID;
+                    codesClassificationCodes[currentCode] = jsonData.classificationCodes[currentCode].classificationCode;
                 }
                 for (var currentPartiesURL = 0; currentPartiesURL < jsonData.partiesURL.length; currentPartiesURL++) {
                     partiesURL[currentPartiesURL] = jsonData.partiesURL[currentPartiesURL].url;
@@ -717,7 +728,9 @@ Ext.onReady(function() {
         for (var currentWard = 0; currentWard < totalNumOfWards; currentWard++) {
             if (wardOperational[currentWard]) {
                 if (wards[currentWard].Contains(point)) {
-                    sectorName = sectorWardNames[currentWard];
+                    //sectorName = sectorWardNames[currentWard];
+                    sectorName = sectorNames[wardSector[currentWard]];
+                    sectorID = wardSector[currentWard];
                 }
             }
         };
@@ -1567,34 +1580,56 @@ Ext.onReady(function() {
             pitch = streetviewPOV.pitch;
             zoom = streetviewPOV.zoom;
         }
-        var encodedProblemType = encodeURIComponent(problemType);
-        var encodedProblemDetails = encodeURIComponent(problemDetails);
-        var encodedProblemLocation = encodeURIComponent(problemLocation);
-        var encodedEmailAddress = encodeURIComponent(emailAddress);
-        var encodedPhoneNumber = encodeURIComponent(phoneNumber);
-        var encodedStreetviewed = encodeURIComponent(streetviewed);
-        var encodedLat = encodeURIComponent(currentPoint.latLng.lat());
-        var encodedLng = encodeURIComponent(currentPoint.latLng.lng());
+        var classificationCode="";
+        for (var currentCode = 0; currentCode < jsonData.classificationCodes.length; currentCode++) {
+           if(codesType[currentCode].toLowerCase()==reportItTypes[problemType].toLowerCase()&&
+              (codesIncident[currentCode].toLowerCase()==reportItIncidents[problemType].toLowerCase()||codesIncident[currentCode]=="*")&&
+              (codesSectorID[currentCode]==sectorID||codesSectorID[currentCode]=="*"))
+              {
+              classificationCode=codesClassificationCodes[currentCode];
+              }
+        }
+        //var encodedClassificationCode = encodeURIComponent(classificationCode);
+        //var encodedProblemType = encodeURIComponent(reportItTypes[problemType]);
+        //var encodedProblemDetails = encodeURIComponent(problemDetails);
+        //var encodedProblemLocation = encodeURIComponent(problemLocation);
+        //var encodedEmailAddress = encodeURIComponent(emailAddress);
+        //var encodedPhoneNumber = encodeURIComponent(phoneNumber);
+        //var encodedStreetviewed = encodeURIComponent(streetviewed);
+        var tempLat;
+        var tempLng;
+        if(clickSearch){
+          tempLat=currentPoint.latLng.lat();
+          tempLng=currentPoint.latLng.lng();
+        }
+        else{
+          tempLat=currentPoint.lat();
+          tempLng=currentPoint.lng();
+        }
+        //alert(currentPoint.lat());
+        //var encodedLat = encodeURIComponent(currentPoint.latLng.lat());
+        //var encodedLng = encodeURIComponent(currentPoint.latLng.lng());
         var encodedHeading = encodeURIComponent(heading);
         var encodedPitch = encodeURIComponent(pitch);
         var encodedZoom = encodeURIComponent(zoom);
-        var encodedWard = encodeURIComponent(wardNames[ward]);
-        var encodedSector = encodeURIComponent(sectorName);
+        //var encodedWard = encodeURIComponent(wardNames[ward]);
+        //var encodedSector = encodeURIComponent(sectorName);
         Ext.Ajax.request({
             url: reportItURL,
-            params: { problemType: encodedProblemType,
-                problemDetails: encodedProblemDetails,
-                problemLocation: encodedProblemLocation,
-                emailAddress: encodedEmailAddress,
-                phoneNumber: encodedPhoneNumber,
-                streetviewed: encodedStreetviewed,
-                lat: encodedLat,
-                lng: encodedLng,
-                heading: encodedHeading,
-                pitch: encodedPitch,
-                zoom: encodedZoom,
-                ward: encodedWard,
-                sector: encodedSector
+            params: { classificationCode: classificationCode, 
+                      problemType: reportItTypes[problemType],
+                      problemDetails: problemDetails,
+                      problemLocation: problemLocation,
+                      emailAddress: emailAddress,
+                      phoneNumber: phoneNumber,
+                      streetviewed: streetviewed,
+                      lat: tempLat,
+                      lng: tempLng,
+                      heading: encodedHeading,
+                      pitch: encodedPitch,
+                      zoom: encodedZoom,
+                      ward: wardNames[ward],
+                      sector: sectorName
             },
             timeout: 9000,
             method: 'POST',
@@ -1603,6 +1638,7 @@ Ext.onReady(function() {
                 gotoConfirmationMenu(problemType, response.responseText.substring(response.responseText.length - 8));
             },
             failure: function(response) {
+            alert(response.responseText);
                 Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error reporting your problem. Please try again later.');
             }
         });
@@ -1638,7 +1674,7 @@ Ext.onReady(function() {
             var encodedSector = encodeURIComponent(sectorNames[wardSector[ward]]);
             Ext.Ajax.request({
                 url: emailURL + 'contact=' + encodedContactDetails + '&message=' + encodedMessageDetails + '&emailTo=' + encodedEmailTo + '&messageType=' + messageType + '&sector=' + encodedSector,
-                timeout: 9000,
+                timeout: 30000,
                 method: 'POST',
                 success: function(response) {
                     var sendEmailResponse;
@@ -2209,6 +2245,7 @@ Ext.onReady(function() {
                     }
                 }
                 if (resultInWard) {
+                    menuLocation = "at " + localSearch.results[0].streetAddress;
                     callbackFunction(point, true);
                 }
                 else {
