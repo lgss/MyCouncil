@@ -4,11 +4,11 @@
 //Ensure Wards are in alphabetical order.
 //
 {"environment":"local",
- "version":"v1.05",
+ "version":"v1.07",
  "showOperationalInformation":"false",
  "showContactScreen":"true",
  "showReportIT":"true",
- "showExternalPages":"false",
+ "showExternalPages":"true",
  "mapCenter" : new google.maps.LatLng(52.237178, -0.894635),
  "defaultZoom" : 12,
  "mapSWBounds" : new google.maps.LatLng(52.184668, -0.969543),
@@ -21,9 +21,9 @@
  "localEmailURL" : "http://localhost:8080/mycouncil/SendEmail?",
  "testEmailURL" : "http://selfserve.northampton.gov.uk/mycounciltest/SendEmail?",
  "liveEmailURL" : "http://selfserve.northampton.gov.uk/mycouncil/SendEmail?",
- "localReportItURL" : "http://localhost:8080/mycouncil/CreateCallTest?",
- "testReportItURL" : "http://selfserve.northampton.gov.uk/mycounciltest/CreateCallTest?",
- "liveReportItURL" : "http://selfserve.northampton.gov.uk/mycouncil/CreateCallLive?",
+ "localReportItURL" : "http://localhost:8080/mycouncil/CreateCall?",
+ "testReportItURL" : "http://selfserve.northampton.gov.uk/mycounciltest/CreateCall?",
+ "liveReportItURL" : "http://selfserve.northampton.gov.uk/mycouncil/CreateCall?",
  "feedbackEmailAddress" : "kwhite@northampton.gov.uk",
  "localPrioritiesURL" : "http://northants.police.uk/default.aspx?id=forms&formid=8",
  "councillor_main_url_base" : "http://www.northamptonboroughcouncil.com/councillors/mgUserInfo.aspx?UID=",
@@ -78,6 +78,15 @@
                     {"name":"Graffiti - Offensive","type":"Graffiti","incident":"Offensive"},
                     {"name":"Graffiti - Non-Offensive","type":"Graffiti","incident":"Non-Offensive"}
                     ],
+ "classificationCodes":[{"type":"Flytipping","incident":"*","sectorID":"*","classificationCode":"2000027"},
+                        {"type":"Graffiti","incident":"Offensive","sectorID":"*","classificationCode":"2000140"}, 
+                        {"type":"Graffiti","incident":"Non-Offensive","sectorID":"*","classificationCode":"2000141"},
+                        {"type":"Cleansing","incident":"*","sectorID":"0","classificationCode":"2000672"},
+                        {"type":"Cleansing","incident":"*","sectorID":"1","classificationCode":"2000671"},
+                        {"type":"Cleansing","incident":"*","sectorID":"2","classificationCode":"2000673"},
+                        {"type":"Cleansing","incident":"*","sectorID":"3","classificationCode":"2000670"},
+                        {"type":"Cleansing","incident":"*","sectorID":"4","classificationCode":"2000670"}  
+                       ],                   
  "wards": [
       {"name":"Abington",
       "sector":"1",
