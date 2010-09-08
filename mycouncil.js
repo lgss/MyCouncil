@@ -57,6 +57,9 @@ Ext.onReady(function() {
     var reportItNames = new Array();
     var reportItTypes = new Array();
     var reportItIncidents = new Array();
+    var reportItDescEmail = new Array();
+    var reportItDescText = new Array();
+    var reportItDescVoice = new Array();
     var totalNumOfWards = 0;
     var mouseMoveHandler;
     var leadBy;
@@ -148,23 +151,15 @@ Ext.onReady(function() {
     var codesIncident = new Array();
     var codesSectorID = new Array();
     var codesClassificationCodes = new Array();
-
-    var formWithoutStreetview = '<form action="#" onsubmit="process(this); return false" action="#">'
-                + 'Choose the type of problem :<br>'
-                + '<select name="problemtype"><option value="1">Fly Tipping</option><option value="2">Graffiti</option><option value="3">Dog Fouling</option><option value="4">Dead Animals</option><option value="5">Other</option></select>'
-                + '<BR>'
-                + 'Tell us about the problem:<br>'
-                + '  <textarea name="data" id="dataID" rows="5" cols="40"><\/textarea><br>'
-                + 'Your email address (optional):<br>'
-                + '  <input name="email" size="53" maxlength="53"><\/input><br>'
-                + 'Your phone number (optional):<br>'
-                + '  <input name="phone" size="53" maxlength="53"><\/input><br>'
-                + '<BR>'
-                + '<center><input type="submit" value="Report it!"/></center>'
-                + '</form>';
+    var reportItJson;
+    var bigForm=false;
 
     if (navigator.userAgent.indexOf("IE") > -1) {
         internetExplorer = true;
+    }
+    
+    if(Ext.isIE7){
+      document.body.scroll='auto';
     }
 
     if (document.cookie.length > 0) {
@@ -194,17 +189,54 @@ Ext.onReady(function() {
             startupSearchText = Ext.urlDecode(location.search.substring(1)).search;
         }
     };
+    
+    if(Ext.isIE){
+      var tempHeight=0;
+      var tempWidth=0;
+      if(document.documentElement && document.documentElement.clientHeight) {
+         tempHeight = document.documentElement.clientHeight;
+         tempWidth = document.documentElement.clientWidth;
+      } 
+      else{
+         tempHeight = document.body.clientHeight;
+         tempWidth = document.body.clientWidth;
+      }
 
-    if (typeof screen.availHeight != 'undefined') {
-        var mapHeight = screen.availHeight - 260;
-        if (screen.availHeight < 800) {
-            picHeight = 81;
-            picWidth = 54;
-            document.getElementById("info_panel_details").style.fontSize = "10px";
-            miniScreen = true;
-        }
-        document.getElementById("map").style.height = mapHeight + "px";
+      var mapHeight = tempHeight - 105;
+      document.getElementById("map").style.height = mapHeight + "px";
+      if (tempHeight < 800) {
+          picHeight = 81;
+          picWidth = 54;
+          document.getElementById("info_panel_details").style.fontSize = "10px";
+          miniScreen = true;
+      }else if(tempWidth>=1270){
+         bigForm=true;      
+      }
     }
+    else{
+          var mapHeight = window.innerHeight - 105;
+          document.getElementById("map").style.height = mapHeight + "px";
+          if (window.innerHeight < 800) {
+              picHeight = 81;
+              picWidth = 54;
+              document.getElementById("info_panel_details").style.fontSize = "10px";
+              miniScreen = true;
+          }
+          else if(window.innerWidth>=1270){
+             bigForm=true;      
+          }
+    }
+    
+//    if (typeof screen.availHeight != 'undefined') {
+//        var mapHeight = screen.availHeight - 260;
+//        if (screen.availHeight < 800) {
+//            picHeight = 81;
+//            picWidth = 54;
+//            document.getElementById("info_panel_details").style.fontSize = "10px";
+//            miniScreen = true;
+//        }
+//        document.getElementById("map").style.height = mapHeight + "px";
+//    }
 
     if (politicalView) {
         document.getElementById("report_title").innerHTML = "Political Map";
@@ -337,6 +369,9 @@ Ext.onReady(function() {
                     reportItNames[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].name;
                     reportItTypes[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].type;
                     reportItIncidents[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].incident;
+                    reportItDescEmail[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].descriptionEmail;
+                    reportItDescText[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].descriptionText;
+                    reportItDescVoice[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].descriptionVoice;
                 }
                 for (var currentCode = 0; currentCode < jsonData.classificationCodes.length; currentCode++) {
                     codesType[currentCode] = jsonData.classificationCodes[currentCode].type;
@@ -787,7 +822,7 @@ Ext.onReady(function() {
                 }
                 if (councillor_names_array[currentCouncillor] != "") {
                     document.getElementById("info_panel_details").innerHTML += "<BR>" +
-                              "<TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"Images/" + councillor_images_array[currentCouncillor] + ".jpg\" alt=\"Councillor" + councillor_names_array[currentCouncillor] + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
+                              "<TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"images/" + councillor_images_array[currentCouncillor] + ".jpg\" alt=\"Councillor" + councillor_names_array[currentCouncillor] + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
                                 "<B>Councillor " + councillor_names_array[currentCouncillor] + "</B><BR>" +
                               parties[councillor_parties_array[currentCouncillor]] + "<BR>" +
                               councillor_post_array[currentCouncillor] +
@@ -797,13 +832,13 @@ Ext.onReady(function() {
         }
         else {
             document.getElementById("info_panel_details").innerHTML = "<BR>" +
-                              "<CENTER><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"Images/" + sectorCoOrdinatorImages1[wardSector[currentWard]] + ".jpg\" alt=\"" + sectorCoOrdinatorNames1[wardSector[currentWard]] + "\"/></CENTER>" +
+                              "<CENTER><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"images/" + sectorCoOrdinatorImages1[wardSector[currentWard]] + ".jpg\" alt=\"" + sectorCoOrdinatorNames1[wardSector[currentWard]] + "\"/></CENTER>" +
                                 "<B>" + sectorCoOrdinatorNames1[wardSector[currentWard]] + "</B><BR>Partnership Coordinator" +
                                 "<BR>Telephone: " + sectorCoOrdinatorTelephones1[wardSector[currentWard]] +
                                 "<BR>Fax: " + sectorCoOrdinatorFaxes1[wardSector[currentWard]];
             if (sectorCoOrdinatorNames2[wardSector[currentWard]]) {
                 document.getElementById("info_panel_details").innerHTML += "<BR><BR>" +
-                              "<CENTER><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"Images/" + sectorCoOrdinatorImages2[wardSector[currentWard]] + ".jpg\" alt=\"" + sectorCoOrdinatorNames2[wardSector[currentWard]] + "\"/></CENTER>" +
+                              "<CENTER><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"images/" + sectorCoOrdinatorImages2[wardSector[currentWard]] + ".jpg\" alt=\"" + sectorCoOrdinatorNames2[wardSector[currentWard]] + "\"/></CENTER>" +
                                 "<B>" + sectorCoOrdinatorNames2[wardSector[currentWard]] + "</B><BR>Partnership Coordinator" +
                                 "<BR>Telephone: " + sectorCoOrdinatorTelephones2[wardSector[currentWard]] +
                                 "<BR>Fax: " + sectorCoOrdinatorFaxes2[wardSector[currentWard]];
@@ -823,19 +858,19 @@ Ext.onReady(function() {
                     document.getElementById("info_panel_details").innerHTML += "<BR>";
                 }
                 document.getElementById("info_panel_details").innerHTML +=
-                            "<TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"Images/" + leaderImage + ".jpg\" alt=\"Councillor " + leaderName + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
+                            "<TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"images/" + leaderImage + ".jpg\" alt=\"Councillor " + leaderName + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
                             "<B>Councillor " + leaderName + "</B><BR>Leader of the Council<BR>";
                 if (!miniScreen) {
                     document.getElementById("info_panel_details").innerHTML += "<BR>";
                 }
-                document.getElementById("info_panel_details").innerHTML += "<TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"Images/" + mayorImage + ".jpg\" alt=\"Councillor " + mayorName + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
+                document.getElementById("info_panel_details").innerHTML += "<TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"images/" + mayorImage + ".jpg\" alt=\"Councillor " + mayorName + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
                             "<B>Councillor " + mayorName + "</B><BR>Mayor<BR><BR>" +
                             "<div class=\"sidePanelSubTitle\">Political Breakdown</div><BR>";
                 document.getElementById("info_panel_details").innerHTML += "<table border=\"0\" width=\"100%\" cellpadding=\"0\" style=\"text-align: left\">" + displayBreakdown + "</table>";
             }
             else {
                 document.getElementById("info_panel_details").innerHTML = "<BR>" +
-                            "<TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + chiefExecImageHeight + "\" height=\"" + chiefExecImageWidth + "\" src=\"Images/" + chiefExecImage + ".jpg\" alt=\"Chief Executive " + chiefExecName + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
+                            "<TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + chiefExecImageHeight + "\" height=\"" + chiefExecImageWidth + "\" src=\"images/" + chiefExecImage + ".jpg\" alt=\"Chief Executive " + chiefExecName + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
                             "<B>" + chiefExecName + "</B><BR>Chief Executive<BR>" +
                             "<BR>";
             }
@@ -1423,25 +1458,51 @@ Ext.onReady(function() {
         }
 
         var form = "";
-
+        var inputSize=38;
+        var textAreaSize=34;
+        
+        if(Ext.isChrome){
+           inputSize=38;
+           textAreaSize=37;
+        }
+        if(Ext.isIE){
+           inputSize=37;
+           textAreaSize=37;
+        }
+        
+        var formDefaultClass="miniFormDefault";
+        var formActiveClass="miniFormActive";
+        var streetViewText1="Move the camera picture below (optional) :";
+        var streetViewText2="Does the image show where the problem is?&nbsp";
+        var useStreetviewLinks = false;
+        
+        if(bigForm){
+          formDefaultClass="formDefault";
+          formActiveClass="formActive";  
+          streetViewText1="Move the camera picture below to show the problem location (optional) :";
+          streetViewText2="Does the camera image above now show where the problem is located?&nbsp";
+          useStreetviewLinks = true;
+        }
+       
         if (streetviewAvailable) {
-            form = '<form action="#" onsubmit="process(this); return false" action="#">'
+           form = '<form action="#" onsubmit="process(this); return false" action="#">'
                 + '<table border="0" width="100%" cellpadding="10">'
                 + '<tr>'
                 + '<td width="50%" valign="top" halign="center">'
                 + 'Choose the type of problem :<br>'
-                + '<select class="miniFormActive" name="problemType" id="problemType">' + formEntries + '</select>'
-                + '<BR><BR>'
-                + '<textarea class="miniFormDefault" name="problemDetails" id="problemDetails" rows="5" cols="34" onmousedown="if(this.className==\'miniFormDefault\'){this.value=\'\';this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.value=\'\';this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'">Please describe the problem here<\/textarea><br>'
-                + '<input class="miniFormDefault" name="problemLocation" id="problemLocation" size="35" maxlength="53" onmousedown="if(this.className==\'miniFormDefault\'){this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'" value="' + menuLocation + '"><\/input><br>'
-                + '<input class="miniFormDefault" name="emailAddress" id="emailAddress" size="35" maxlength="53" onmousedown="if(this.className==\'miniFormDefault\'){this.value=\'\';this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.value=\'\';this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'" value="Your email address here (optional)"><\/input><br>'
-                + '<input class="miniFormDefault" name="phoneNumber" id="phoneNumber" size="35" maxlength="53" onmousedown="if(this.className==\'miniFormDefault\'){this.value=\'\';this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.value=\'\';this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'" value="Your phone number here (optional)"><\/input><br>'
+                + '<select class="' + formActiveClass + '" name="problemType" id="problemType">' + formEntries + '</select>'
+                + '<BR>'
+                + '<textarea class="' + formDefaultClass + '" name="problemDetails" id="problemDetails" rows="4" cols="' + textAreaSize + '" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'">Please describe the problem here<\/textarea><br>'
+                + '<input class="' + formDefaultClass + '" name="problemLocation" id="problemLocation" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="' + menuLocation + '"><\/input><br>'
+                + '<input class="' + formDefaultClass + '" name="name" id="name" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="Your name here (optional)"><\/input><br>'
+                + '<input class="' + formDefaultClass + '" name="emailAddress" id="emailAddress" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="Your email address here (optional)"><\/input><br>'
+                + '<input class="' + formDefaultClass + '" name="phoneNumber" id="phoneNumber" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="Your phone number here (optional)"><\/input><br>'
                 + '</td>'
                 + '<td style="white-space:nowrap" valign="top" halign="center">'
-                + 'Drag the camera picture below around so that it shows where the problem is (optional) :'
+                + streetViewText1
                 + '<div style="height:150px" id="formID">'
                 + '</div>'
-                + 'Does the image above now show where the problem is?&nbsp'
+                + streetViewText2
                 + '<input type="checkbox" name="streetviewed" id="streetviewed" value="true" />'
                 + '</td>'
                 + '</tr>'
@@ -1457,16 +1518,17 @@ Ext.onReady(function() {
                 + '<tr>'
                 + '<td width="50%" valign="top" halign="center">'
                 + 'Choose the type of problem :<br>'
-                + '<select class="miniFormActive" name="problemType" id="problemType">' + formEntries + '</select>'
+                + '<select class="' + formActiveClass + '" name="problemType" id="problemType">' + formEntries + '</select>'
                 + '<BR><BR>'
-                + '<textarea class="miniFormDefault" name="problemDetails" id="problemDetails" rows="5" cols="34" onmousedown="if(this.className==\'miniFormDefault\'){this.value=\'\';this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.value=\'\';this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'">Please describe the problem here<\/textarea><br>'
-                + '<input class="miniFormDefault" name="problemLocation" id="problemLocation" size="35" maxlength="53" onmousedown="if(this.className==\'miniFormDefault\'){this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'" value="' + menuLocation + '"><\/input><br>'
-                + '<input class="miniFormDefault" name="emailAddress" id="emailAddress" size="35" maxlength="53" onmousedown="if(this.className==\'miniFormDefault\'){this.value=\'\';this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.value=\'\';this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'" value="Your email address here (optional)"><\/input><br>'
-                + '<input class="miniFormDefault" name="phoneNumber" id="phoneNumber" size="35" maxlength="53" onmousedown="if(this.className==\'miniFormDefault\'){this.value=\'\';this.focus();this.className=\'miniFormActive\'}" onfocus="if(this.className==\'miniFormDefault\'){this.value=\'\';this.className=\'miniFormActive\'}" onmouseover="this.style.cursor=\'text\'" value="Your phone number here (optional)"><\/input><br>'
+                + '<textarea class="' + formDefaultClass + '" name="problemDetails" id="problemDetails" rows="5" cols="' + textAreaSize + '" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'">Please describe the problem here<\/textarea><br>'
+                + '<input class="' + formDefaultClass + '" name="problemLocation" id="problemLocation" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="' + menuLocation + '"><\/input><br>'
+                + '<input class="' + formDefaultClass + '" name="name" id="name" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="Your name here (optional)"><\/input><br>'
+                + '<input class="' + formDefaultClass + '" name="emailAddress" id="emailAddress" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="Your email address here (optional)"><\/input><br>'
+                + '<input class="' + formDefaultClass + '" name="phoneNumber" id="phoneNumber" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="Your phone number here (optional)"><\/input><br>'
                 + '</td>'
                 + '</tr>'
                 + '<tr>'
-                + '<td colspan="2" onClick="reportProblem(ward=\'' + ward + '\',document.getElementById(\'problemType\').value,document.getElementById(\'problemDetails\').value,document.getElementById(\'problemLocation\').value,document.getElementById(\'emailAddress\').value,document.getElementById(\'phoneNumber\').value)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report the problem</td>'
+                + '<td colspan="2" onClick="reportProblem(ward=\'' + ward + '\',document.getElementById(\'problemType\').value,document.getElementById(\'problemDetails\').value,document.getElementById(\'problemLocation\').value,document.getElementById(\'name\').value,document.getElementById(\'emailAddress\').value,document.getElementById(\'phoneNumber\').value)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report the problem</td>'
                 + '</tr>'
                 + '</table'
                 + '</form>';       
@@ -1489,12 +1551,13 @@ Ext.onReady(function() {
                    + '</tr>'
                    + '</table>'
                    + '</div></div>';
+                   
         currentBubble.setContent(bubbleMenu);
         currentBubble.open(map);
         var panoramaOptions = {
             position: streetviewLatLng,
-            addressControl: false,
-            linksControl: false,
+            addressControl :  false,
+            linksControl: useStreetviewLinks,
             enableFullScreen: true,
             features: { userPhotos: false },
             pov: {
@@ -1503,6 +1566,7 @@ Ext.onReady(function() {
                 zoom: 1
             }
         };
+        
         whenReady('formID', function(formID) {
             document.getElementById("formID").innerHTML = ".";
             streetView = new google.maps.StreetViewPanorama(document.getElementById("formID"), panoramaOptions);
@@ -1520,7 +1584,7 @@ Ext.onReady(function() {
         var confirmationText = "";
 
         confirmationText = "Thank you for raising a call with us regarding ";
-        confirmationText += reportItTypes[problemType].toLowerCase() + ", the call number for this problem is shown above. ";
+        confirmationText += reportItDescEmail[problemType] + ", the call number for this problem is shown above. ";
         confirmationText += "<BR><BR>Please use this call number when enquiring about the status of the problem.";
         confirmationText += "<BR><BR>If you have provided us with a telephone number or email address we will notify you when your problem has been resolved.";
         confirmationText += "<BR><BR>If you wish to enquire about the status of the problem then use the search box at the top of this page. You can also call us on " + callCenterNumber + ".";
@@ -1560,7 +1624,7 @@ Ext.onReady(function() {
         currentBubble.open(map);
     }
 
-    reportProblem = function(ward, problemType, problemDetails, problemLocation, emailAddress, phoneNumber, streetviewed) {
+    reportProblem = function(ward, problemType, problemDetails, problemLocation, name, emailAddress, phoneNumber, streetviewed) {
         Ext.MessageBox.wait('Please wait whilst the problem is being registered...');
         if (problemDetails == 'Please describe the problem here') {
             problemDetails = "";
@@ -1581,6 +1645,9 @@ Ext.onReady(function() {
             zoom = streetviewPOV.zoom;
         }
         var classificationCode="";
+        var descriptionEmail="";
+        var descriptionText="";
+        var descriptionVoice="";
         for (var currentCode = 0; currentCode < jsonData.classificationCodes.length; currentCode++) {
            if(codesType[currentCode].toLowerCase()==reportItTypes[problemType].toLowerCase()&&
               (codesIncident[currentCode].toLowerCase()==reportItIncidents[problemType].toLowerCase()||codesIncident[currentCode]=="*")&&
@@ -1620,6 +1687,10 @@ Ext.onReady(function() {
                       problemType: reportItTypes[problemType],
                       problemDetails: problemDetails,
                       problemLocation: problemLocation,
+                      descriptionEmail: reportItDescEmail[problemType],
+                      descriptionText: reportItDescText[problemType],
+                      descriptionVoice: reportItDescVoice[problemType],
+                      name: name,
                       emailAddress: emailAddress,
                       phoneNumber: phoneNumber,
                       streetviewed: streetviewed,
@@ -1635,10 +1706,20 @@ Ext.onReady(function() {
             method: 'POST',
             success: function(response) {
                 Ext.MessageBox.hide();
-                gotoConfirmationMenu(problemType, response.responseText.substring(response.responseText.length - 8));
+                try {
+                    reportItJson = Ext.util.JSON.decode(response.responseText);
+                }
+                catch (err) {
+                    Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error handling your problem. Please try again later.');
+                }
+                if(reportItJson.result=="success"){
+                   gotoConfirmationMenu(problemType, reportItJson.callNumber);
+                }
+                else{
+                Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error processing your problem. Please try again later.');
+                }   
             },
             failure: function(response) {
-            alert(response.responseText);
                 Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error reporting your problem. Please try again later.');
             }
         });
