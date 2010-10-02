@@ -58,8 +58,7 @@ Ext.onReady(function() {
     var reportItTypes = new Array();
     var reportItIncidents = new Array();
     var reportItDescEmail = new Array();
-    var reportItDescText = new Array();
-    var reportItDescVoice = new Array();
+    var reportItSLA = new Array();
     var totalNumOfWards = 0;
     var mouseMoveHandler;
     var leadBy;
@@ -119,7 +118,7 @@ Ext.onReady(function() {
     var localPrioritiesURL;
     var contactDetailsClicked = false;
     var contactContentsClicked = false;
-    var emailURL;
+    var messageURL;
     var outsideBoundariesMessage;
     var outsideBoundariesURL;
     var findAddressTailCheck;
@@ -130,11 +129,13 @@ Ext.onReady(function() {
     var streetviewAvailable = false;
     var streetviewLatLng;
     var miniScreen = false;
-    var showReportIT = false;
+    var showReportIt = false;
+    var showViewIt = false;
     var showExternalPages = false;
     var showContactScreen = false;
     var showHelp = false;
     var showInformation = false;
+    var showSLA = false;
     var showFeedback = false;
     var feedbackEmailAddress;
     var menuLocation;
@@ -144,7 +145,9 @@ Ext.onReady(function() {
     var sectorName;
     var sectorID;
     var callCenterNumber;
+    var myCouncilURL;
     var reportItURL;
+    var viewItURL;
     var version;
     var storePanel = false;
     var codesType = new Array();
@@ -153,14 +156,17 @@ Ext.onReady(function() {
     var codesClassificationCodes = new Array();
     var reportItJson;
     var bigForm=false;
+    var defaultStreetViewZoom=0;
+    var readyCount=0;
+    //var viewingCall=false;
 
     if (navigator.userAgent.indexOf("IE") > -1) {
         internetExplorer = true;
     }
     
-    if(Ext.isIE7){
-      document.body.scroll='auto';
-    }
+//    if(Ext.isIE7){
+//      document.body.scroll='auto';
+//    }
 
     if (document.cookie.length > 0) {
         cookie_start = document.cookie.indexOf("viewedHelp=true");
@@ -191,6 +197,7 @@ Ext.onReady(function() {
     };
     
     if(Ext.isIE){
+      defaultStreetViewZoom=1;
       var tempHeight=0;
       var tempWidth=0;
       if(document.documentElement && document.documentElement.clientHeight) {
@@ -209,8 +216,8 @@ Ext.onReady(function() {
           picWidth = 54;
           document.getElementById("info_panel_details").style.fontSize = "10px";
           miniScreen = true;
-      }else if(tempWidth>=1270){
-         bigForm=true;      
+      }else if(tempWidth>=1250){
+         bigForm=true; 
       }
     }
     else{
@@ -221,6 +228,7 @@ Ext.onReady(function() {
               picWidth = 54;
               document.getElementById("info_panel_details").style.fontSize = "10px";
               miniScreen = true;
+              defaultStreetViewZoom=1;
           }
           else if(window.innerWidth>=1270){
              bigForm=true;      
@@ -245,7 +253,7 @@ Ext.onReady(function() {
         document.getElementById("report_title").innerHTML = "Operational Map";
     }
     document.getElementById("searchBox").setAttribute('style', "font-style:italic;color:#989898");
-    document.getElementById("searchBox").value = "Enter a postcode or address";
+    document.getElementById("searchBox").value = "Enter a postcode, address or call number";
 
     var initialPosition = mapCenter;
 
@@ -323,24 +331,28 @@ Ext.onReady(function() {
                 version = jsonData.version;
                 switch (jsonData.environment) {
                     case "local":
-                        emailURL = jsonData.localEmailURL;
-                        break;
-                    case "test":
-                        emailURL = jsonData.testEmailURL;
-                        break;
-                    case "live":
-                        emailURL = jsonData.liveEmailURL;
-                        break;
-                }
-                switch (jsonData.environment) {
-                    case "local":
+                        myCouncilURL = jsonData.localMyCouncilURL;
+                        messageURL = jsonData.localMessageURL;
                         reportItURL = jsonData.localReportItURL;
+                        viewItURL = jsonData.localViewItURL;
+                        break;
+                    case "dev":
+                        myCouncilURL = jsonData.devMyCouncilURL;
+                        messageURL = jsonData.devMessageURL;
+                        reportItURL = jsonData.devReportItURL;
+                        viewItURL = jsonData.devViewItURL;
                         break;
                     case "test":
+                        myCouncilURL = jsonData.testMyCouncilURL;
+                        messageURL = jsonData.testMessageURL;
                         reportItURL = jsonData.testReportItURL;
+                        viewItURL = jsonData.testViewItURL;
                         break;
                     case "live":
+                        myCouncilURL = jsonData.liveMyCouncilURL;
+                        messageURL = jsonData.liveMessageURL;
                         reportItURL = jsonData.liveReportItURL;
+                        viewItURL = jsonData.liveViewItURL;
                         break;
                 }
                 leaderName = jsonData.leader.name;
@@ -356,8 +368,11 @@ Ext.onReady(function() {
                 if (jsonData.showOperationalInformation == "true") {
                     showOperationalInformation = true;
                 }
-                if (jsonData.showReportIT == "true") {
-                    showReportIT = true;
+                if (jsonData.showReportIt == "true") {
+                    showReportIt = true;
+                }
+                if (jsonData.showViewIt == "true") {
+                    showViewIt = true;
                 }
                 if (jsonData.showExternalPages == "true") {
                     showExternalPages = true;
@@ -370,8 +385,7 @@ Ext.onReady(function() {
                     reportItTypes[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].type;
                     reportItIncidents[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].incident;
                     reportItDescEmail[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].descriptionEmail;
-                    reportItDescText[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].descriptionText;
-                    reportItDescVoice[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].descriptionVoice;
+                    reportItSLA[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].sla;
                 }
                 for (var currentCode = 0; currentCode < jsonData.classificationCodes.length; currentCode++) {
                     codesType[currentCode] = jsonData.classificationCodes[currentCode].type;
@@ -508,9 +522,9 @@ Ext.onReady(function() {
                             clckTimeOut = null;
                         }
                         else {
-                            clckTimeOut = window.setTimeout(function() { singleClick(event) }, 500);
+                            clckTimeOut = window.setTimeout(function() {singleClick(event,false) }, 500);
                         }
-                    });
+                     });
                     if ((politicalView && wardPolitical[currentWard]) || (!politicalView && wardOperational[currentWard])) {
                         wards[currentWard].setMap(map);
                     }
@@ -549,10 +563,10 @@ Ext.onReady(function() {
                                  "</table>" +
                                  "</td>" +
                                  "</tr>";
-                        new MapKey(wardKeyDiv, map, partyTextColour[sortedParties[currentParty]], partyColours[sortedParties[currentParty]], parties[sortedParties[currentParty]], "Wards held by " + partyWardDescriptions[sortedParties[currentParty]] + " are in " + partyColours[sortedParties[currentParty]], sortedParties[currentParty], true, false, false, false, false, false, true, false);
+                        new MapKey(wardKeyDiv, map, partyTextColour[sortedParties[currentParty]], partyColours[sortedParties[currentParty]], parties[sortedParties[currentParty]], "Wards held by " + partyWardDescriptions[sortedParties[currentParty]] + " are in " + partyColours[sortedParties[currentParty]], sortedParties[currentParty], true, false, false, false, false, false, true, false, false);
                     }
                 }
-                new MapKey(wardKeyDiv, map, "white", "gray", "Jointly Held", "Wards held by more than one party are in grey", 0, true, false, false, false, false, false, true, false);
+                new MapKey(wardKeyDiv, map, "white", "gray", "Jointly Held", "Wards held by more than one party are in grey", 0, true, false, false, false, false, false, true, false, false);
                 firstLoad = false;
                 if (!inWard) {
                     defaultStats();
@@ -567,20 +581,20 @@ Ext.onReady(function() {
                         buttonLabel += " Sector";
                     }
                     buttonLabel += " are in " + sectorBackgroundColours[currentSector];
-                    new MapKey(sectorKeyDiv, map, sectorTextColours[currentSector], sectorBackgroundColours[currentSector], buttonText, buttonLabel, currentSector, true, false, false, false, false, false, false, false);
+                    new MapKey(sectorKeyDiv, map, sectorTextColours[currentSector], sectorBackgroundColours[currentSector], buttonText, buttonLabel, currentSector, true, false, false, false, false, false, false, false, false);
                 }
                 createMenu();
                 if (politicalView) {
-                    new MapKey(switchDiv, map, "black", "white", "Switch to operational view", "Click here to switch to operational view", 0, false, true, false, false, false, false, false, false);
+                    new MapKey(switchDiv, map, "black", "white", "Switch to operational view", "Click here to switch to operational view", 0, false, true, false, false, false, false, false, false, false);
                     map.controls[google.maps.ControlPosition.RIGHT].push(wardKeyDiv);
                 }
                 else {
-                    new MapKey(switchDiv, map, "black", "white", "Switch to political view", "Click here to switch to political view", 0, false, true, false, false, false, false, false, false);
+                    new MapKey(switchDiv, map, "black", "white", "Switch to political view", "Click here to switch to political view", 0, false, true, false, false, false, false, false, false, false);
                     map.controls[google.maps.ControlPosition.RIGHT].push(sectorKeyDiv);
                 }
                 map.controls[google.maps.ControlPosition.TOP_LEFT].push(switchDiv);
                 var versionDiv = document.createElement('DIV');
-                new MapKey(versionDiv, map, "black", "white", version, "This is the version of MyCouncil you are using", 0, false, false, false, false, false, false, false, true);
+                new MapKey(versionDiv, map, "black", "white", version, "This is the version of MyCouncil you are using", 0, false, false, false, false, false, false, false, true, false);
                 map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(versionDiv);
                 window.setTimeout(function() {
                     if (startupAnimation) {
@@ -588,7 +602,7 @@ Ext.onReady(function() {
                         map.controls[google.maps.ControlPosition.LEFT].removeAt(0);
                         createMenu();
                         highlightHelp = false;
-                        panelClick(true, false, false);
+                        panelClick(true, false, false, false);
                     }
                 }, 4000);
                 window.setTimeout(function() {
@@ -597,7 +611,7 @@ Ext.onReady(function() {
                         map.controls[google.maps.ControlPosition.LEFT].removeAt(0);
                         createMenu();
                         highlightHelp = false;
-                        panelClick(true, false, false);
+                        panelClick(true, false, false, false);
                         startupAnimation = false;
                         var expiryDate = new Date();
                         expiryDate.setDate(expiryDate.getDate() + 365);
@@ -737,9 +751,14 @@ Ext.onReady(function() {
 
     window.setTimeout(function() {
         if (startupSearch) {
-            findAddress(true);
+           if(isCallNumber(startupSearchText)){
+             getCallDetails(startupSearchText,false,false,true);
+           }
+           else{
+             findAddress(true);
+           }
         }
-    }, 1000);
+    }, 2000);
 
     function checkWards(point) {
         inWard = false;
@@ -941,7 +960,7 @@ Ext.onReady(function() {
         var switchDiv = document.createElement('DIV');
         if (politicalView) {
             document.getElementById("report_title").innerHTML = "Political Map";
-            new MapKey(switchDiv, map, "black", "white", "Switch to operational view", "Click here to switch to operational view", 0, false, true, false, false, false, false, true, false);
+            new MapKey(switchDiv, map, "black", "white", "Switch to operational view", "Click here to switch to operational view", 0, false, true, false, false, false, false, true, false, false);
             for (var currentWard = 0; currentWard < wards.length; currentWard++) {
                 wards[currentWard].setOptions({
                     fillColor: wardColour[currentWard]
@@ -957,7 +976,7 @@ Ext.onReady(function() {
         }
         else {
             document.getElementById("report_title").innerHTML = "Operational Map";
-            new MapKey(switchDiv, map, "black", "white", "Switch to political view", "Click here to switch to political view", 0, false, true, false, false, false, false, false, false);
+            new MapKey(switchDiv, map, "black", "white", "Switch to political view", "Click here to switch to political view", 0, false, true, false, false, false, false, false, false, false);
             for (var currentWard = 0; currentWard < wards.length; currentWard++) {
                 wards[currentWard].setOptions({
                     fillColor: sectorBackgroundColours[wardSector[currentWard]]
@@ -978,16 +997,16 @@ Ext.onReady(function() {
         }
     }
 
-    function panelClick(help, information, feedback) {
+    function panelClick(help, information, feedback, sla) {
         if (!panelAnimation) {
-            if (!showHelp && !showInformation && !showFeedback) {
+            if (!showHelp && !showSLA && !showInformation && !showFeedback) {
                 storePanel = true;
             }
             else {
                 storePanel = false;
             }
             panelAnimation = true;
-            if ((help && showHelp) || (information && showInformation) || (feedback && showFeedback)) {
+            if ((help && showHelp) || (sla && showSLA) || (information && showInformation) || (feedback && showFeedback)) {
                 showPanel = false;
             }
             else {
@@ -999,6 +1018,14 @@ Ext.onReady(function() {
                 }
                 else {
                     showHelp = true;
+                }
+            }
+            if (sla || showSLA) {
+                if (showSLA) {
+                    showSLA = false;
+                }
+                else {
+                    showSLA = true;
                 }
             }
             if (information || showInformation) {
@@ -1028,10 +1055,18 @@ Ext.onReady(function() {
                     }
                     if (miniScreen) {
                         if (internetExplorer && !Ext.isIE8) {
-                            panelDiv.setAttribute('className', "menuMiniContents");
+                            if(sla){
+                               panelDiv.setAttribute('className', "menuMiniSLAContents");
+                            }else{
+                               panelDiv.setAttribute('className', "menuMiniContents");
+                            }
                         }
                         else {
-                            panelDiv.setAttribute('class', "menuMiniContents");
+                            if(sla){
+                               panelDiv.setAttribute('class', "menuMiniSLAContents");
+                            }else{
+                               panelDiv.setAttribute('class', "menuMiniContents");
+                            }
                         }
                     }
                     else {
@@ -1052,6 +1087,14 @@ Ext.onReady(function() {
                                             "3. Identify a location you are interested in. Drag the map, use the zoom buttons, type in an address, postcode or place to find the location.<BR><BR>" +
                                             "4. Click on the map at that location. A menu will display and for that location you will be able to find out more details about the councillors, send them a message, tell " +
                                             "us your priorites you would like resolved, read documents about what we are already doing for the area or send a message to your local coordinator.";
+                    }
+                    if (sla) {
+                        var tempHTML="<table><tr><th><B>Type</B>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th><th><B>Description</B></th><th><B><CENTER>Working Days</CENTER></B></th></tr>";
+                        for(var currentReportItItem = 0; currentReportItItem < reportItNames.length; currentReportItItem++) {
+                           tempHTML += "<tr><td>" + reportItTypes[currentReportItItem] + '</td><td>' + reportItIncidents[currentReportItItem] + '</td><td><CENTER>' + reportItSLA[currentReportItItem] + '</CENTER></td></tr>';
+                        }
+                        panelDiv.innerHTML = tempHTML;
+                        panelDiv.innerHTML += "</table";
                     }
                     if (information) {
                         panelDiv.innerHTML = "<BR>" +
@@ -1139,22 +1182,28 @@ Ext.onReady(function() {
         var buttonSelectedBackgroundColour = "red";
         var buttonSelectedTextColour = "black";
         if (!showHelp) {
-            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Help", "Click here to show help information", 0, false, false, true, true, false, false, false, false);
+            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Help", "Click here to show help information", 0, false, false, true, true, false, false, false, false, false);
         }
         else {
-            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Help", "Click here to hide help information", 0, false, false, true, true, false, false, false, false);
+            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Help", "Click here to hide help information", 0, false, false, true, true, false, false, false, false, false);
+        }
+        if (!showSLA) {
+            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Target Dates", "Click here to show information about our target dates for resolving issues", 0, false, false, true, false, true, false, false, false, true);
+        }
+        else {
+            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Target Dates", "Click here to hide information about target dates", 0, false, false, true, false, true, false, false, false, true);
         }
         if (!showInformation) {
-            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Open Source", "Click here to show information about Open Source", 0, false, false, true, false, true, false, false, false);
+            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Open Source", "Click here to show information about Open Source", 0, false, false, true, false, true, false, false, false, false);
         }
         else {
-            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Open Source", "Click here to hide information about Open Source", 0, false, false, true, false, true, false, false, false);
+            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Open Source", "Click here to hide information about Open Source", 0, false, false, true, false, true, false, false, false, false);
         }
         if (!showFeedback) {
-            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Send Feedback", "Click here to send us your feedback", 0, false, false, true, false, false, true, false, false);
+            new MapKey(menuDiv, map, buttonTextColour, buttonBackgroundColour, "Send Feedback", "Click here to send us your feedback", 0, false, false, true, false, false, true, false, false, false);
         }
         else {
-            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Send Feedback", "Click here to hide feedback form", 0, false, false, true, false, false, true, false, false);
+            new MapKey(menuDiv, map, buttonSelectedTextColour, buttonSelectedBackgroundColour, "Send Feedback", "Click here to hide feedback form", 0, false, false, true, false, false, true, false, false, false);
         }
         map.controls[google.maps.ControlPosition.LEFT].push(menuDiv);
     }
@@ -1169,20 +1218,30 @@ Ext.onReady(function() {
         }, 500);
     }
 
-    function singleClick(point) {
+    function singleClick(point,returnedFromViewCall) {
         clickSearch = true;
         window.clearTimeout(clckTimeOut);
         clckTimeOut = null;
         clearBubble();
-        if (!bubbleActive) {
+        if (!bubbleActive&&!returnedFromViewCall) {
             checkWards(point.latLng);
         }
         currentPoint = point;
+        if(returnedFromViewCall){
+          justClosedBubble = false;
+        }
         if (justClosedBubble)
         { justClosedBubble = false; }
         else {
             bubbleActive = true;
-            var nearestStreetView = new google.maps.StreetViewService().getPanoramaByLocation(point.latLng, 50, checkStreetViewLocation);
+            var tempLatLng;
+            if(returnedFromViewCall){
+               tempLatLng=point;
+            }
+            else{
+               tempLatLng=point.latLng;
+            }
+            var nearestStreetView = new google.maps.StreetViewService().getPanoramaByLocation(tempLatLng, 50, checkStreetViewLocation);
         }
     }
 
@@ -1260,13 +1319,19 @@ Ext.onReady(function() {
 
     function createBubble(point, location) {
         if (clickSearch) {
+            if(point.latLng){
             streetviewLatLng = point.latLng;
+            }
+            else{
+            streetviewLatLng = point;
+            }
         }
         if (clickSearch || (!clickSearch && (menuLocation.substr(3, 2)).toLowerCase() == "nn")) {
             menuLocation = "near " + location.substring(0, location.indexOf(","));
         }
         gotoMainMenu(location, false, null, false)
         currentLocation = location;
+        
         if (point.latLng) {
             currentBubble = new google.maps.InfoWindow({
                 content: bubbleMenu,
@@ -1283,7 +1348,9 @@ Ext.onReady(function() {
         currentBubbleListener = google.maps.event.addListener(currentBubble, "closeclick", function() {
             clearBubble();
             justClosedBubble = false;
-        });
+            window.clearTimeout(clckTimeOut);
+            clckTimeOut = null;
+         });
     }
 
     gotoMainMenu = function setBubbleContents(location, internal, internalLocationDescription, setBubbleContents) {
@@ -1312,10 +1379,17 @@ Ext.onReady(function() {
                    + '</td>'
                    + '</tr>';
 
-        if (showReportIT) {
+        if (showReportIt) {
             bubbleMenu += '<tr>'
                      + '<td width="5%" style="background: black"></td>'
                      + '<td onClick="gotoProblemMenu()" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report a problem</td>'
+                     + '<td width="5%" style="background: black"></td>'
+                     + '</tr>';
+        }
+        if (showViewIt) {
+            bubbleMenu += '<tr>'
+                     + '<td width="5%" style="background: black"></td>'
+                     + '<td onClick="gotoViewMenu()" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">View a problem</td>'
                      + '<td width="5%" style="background: black"></td>'
                      + '</tr>';
         }
@@ -1443,6 +1517,63 @@ Ext.onReady(function() {
         currentBubble.setContent(bubbleMenu);
 
     }
+    
+    gotoViewMenu = function() {
+
+        resetSearchBox();
+        var ward = displayWard;
+
+        if (displaySubWard != -1) {
+            ward = displaySubWard;
+        }
+        
+        var defaultClassName = 'formDefault';
+        var activeClassName = 'formActive';
+
+//        if (miniScreen) {
+//            defaultClassName = 'miniFormDefault';
+//            activeClassName = 'miniFormActive';
+//        }
+
+        var bubbleMenu = '<BR><div class="header"><div id="bubbleBack">'
+                       + '<table width="350px" border="0" cellpadding="0" cellspacing="2" onmouseover="document.getElementById(\'callReference\').focus()">'
+                       + '<tr>'
+                       + '<td colspan="3" class="sidePanelSubTitle">'
+                       + 'View a problem<BR>'
+                       + '<DIV class="bubbleMiniText">Please enter a six digit call number';
+
+        bubbleMenu += '</DIV>'
+                   + '</td>'
+                   + '</tr>'
+                   + '<tr>'
+                   + '<td width="5%" style="background: black"></td>'
+                   + '<td style="padding:5px 5px 5px 5px"><input id="callReference" class="' + defaultClassName + '" onmousedown="if(this.className==\'' + defaultClassName + '\'){this.value=\'\';this.focus();this.className=\'' + activeClassName + '\'}" onfocus="if(this.className==\'' + defaultClassName + '\'){this.value=\'\';this.className=\'' + activeClassName + '\'}" onmouseover="this.style.cursor=\'text\'" type="textbox" value="" size="6"></td>'
+                   + '<td width="5%" style="background: black"></td>'
+                   + '</tr>';
+
+        bubbleMenu +=
+                   '<tr>'
+                   + '<td width="5%" style="background: black"></td>'
+                   + '<td onClick="getCallDetails(document.getElementById(\'callReference\').value,true,false,false)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">View the problem</td>'
+                   + '<td width="5%" style="background: black"></td>'
+                   + '</tr>';
+
+        bubbleMenu += '<tr>'
+                   + '<td width="5%" style="background: black"></td>'
+                   + '<td onClick="gotoMainMenu(\'' + currentLocation + '\',false,null,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Main Menu</td>'
+                   + '<td width="5%" style="background: black"></td>'
+                   + '</tr>'
+                   + '<tr>'
+                   + '<td width="5%" style="background: black"></td>'
+                   + '<td id="clearMap" style="text-align: centre" cstyle="background: black">&nbsp</td>'
+                   + '<td width="5%" style="background: black"></td>'
+                   + '</tr>'
+                   + '</table>'
+                   + '</div></div>';
+
+        currentBubble.setContent(bubbleMenu);
+
+    }
 
     gotoProblemMenu = function() {
 
@@ -1494,6 +1625,7 @@ Ext.onReady(function() {
                 + '<BR>'
                 + '<textarea class="' + formDefaultClass + '" name="problemDetails" id="problemDetails" rows="4" cols="' + textAreaSize + '" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'">Please describe the problem here<\/textarea><br>'
                 + '<input class="' + formDefaultClass + '" name="problemLocation" id="problemLocation" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="' + menuLocation + '"><\/input><br>'
+                + '<input type="hidden" name="problemStreet" id="problemStreet" size="' + inputSize + '" maxlength="53" value="' + menuLocation + '"><\/input>'
                 + '<input class="' + formDefaultClass + '" name="name" id="name" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="Your name here (optional)"><\/input><br>'
                 + '<input class="' + formDefaultClass + '" name="emailAddress" id="emailAddress" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="Your email address here (optional)"><\/input><br>'
                 + '<input class="' + formDefaultClass + '" name="phoneNumber" id="phoneNumber" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="Your phone number here (optional)"><\/input><br>'
@@ -1507,7 +1639,7 @@ Ext.onReady(function() {
                 + '</td>'
                 + '</tr>'
                 + '<tr>'
-                + '<td colspan="2" onClick="reportProblem(ward=\'' + ward + '\',document.getElementById(\'problemType\').value,document.getElementById(\'problemDetails\').value,document.getElementById(\'problemLocation\').value,document.getElementById(\'emailAddress\').value,document.getElementById(\'phoneNumber\').value,document.getElementById(\'streetviewed\').checked)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report the problem</td>'
+                + '<td colspan="2" onClick="reportProblem(ward=\'' + ward + '\',document.getElementById(\'problemType\').value,document.getElementById(\'problemDetails\').value,document.getElementById(\'problemLocation\').value,document.getElementById(\'problemStreet\').value,document.getElementById(\'name\').value,document.getElementById(\'emailAddress\').value,document.getElementById(\'phoneNumber\').value,document.getElementById(\'streetviewed\').checked)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report the problem</td>'
                 + '</tr>'
                 + '</table'
                 + '</form>';
@@ -1522,13 +1654,14 @@ Ext.onReady(function() {
                 + '<BR><BR>'
                 + '<textarea class="' + formDefaultClass + '" name="problemDetails" id="problemDetails" rows="5" cols="' + textAreaSize + '" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'">Please describe the problem here<\/textarea><br>'
                 + '<input class="' + formDefaultClass + '" name="problemLocation" id="problemLocation" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="' + menuLocation + '"><\/input><br>'
+                + '<input type="hidden" name="problemStreet" id="problemStreet" size="' + inputSize + '" maxlength="53" value="' + menuLocation + '"><\/input>'
                 + '<input class="' + formDefaultClass + '" name="name" id="name" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="Your name here (optional)"><\/input><br>'
                 + '<input class="' + formDefaultClass + '" name="emailAddress" id="emailAddress" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="Your email address here (optional)"><\/input><br>'
                 + '<input class="' + formDefaultClass + '" name="phoneNumber" id="phoneNumber" size="' + inputSize + '" maxlength="53" onmousedown="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.focus();this.className=\'' + formActiveClass + '\'}" onfocus="if(this.className==\'' + formDefaultClass + '\'){this.value=\'\';this.className=\'' + formActiveClass + '\'}" onmouseover="this.style.cursor=\'text\'" value="Your phone number here (optional)"><\/input><br>'
                 + '</td>'
                 + '</tr>'
                 + '<tr>'
-                + '<td colspan="2" onClick="reportProblem(ward=\'' + ward + '\',document.getElementById(\'problemType\').value,document.getElementById(\'problemDetails\').value,document.getElementById(\'problemLocation\').value,document.getElementById(\'name\').value,document.getElementById(\'emailAddress\').value,document.getElementById(\'phoneNumber\').value)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report the problem</td>'
+                + '<td colspan="2" onClick="reportProblem(ward=\'' + ward + '\',document.getElementById(\'problemType\').value,document.getElementById(\'problemDetails\').value,document.getElementById(\'problemLocation\').value,document.getElementById(\'problemStreet\').value,document.getElementById(\'name\').value,document.getElementById(\'emailAddress\').value,document.getElementById(\'phoneNumber\').value)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report the problem</td>'
                 + '</tr>'
                 + '</table'
                 + '</form>';       
@@ -1563,7 +1696,7 @@ Ext.onReady(function() {
             pov: {
                 heading: 0,
                 pitch: 0,
-                zoom: 1
+                zoom: defaultStreetViewZoom
             }
         };
         
@@ -1573,7 +1706,7 @@ Ext.onReady(function() {
         });
     }
 
-    gotoConfirmationMenu = function(problemType, callNumber) {
+    gotoConfirmationMenu = function(problemType, callNumber, slaDate) {
 
         var ward = displayWard;
 
@@ -1582,12 +1715,22 @@ Ext.onReady(function() {
         }
 
         var confirmationText = "";
+        
+        if(slaDate=="not available"){
+          slaDate = 'This type of problem currently has no target resolution date';
+        }
+        else{
+          slaDate = 'Target resolution date is ' + slaDate;
+        }
 
         confirmationText = "Thank you for raising a call with us regarding ";
-        confirmationText += reportItDescEmail[problemType] + ", the call number for this problem is shown above. ";
-        confirmationText += "<BR><BR>Please use this call number when enquiring about the status of the problem.";
-        confirmationText += "<BR><BR>If you have provided us with a telephone number or email address we will notify you when your problem has been resolved.";
-        confirmationText += "<BR><BR>If you wish to enquire about the status of the problem then use the search box at the top of this page. You can also call us on " + callCenterNumber + ".";
+        confirmationText += reportItDescEmail[problemType];
+        confirmationText += ", please use the call number above when enquiring about the current state of the problem.";
+        //confirmationText += "<BR><BR>Your call should be resolved on or before " + slaDate + ".";
+        //confirmationText += "<BR><BR>If you have provided us with a telephone number or email address we will notify you when your problem has been resolved.";
+        //confirmationText += "<BR><BR>If you wish to enquire about the current state of the problem then use the search box at the top of this page. You can also call us on " + callCenterNumber + ".";
+        confirmationText += "<BR><BR>If you wish to enquire about the current state of the problem then telephone us on " + callCenterNumber + ".";
+
 
         var bubbleMenu = '<BR><div class="header"><div id="bubbleBack">'
                        + '<table border="0" cellpadding="0" cellspacing="2">'
@@ -1600,7 +1743,13 @@ Ext.onReady(function() {
                        + '</tr>'
                        + '<tr>'
                        + '<td width="5%" style="background: black"></td>'
-                       + '<td style="text-align: centre" class="reverseButton">Your call number is : ' + callNumber + '</td>'
+                       + '<td style="text-align: centre" class="reverseButton">Your call number is ' + callNumber + '</td>'
+                       + '<td width="5%" style="background: black"></td>'
+                       + '</tr>'
+                        + '<tr>'
+                       + '<td width="5%" style="background: black"></td>'
+                       //+ '<td style="text-align: centre" class="slaText">Target resolution date is ' + slaDate + '</td>'
+                       + '<td style="text-align: centre" class="slaText">' + slaDate + '</td>'
                        + '<td width="5%" style="background: black"></td>'
                        + '</tr>'
                        + '<tr>'
@@ -1624,10 +1773,13 @@ Ext.onReady(function() {
         currentBubble.open(map);
     }
 
-    reportProblem = function(ward, problemType, problemDetails, problemLocation, name, emailAddress, phoneNumber, streetviewed) {
+    reportProblem = function(ward, problemType, problemDetails, problemLocation, problemStreet, name, emailAddress, phoneNumber, streetviewed) {
         Ext.MessageBox.wait('Please wait whilst the problem is being registered...');
         if (problemDetails == 'Please describe the problem here') {
             problemDetails = "";
+        }
+        if (name == 'Your name here (optional)') {
+            name = "";
         }
         if (emailAddress == 'Your email address here (optional)') {
             emailAddress = "";
@@ -1646,8 +1798,6 @@ Ext.onReady(function() {
         }
         var classificationCode="";
         var descriptionEmail="";
-        var descriptionText="";
-        var descriptionVoice="";
         for (var currentCode = 0; currentCode < jsonData.classificationCodes.length; currentCode++) {
            if(codesType[currentCode].toLowerCase()==reportItTypes[problemType].toLowerCase()&&
               (codesIncident[currentCode].toLowerCase()==reportItIncidents[problemType].toLowerCase()||codesIncident[currentCode]=="*")&&
@@ -1656,53 +1806,49 @@ Ext.onReady(function() {
               classificationCode=codesClassificationCodes[currentCode];
               }
         }
-        //var encodedClassificationCode = encodeURIComponent(classificationCode);
-        //var encodedProblemType = encodeURIComponent(reportItTypes[problemType]);
-        //var encodedProblemDetails = encodeURIComponent(problemDetails);
-        //var encodedProblemLocation = encodeURIComponent(problemLocation);
-        //var encodedEmailAddress = encodeURIComponent(emailAddress);
-        //var encodedPhoneNumber = encodeURIComponent(phoneNumber);
-        //var encodedStreetviewed = encodeURIComponent(streetviewed);
         var tempLat;
         var tempLng;
         if(clickSearch){
-          tempLat=currentPoint.latLng.lat();
-          tempLng=currentPoint.latLng.lng();
+          if(currentPoint.latLng){
+            tempLat=currentPoint.latLng.lat();
+            tempLng=currentPoint.latLng.lng();
+          }else{
+            tempLat=currentPoint.lat();
+            tempLng=currentPoint.lng();
+          }
         }
         else{
           tempLat=currentPoint.lat();
           tempLng=currentPoint.lng();
         }
-        //alert(currentPoint.lat());
-        //var encodedLat = encodeURIComponent(currentPoint.latLng.lat());
-        //var encodedLng = encodeURIComponent(currentPoint.latLng.lng());
+        if(streetviewed){
+           tempLat=streetView.getPosition().lat();
+           tempLng=streetView.getPosition().lng();
+        }
         var encodedHeading = encodeURIComponent(heading);
         var encodedPitch = encodeURIComponent(pitch);
         var encodedZoom = encodeURIComponent(zoom);
-        //var encodedWard = encodeURIComponent(wardNames[ward]);
-        //var encodedSector = encodeURIComponent(sectorName);
         Ext.Ajax.request({
             url: reportItURL,
             params: { classificationCode: classificationCode, 
-                      problemType: reportItTypes[problemType],
+                      problemType: reportItNames[problemType],
                       problemDetails: problemDetails,
+                      problemStreet: problemStreet,
                       problemLocation: problemLocation,
                       descriptionEmail: reportItDescEmail[problemType],
-                      descriptionText: reportItDescText[problemType],
-                      descriptionVoice: reportItDescVoice[problemType],
                       name: name,
                       emailAddress: emailAddress,
                       phoneNumber: phoneNumber,
-                      streetviewed: streetviewed,
                       lat: tempLat,
                       lng: tempLng,
                       heading: encodedHeading,
                       pitch: encodedPitch,
                       zoom: encodedZoom,
                       ward: wardNames[ward],
-                      sector: sectorName
+                      sector: sectorName,
+                      myCouncilURL: myCouncilURL
             },
-            timeout: 9000,
+            timeout: 30000,
             method: 'POST',
             success: function(response) {
                 Ext.MessageBox.hide();
@@ -1713,10 +1859,10 @@ Ext.onReady(function() {
                     Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error handling your problem. Please try again later.');
                 }
                 if(reportItJson.result=="success"){
-                   gotoConfirmationMenu(problemType, reportItJson.callNumber);
+                   gotoConfirmationMenu(problemType, reportItJson.callNumber, reportItJson.slaDate);
                 }
                 else{
-                Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error processing your problem. Please try again later.');
+                   Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error processing your problem. Please try again later.');
                 }   
             },
             failure: function(response) {
@@ -1726,6 +1872,9 @@ Ext.onReady(function() {
     }
 
     formClick = function(contact, contactDetails, messageDetails, ward, selection, councillor) {
+        if (contactDetails == "Enter your contact details here" || contactDetails == "Enter your email address here" ){
+        contactDetails="";
+        }
         if (messageDetails != 'Enter your message here' && messageDetails != '') {
             var emailAddress;
             var messageType;
@@ -1754,7 +1903,7 @@ Ext.onReady(function() {
             var encodedEmailTo = encodeURIComponent(emailAddress);
             var encodedSector = encodeURIComponent(sectorNames[wardSector[ward]]);
             Ext.Ajax.request({
-                url: emailURL + 'contact=' + encodedContactDetails + '&message=' + encodedMessageDetails + '&emailTo=' + encodedEmailTo + '&messageType=' + messageType + '&sector=' + encodedSector,
+                url: messageURL + 'contact=' + encodedContactDetails + '&message=' + encodedMessageDetails + '&emailTo=' + encodedEmailTo + '&messageType=' + messageType + '&sector=' + encodedSector,
                 timeout: 30000,
                 method: 'POST',
                 success: function(response) {
@@ -1766,7 +1915,7 @@ Ext.onReady(function() {
                         }
                         else {
                             Ext.MessageBox.alert('<CENTER>Hello</CENTER>', sendEmailResponse.message);
-                            panelClick(false, false, true);
+                            panelClick(false, false, true, false);
                         }
                     }
                     catch (err) {
@@ -2082,9 +2231,17 @@ Ext.onReady(function() {
     var enterKey = new Ext.KeyMap(document, {
         key: [13],
         fn: function(e) {
-            if (searchBoxActive) {
-                findAddress(false);
-            }
+        if (searchBoxActive) {
+           if(isCallNumber(document.getElementById("searchBox").value)){
+               getCallDetails(document.getElementById("searchBox").value,false,true,false);
+           }
+           else{
+               findAddress(false);
+           }    
+        }
+        else{
+        }
+        getCallDetails(document.getElementById("callReference").value,true,false,false);
         }
     });
 
@@ -2095,15 +2252,16 @@ Ext.onReady(function() {
         });
     }
 
-    google.maps.event.addListener(map, "click", function(event) {
-        if (clckTimeOut) {
-            window.clearTimeout(clckTimeOut);
-            clckTimeOut = null;
-        }
-        else {
-            clckTimeOut = window.setTimeout(function() { singleClick(event) }, 500);
-        }
-    });
+//    google.maps.event.addListener(map, "click", function(event) {
+//    alert("MapClick!");
+//        if (clckTimeOut) {
+//            window.clearTimeout(clckTimeOut);
+//            clckTimeOut = null;
+//        }
+//        else {
+//            clckTimeOut = window.setTimeout(function() { if(viewingCall){viewingCall=false}else{singleClick(event,false)} }, 500);
+//        }
+//    });
 
     var searchBox = Ext.get(document.getElementById("searchBox"));
     searchBox.on('mousedown', function() {
@@ -2117,9 +2275,374 @@ Ext.onReady(function() {
     var findButton = Ext.get(document.getElementById("findIt"));
     findButton.on('click', function() {
         if (searchBoxActive) {
-            findAddress(false);
+           if(isCallNumber(document.getElementById("searchBox").value)){
+               getCallDetails(document.getElementById("searchBox").value,false,true,false);
+           }
+           else{
+               findAddress(false);
+           }    
         }
     });
+    
+    function isCallNumber(searchString) {
+       var isCallNumber=false;
+       if(searchString.length==6)
+         {
+         var numbers = '0123456789';
+         var isNumeric=true;
+         for(currentNumber=0; currentNumber<searchString.length; currentNumber++) {
+             if(numbers.indexOf(searchString.charAt(currentNumber),0) == -1){
+                isNumeric = false;
+             }
+         }
+         if(isNumeric){
+             isCallNumber=true;
+         }
+         }
+         return isCallNumber;
+     }
+     
+    getCallDetails = function(callReference,fromMenu,fromSearch,fromURL){
+    
+        var viewItJson;
+        var viewItForm;
+        var bubbleMenu;
+        Ext.Ajax.request({
+            url: viewItURL,
+            params: { caseRef: callReference
+            },
+            timeout: 30000,
+            method: 'POST',
+            success: function(response) {
+                Ext.MessageBox.hide();
+                try {
+                    viewItJson = Ext.util.JSON.decode(response.responseText);
+                }
+                catch (err) {
+                    Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error handling the problem. Please try again later.');
+                }
+                if(viewItJson.result=="success"){
+                   if(viewItJson.status=="not found"){
+                      if(fromURL){
+                         Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but this is not a valid call number.');
+                      }else{
+                         Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but this is not a valid call number. Please try again.');
+                      }
+                      return;                      
+                   }
+                   else{
+                       resetSearchBox();
+//                        if(fromSearch||fromURL){
+//                         if(currentBubble){
+//                           alert("CP1");
+//                           currentBubble.setContent("");
+//                           currentBubble.close();
+//                         }
+                       var tempStatus="";
+                       var showSla=true;
+                       if(viewItJson.status=="open"){
+                          tempStatus="Open";
+                       }else{
+                          tempStatus="Closed";
+                          showSla=false;
+                       }
+                       if(viewItJson.txtheading){
+                          viewItForm = '<BR><table border="0" width="100%" cellpadding="10">'
+                                     + '<tr>'
+                                                                          + '<td width="1%" valign="top" halign="center">'
+                                     + '&nbsp Status'
+                                     + '</td>'
+                                     + '<td width="1%" valign="top" halign="center">'
+                                     + ':'
+                                     + '</td>'
+                                     + '<td width="48%" valign="top" halign="center"><span style="background-color:' + viewItJson.slaColour + '">'
+                                     + tempStatus
+                                     + '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span></td>'
+                                     + '<td width="60%" style="white-space:nowrap;color:black" valign="top" halign="center" rowspan="5">'
+                                     + '<div style="height:150px" id="viewID">'
+                                     + '</div>';
+                                     
+                          if(!miniScreen){
+                            viewItForm += 'Above is an image of the problem area &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'
+                                       + '&nbsp';
+                          }
+                                     
+                          viewItForm += '</td>'
+                                     + '</tr>'
+                                     + '<tr>'
+                                     + '<td style="white-space: nowrap;" width="1%" valign="top" halign="center">'
+                                     + '&nbsp Reported on'
+                                     + '</td>'
+                                     + '<td width="1%" valign="top" halign="center">'
+                                     + ':'
+                                     + '</td>'
+                                     + '<td width="48%" valign="top" halign="center">'
+                                     + viewItJson.created
+                                     + '</td>'
+                                     + '</tr>';
+                                     
+                           if(showSla&&viewItJson.dueDate){
+                             viewItForm += '<tr>'
+                                        + '<td style="white-space: nowrap;" width="1%" valign="top" halign="center">'
+                                        + '&nbsp Target Date'
+                                        + '</td>'
+                                        + '<td width="1%" valign="top" halign="center">'
+                                        + ':'
+                                        + '</td>'
+                                        + '<td width="48%" valign="top" halign="center">'
+                                        + viewItJson.dueDate
+                                        + '</td>'
+                                        + '</tr>';         
+                           }
+                           
+                           if(viewItJson.closed){
+                             viewItForm += '<tr>'
+                                        + '<td style="white-space: nowrap" width="1%" valign="top" halign="center">'
+                                        + '&nbsp Closed Date' 
+                                        + '</td>'
+                                        + '<td width="1%" valign="top" halign="center">'
+                                        + ':'
+                                        + '</td>'
+                                        + '<td width="48%" valign="top" halign="center">'
+                                        + viewItJson.closed
+                                        + '</td>'
+                                        + '</tr>';         
+                           }
+                           
+                           if(viewItJson.cbotype){
+                             viewItForm += '<tr>'
+                                        + '<td width="1%" valign="top" halign="center">'
+                                        + '&nbsp Problem'
+                                        + '</td>'
+                                        + '<td width="1%" valign="top" halign="center">'
+                                        + ':'
+                                        + '</td>'
+                                        + '<td style="white-space: nowrap" width="48%" valign="top" halign="center">'
+                                        + viewItJson.cbotype
+                                        + '</td>'
+                                        + '</tr>';         
+                           }
+                           if(viewItJson.txtstreet){
+                             viewItForm += '<tr>'
+                                        + '<td width="1%" valign="top" halign="center">'
+                                        + '&nbsp Location'
+                                        + '</td>'
+                                        + '<td width="1%" valign="top" halign="center">'
+                                        + ':'
+                                        + '</td>'
+                                        + '<td width="48%" valign="top" halign="center">'
+                                        + viewItJson.txtstreet
+                                        + '<BR><BR>'
+                                        + '</td>'
+                                        + '</tr>';         
+                           }
+                                     
+                           if(miniScreen){
+                             viewItForm += '<TR><td colspan="4">&nbsp</td></TR>';
+                           }
+                           viewItForm += '<tr>'
+                                      + '<td colspan="4" onClick="returnToMainMenu()" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: center" class="button">Main Menu</td>'
+                                      + '</tr>'
+                                      + '</table';
+                           bubbleMenu = '<BR><div class="header"><div id="bubbleBack">'
+                                      + '<table border="0" cellpadding="0" cellspacing="2">'
+                                      + '<tr>'
+                                      + '<td colspan="3" class="sidePanelSubTitle">';
+                           if(miniScreen){ 
+                              bubbleMenu += '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Call number ' + callReference + '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<BR>';
+                           }else{
+                              bubbleMenu += '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Call number ' + callReference + '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<BR>';
+                           }
+                        }else{
+                           viewItForm = '<BR><table border="0" width="100%" cellpadding="10">'
+                                     + '<tr>'
+                                     + '<td width="1%" valign="top" halign="center">'
+                                     + 'Status'
+                                     + '</td>'
+                                     + '<td width="1%" valign="top" halign="center">'
+                                     + ':'
+                                     + '</td>'
+                                     + '<td width="48%" valign="top" halign="center"><span style="background-color:' + viewItJson.slaColour + '">'
+                                     + tempStatus
+                                     + '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span></td>'
+                                     + '</tr>'
+                                     + '<tr>'
+                                     + '<td style="white-space: nowrap;" width="1%" valign="top" halign="center">'
+                                     + 'Reported on'
+                                     + '</td>'
+                                     + '<td width="1%" valign="top" halign="center">'
+                                     + ':'
+                                     + '</td>'
+                                     + '<td width="48%" valign="top" halign="center">'
+                                     + viewItJson.created
+                                     + '</td>'
+                                     + '</tr>';
+                                     
+                           if(showSla&&viewItJson.dueDate){
+                             viewItForm += '<tr>'
+                                        + '<td style="white-space: nowrap;" width="1%" valign="top" halign="center">'
+                                        + 'Target Date'
+                                        + '</td>'
+                                        + '<td width="1%" valign="top" halign="center">'
+                                        + ':'
+                                        + '</td>'
+                                        + '<td width="48%" valign="top" halign="center">'
+                                        + viewItJson.dueDate
+                                        + '</td>'
+                                        + '</tr>';         
+                           }
+                           
+                           if(viewItJson.closed){
+                             viewItForm += '<tr>'
+                                        + '<td style="white-space: nowrap;" width="1%" valign="top" halign="center">'
+                                        + 'Closed Date' 
+                                        + '</td>'
+                                        + '<td width="1%" valign="top" halign="center">'
+                                        + ':'
+                                        + '</td>'
+                                        + '<td width="48%" valign="top" halign="center">'
+                                        + viewItJson.closed
+                                        + '</td>'
+                                        + '</tr>';         
+                           }
+                           
+                           if(viewItJson.cbotype){
+                             viewItForm += '<tr>'
+                                        + '<td width="1%" valign="top" halign="center">'
+                                        + 'Problem'
+                                        + '</td>'
+                                        + '<td width="1%" valign="top" halign="center">'
+                                        + ':'
+                                        + '</td>'
+                                        + '<td width="48%" valign="top" halign="center">'
+                                        + viewItJson.cbotype
+                                        + '</td>'
+                                        + '</tr>';         
+                           }
+                           if(viewItJson.txtstreet){
+                             viewItForm += '<tr>'
+                                        + '<td width="1%" valign="top" halign="center">'
+                                        + 'Location'
+                                        + '</td>'
+                                        + '<td width="1%" valign="top" halign="center">'
+                                        + ':'
+                                        + '</td>'
+                                        + '<td width="48%" valign="top" halign="center">'
+                                        + viewItJson.txtstreet
+                                        + '<BR><BR>'
+                                        + '</td>'
+                                        + '</tr>';         
+                           }
+                                     
+                           viewItForm += '<tr>'
+                                      + '<td colspan="4" onClick="returnToMainMenu()" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: center" class="button">Main Menu</td>'
+                                      + '</tr>'
+                                      + '</table';
+                           bubbleMenu = '<BR><div class="header"><div id="bubbleBack">'
+                                      + '<table border="0" cellpadding="0" cellspacing="2">'
+                                      + '<tr>'
+                                      + '<td colspan="3" class="sidePanelSubTitle">';
+                                      
+                           if(miniScreen){
+                              bubbleMenu += ' Call number ' + callReference + '<BR>';
+                           }else{  
+                              bubbleMenu += '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Call number ' + callReference + '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<BR>';
+                           }
+                       }
+                                      
+                       if(viewItJson.txtward){
+                          bubbleMenu += '<DIV class="bubbleMiniText">' + viewItJson.txtward + ' Ward'
+                                      + '</DIV>';
+                       }             
+                                   
+                       bubbleMenu += '</td>'
+                                   + '</tr>'
+                                   + '<tr>'
+                                   + '<td width="5%" style="background: black"></td>'
+                                   + '<td><DIV class="bubbleMidiText">' + viewItForm + '</DIV></td>'
+                                   + '<td width="5%" style="background: black"></td>'
+                                   + '</tr>'
+                                   + '</table>'
+                                   + '</div></div>';
+                        if(viewItJson.txtlongtitude){
+                           currentPoint=new google.maps.LatLng(viewItJson.txtlatitude,viewItJson.txtlongtitude);
+                       }else{
+                          currentPoint=mapCenter;
+                       }
+                        map.setZoom(16);
+                       checkWards(currentPoint);
+                       if(fromSearch||fromURL){
+                         if(currentBubble){
+                           currentBubble.close();
+                         }
+                         currentBubble = new google.maps.InfoWindow({
+                             content: bubbleMenu,
+                             position: currentPoint
+                         });
+                         currentBubble.open(map);
+                         currentBubbleListener = google.maps.event.addListener(currentBubble, "closeclick", function() {
+                            clearBubble();
+                            justClosedBubble = false;
+                            window.clearTimeout(clckTimeOut);
+                            clckTimeOut = null;
+                         });
+                         bubbleActive=true;
+                       }
+                       else{
+                          currentBubble.setPosition(currentPoint);
+                          currentBubble.setContent(bubbleMenu);
+                          currentBubble.open(map);
+                          }
+                       if(viewItJson.txtheading){
+                          var tempZoom=parseInt(viewItJson.txtzoom);
+                          if(miniScreen&&tempZoom<2){
+                             tempZoom=2;
+                          }
+                          var panoramaOptions = {
+                              position: currentPoint,
+                              navigationControl : false,
+                              addressControl :  false,
+                              linksControl: false,
+                              enableFullScreen: true,
+                              features: { userPhotos: false },
+                              pov: {
+                                 heading: parseInt(viewItJson.txtheading),
+                                 pitch: parseInt(viewItJson.txtpitch),
+                                 zoom: tempZoom
+                              }
+                          };
+                          if(fromURL){
+                             readyCount=1;
+                          }else{
+//                             readyCount=0;
+                          }
+                          //alert("fired");
+                          whenReady('viewID', function(viewID) {
+                             //alert("readyCount="+readyCount);
+ //                            if(readyCount>0){
+                                window.setTimeout(function() { 
+                                   document.getElementById("viewID").innerHTML = ".";
+                                   streetView = new google.maps.StreetViewPanorama(document.getElementById("viewID"), panoramaOptions);
+                                }, 500);
+ //                            }
+                             readyCount++;
+                          });
+                        }
+                     }
+                }
+                else{
+                   Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error retrieving the problem. Please try again later.');
+                }   
+            },
+            failure: function(response) {
+                Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error getting the problem. Please try again later.');
+            }
+        });
+    }
+    
+    returnToMainMenu = function(){
+        singleClick(currentPoint,true);
+     }
 
     var resetButton = Ext.get(document.getElementById("resetMap"));
     resetButton.on('click', function() {
@@ -2133,18 +2656,18 @@ Ext.onReady(function() {
         }
     });
 
-    var clearButton = Ext.get(document.getElementById("clearMap"));
-    clearButton.on('click', function() {
-        clearBubble();
-        var point = mapCenter;
-        map.setCenter(point);
-        map.setZoom(12);
-        resetSearchBox();
-        point = googleOutsideLatLng;
-        if (!showPanel && !panelAnimation) {
-            checkWards(point);
-        }
-    });
+//    var clearButton = Ext.get(document.getElementById("clearMap"));
+//    clearButton.on('click', function() {
+//        clearBubble();
+//        var point = mapCenter;
+//        map.setCenter(point);
+//        map.setZoom(12);
+//        resetSearchBox();
+//        point = googleOutsideLatLng;
+//        if (!showPanel && !panelAnimation) {
+//            checkWards(point);
+//        }
+//    });
 
     var previousMessageButton = Ext.get(document.getElementById("previousMessage"));
     previousMessageButton.on('click', function() {
@@ -2180,7 +2703,7 @@ Ext.onReady(function() {
 
     function resetSearchBox() {
         document.getElementById("searchBox").setAttribute('style', "font-style:italic;color:#989898");
-        document.getElementById("searchBox").value = "Enter a postcode or address";
+        document.getElementById("searchBox").value = "Enter a postcode, address or call number";
         document.getElementById("searchBox").blur();
         searchBoxActive = false;
     }
@@ -2194,7 +2717,8 @@ Ext.onReady(function() {
         var searchAddress = "";
         if (startup) {
             addressCheck = startupSearchText.toLowerCase();
-            searchAddress = startupSearchText
+            searchAddress = startupSearchText;
+            menuLocation = "at " + searchAddress;
         }
         else {
             addressCheck = document.getElementById("searchBox").value.toLowerCase();
@@ -2350,7 +2874,7 @@ Ext.onReady(function() {
         }
     }
 
-    function MapKey(keyDiv, map, text_colour, background_colour, text, title, selection, key, view, showPanel, help, information, feedback, political, version) {
+    function MapKey(keyDiv, map, text_colour, background_colour, text, title, selection, key, view, showPanel, help, information, feedback, political, version, sla) {
 
         keyDiv.style.padding = '5px';
 
@@ -2400,15 +2924,19 @@ Ext.onReady(function() {
             }
             //if (help && !startupAnimation && !showInformation && !showFeedback) {
             if (help && !startupAnimation) {
-                panelClick(true, false, false);
+                panelClick(true, false, false, false);
+            }
+            //if (sla && !startupAnimation && !showHelp && !showFeedback) {
+            if (sla && !startupAnimation) {
+                panelClick(false, false, false, true);
             }
             //if (information && !startupAnimation && !showHelp && !showFeedback) {
             if (information && !startupAnimation) {
-                panelClick(false, true, false);
+                panelClick(false, true, false, false);
             }
             //if (feedback && !startupAnimation && !showHelp && !showInformation) {
             if (feedback && !startupAnimation) {
-                panelClick(false, false, true);
+                panelClick(false, false, true, false);
             }
         });
     }

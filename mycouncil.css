@@ -45,7 +45,7 @@ color: black;
 .buttonJoint
 {
 font-size: 14px;
-background: grey;
+background: gray;
 padding:5px 5px 5px 5px;
 color: white;
 }
@@ -160,6 +160,12 @@ font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helv
 font-size: 12px;
 text-align: left;
 }
+.menuMiniSLAContents
+{
+font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
+font-size: 11px;
+text-align: left;
+}
 .messageBar
 {
 font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
@@ -201,8 +207,8 @@ Color: #FFFFFF;
 .shadowed 
 {
 float:right;
-background: url(Images/drop-shadow.png) no-repeat bottom right !important;
-background: url(Images/drop-shadow.gif) no-repeat bottom right;
+background: url(images/drop-shadow.png) no-repeat bottom right !important;
+background: url(images/drop-shadow.gif) no-repeat bottom right;
 margin: 10px 0 0 10px !important;
 margin: 10px 0 0 5px;
 text-align: center;  
@@ -215,4 +221,11 @@ border: 1px solid #999;
 margin: -6px 6px 6px -6px;
 padding: 4px;
 text-align: center;
+}
+.slaText
+{
+font-size: 11px;
+background: gray;
+padding:5px 5px 5px 5px;
+color: white;
 }
