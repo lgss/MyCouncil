@@ -23,15 +23,12 @@ public class ViewLaganCase extends HttpServlet
                      HttpServletResponse response) 
                     throws ServletException, IOException
       {
-	  //System.getProperties().put("http.proxyHost", "localhost");
-	  //System.getProperties().put("http.proxyPort", "8888");
       DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
       Date date = new Date();
 	  Calendar today = Calendar.getInstance();
 	  String version = "v0.001";
       String currentDate = dateFormat.format(date);
 	  String laganSystem = getServletContext().getInitParameter("laganSystem");
-	  String wsdd = getServletContext().getInitParameter("wsdd");
 	  String errorEmailTo = getServletContext().getInitParameter("errorEmailTo");
 	  String errorEmailFrom = getServletContext().getInitParameter("emailFrom");
 	  String smtpHost = getServletContext().getInitParameter("smtpHost");
@@ -42,7 +39,7 @@ public class ViewLaganCase extends HttpServlet
 	  boolean dueFound = false;
 
 	  //Authenticate to Lagan.
-	  EngineConfiguration config = new FileProvider(wsdd);
+	  EngineConfiguration config = new FileProvider(getServletContext().getRealPath("/WEB-INF/mycouncil.wsdd"));
 	  PWCallback pwCallback = new PWCallback();
 	  lagan.api.auth.FLAuthService authService = new lagan.api.auth.FLAuthServiceLocator(config);
 	  org.apache.axis.client.Stub authStub = null;

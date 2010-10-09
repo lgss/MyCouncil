@@ -29,13 +29,11 @@ public class CreateLaganCase extends HttpServlet
 	  String version = "v0.008";
       String currentDate = dateFormat.format(date);
 	  String laganSystem = getServletContext().getInitParameter("laganSystem");
-	  String wsdd = getServletContext().getInitParameter("wsdd");
 	  String errorEmailTo = getServletContext().getInitParameter("errorEmailTo");
 	  String emailFrom = getServletContext().getInitParameter("emailFrom");
 	  String smtpHost = getServletContext().getInitParameter("smtpHost");
       String textMessageFrom = getServletConfig().getInitParameter("textMessageFrom");
 	  String localDialCode = getServletConfig().getInitParameter("localDialCode");
-	  String confirmationEmail = getServletConfig().getInitParameter("confirmationEmail");
 	  String lat=request.getParameter("lat");
       String lng=request.getParameter("lng");
 	  String classificationCode = request.getParameter("classificationCode");
@@ -67,7 +65,7 @@ public class CreateLaganCase extends HttpServlet
 	  }
 
 	  //Authenticate to Lagan.
-	  EngineConfiguration config = new FileProvider(wsdd);
+	  EngineConfiguration config = new FileProvider(getServletContext().getRealPath("/WEB-INF/mycouncil.wsdd"));
 	  PWCallback pwCallback = new PWCallback();
 	  lagan.api.auth.FLAuthService authService = new lagan.api.auth.FLAuthServiceLocator(config);
 	  org.apache.axis.client.Stub authStub = null;
@@ -207,7 +205,7 @@ public class CreateLaganCase extends HttpServlet
 	  {
 		  if (emailAddress.length() > 0)
 		  {
-			  BufferedReader emailTemplate = new BufferedReader(new FileReader(confirmationEmail));
+			  BufferedReader emailTemplate = new BufferedReader(new FileReader(getServletContext().getRealPath("/email-templates/report-it-confirmation.txt")));
 			  String nextLine = "";
 			  StringBuffer emailTextBuffer = new StringBuffer();
 			  while ((nextLine = emailTemplate.readLine()) != null)
@@ -219,7 +217,7 @@ public class CreateLaganCase extends HttpServlet
 			  String amendedEmailTextString = emailTextString.replace("AAA", laganCaseReference);
 			  amendedEmailTextString = amendedEmailTextString.replace("BBB", slaDate);
 			  amendedEmailTextString = amendedEmailTextString.replace("CCC", descriptionEmail);
-			  amendedEmailTextString = amendedEmailTextString.replace("DDD", myCouncilURL + "search=");
+			  amendedEmailTextString = amendedEmailTextString.replace("DDD", myCouncilURL + "?search=");
 
 			  SendMail email = new SendMail();
 			  String[] strEmailTo = { emailAddress };

@@ -6,10 +6,6 @@
     <param-value>test</param-value>
   </context-param>
   <context-param>
-    <param-name>wsdd</param-name>
-    <param-value>C:\Program Files\Apache Software Foundation\Tomcat 6.0\webapps\mycouncil\WEB-INF\classes\uk\gov\selfserve\lagan.wsdd</param-value>
-  </context-param>
-  <context-param>
     <param-name>errorEmailTo</param-name>
     <param-value>kwhite@northampton.gov.uk</param-value>
   </context-param>
@@ -24,10 +20,6 @@
   <servlet>
     <servlet-name>CreateCall</servlet-name>
     <servlet-class>uk.gov.selfserve.CreateLaganCase</servlet-class>
-    <init-param>
-      <param-name>confirmationEmail</param-name>
-      <param-value>C:\Program Files\Apache Software Foundation\Tomcat 6.0\webapps\mycouncil\email-templates\report-it-confirmation.txt</param-value>
-    </init-param>
     <init-param>
       <param-name>textMessageFrom</param-name>
       <param-value>Northampton Borough Council</param-value>

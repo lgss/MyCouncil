@@ -118,7 +118,6 @@ Ext.onReady(function() {
     var localPrioritiesURL;
     var contactDetailsClicked = false;
     var contactContentsClicked = false;
-    var messageURL;
     var outsideBoundariesMessage;
     var outsideBoundariesURL;
     var findAddressTailCheck;
@@ -145,9 +144,6 @@ Ext.onReady(function() {
     var sectorName;
     var sectorID;
     var callCenterNumber;
-    var myCouncilURL;
-    var reportItURL;
-    var viewItURL;
     var version;
     var storePanel = false;
     var codesType = new Array();
@@ -158,6 +154,8 @@ Ext.onReady(function() {
     var bigForm=false;
     var defaultStreetViewZoom=0;
     var readyCount=0;
+    var debug=false;
+    var widescreen=false;
     //var viewingCall=false;
 
     if (navigator.userAgent.indexOf("IE") > -1) {
@@ -219,6 +217,9 @@ Ext.onReady(function() {
       }else if(tempWidth>=1250){
          bigForm=true; 
       }
+      if(tempWidth>=1250){
+         widescreen=true; 
+      }
     }
     else{
           var mapHeight = window.innerHeight - 105;
@@ -232,6 +233,9 @@ Ext.onReady(function() {
           }
           else if(window.innerWidth>=1270){
              bigForm=true;      
+          }
+          if(window.innerWidth>=1270){
+             widescreen=true;      
           }
     }
     
@@ -329,32 +333,6 @@ Ext.onReady(function() {
                 callCenterNumber = jsonData.callCenterNumber;
                 centerPoint = map.getCenter();
                 version = jsonData.version;
-                switch (jsonData.environment) {
-                    case "local":
-                        myCouncilURL = jsonData.localMyCouncilURL;
-                        messageURL = jsonData.localMessageURL;
-                        reportItURL = jsonData.localReportItURL;
-                        viewItURL = jsonData.localViewItURL;
-                        break;
-                    case "dev":
-                        myCouncilURL = jsonData.devMyCouncilURL;
-                        messageURL = jsonData.devMessageURL;
-                        reportItURL = jsonData.devReportItURL;
-                        viewItURL = jsonData.devViewItURL;
-                        break;
-                    case "test":
-                        myCouncilURL = jsonData.testMyCouncilURL;
-                        messageURL = jsonData.testMessageURL;
-                        reportItURL = jsonData.testReportItURL;
-                        viewItURL = jsonData.testViewItURL;
-                        break;
-                    case "live":
-                        myCouncilURL = jsonData.liveMyCouncilURL;
-                        messageURL = jsonData.liveMessageURL;
-                        reportItURL = jsonData.liveReportItURL;
-                        viewItURL = jsonData.liveViewItURL;
-                        break;
-                }
                 leaderName = jsonData.leader.name;
                 leaderImage = jsonData.leader.image;
                 mayorName = jsonData.mayor.name;
@@ -365,6 +343,9 @@ Ext.onReady(function() {
                 chiefExecImageWidth = jsonData.chiefExec.imageWidth;
                 localPrioritiesURL = jsonData.localPrioritiesURL;
                 councillor_main_url_base = jsonData.councillor_main_url_base;
+                if (jsonData.debug == "true") {
+                    debug = true;
+                }
                 if (jsonData.showOperationalInformation == "true") {
                     showOperationalInformation = true;
                 }
@@ -868,7 +849,7 @@ Ext.onReady(function() {
     }
 
     function defaultStats() {
-        if (displayWard != -1 || update) {
+        if ((displayWard != -1 || update)&& !startupSearch) {
             document.getElementById("info_panel_list").innerHTML = "";
             document.getElementById("info_panel_title").innerHTML = "Led by " + ledByDescriptions[leadBy];
             document.getElementById("info_panel_details").innerHTML = "";
@@ -1828,8 +1809,17 @@ Ext.onReady(function() {
         var encodedHeading = encodeURIComponent(heading);
         var encodedPitch = encodeURIComponent(pitch);
         var encodedZoom = encodeURIComponent(zoom);
+        var tempURL=""
+        if(document.location.href.indexOf( "?")!=-1)
+          {
+          tempURL=document.location.href.substring(0,document.location.href.indexOf( "?"));
+          }
+        else
+          {
+          tempURL=document.location.href;
+          }  
         Ext.Ajax.request({
-            url: reportItURL,
+            url: 'CreateCall?',
             params: { classificationCode: classificationCode, 
                       problemType: reportItNames[problemType],
                       problemDetails: problemDetails,
@@ -1846,7 +1836,7 @@ Ext.onReady(function() {
                       zoom: encodedZoom,
                       ward: wardNames[ward],
                       sector: sectorName,
-                      myCouncilURL: myCouncilURL
+                      myCouncilURL: tempURL
             },
             timeout: 30000,
             method: 'POST',
@@ -1902,8 +1892,8 @@ Ext.onReady(function() {
             var encodedMessageDetails = encodeURIComponent(messageDetails);
             var encodedEmailTo = encodeURIComponent(emailAddress);
             var encodedSector = encodeURIComponent(sectorNames[wardSector[ward]]);
-            Ext.Ajax.request({
-                url: messageURL + 'contact=' + encodedContactDetails + '&message=' + encodedMessageDetails + '&emailTo=' + encodedEmailTo + '&messageType=' + messageType + '&sector=' + encodedSector,
+             Ext.Ajax.request({
+                url: 'SendMessage?contact=' + encodedContactDetails + '&message=' + encodedMessageDetails + '&emailTo=' + encodedEmailTo + '&messageType=' + messageType + '&sector=' + encodedSector,
                 timeout: 30000,
                 method: 'POST',
                 success: function(response) {
@@ -2240,8 +2230,8 @@ Ext.onReady(function() {
            }    
         }
         else{
+           getCallDetails(document.getElementById("callReference").value,true,false,false);
         }
-        getCallDetails(document.getElementById("callReference").value,true,false,false);
         }
     });
 
@@ -2308,12 +2298,13 @@ Ext.onReady(function() {
         var viewItForm;
         var bubbleMenu;
         Ext.Ajax.request({
-            url: viewItURL,
+            url: 'ViewCall?',
             params: { caseRef: callReference
             },
             timeout: 30000,
             method: 'POST',
             success: function(response) {
+                startupSearch=false;
                 Ext.MessageBox.hide();
                 try {
                     viewItJson = Ext.util.JSON.decode(response.responseText);
@@ -2332,12 +2323,6 @@ Ext.onReady(function() {
                    }
                    else{
                        resetSearchBox();
-//                        if(fromSearch||fromURL){
-//                         if(currentBubble){
-//                           alert("CP1");
-//                           currentBubble.setContent("");
-//                           currentBubble.close();
-//                         }
                        var tempStatus="";
                        var showSla=true;
                        if(viewItJson.status=="open"){
@@ -2362,7 +2347,7 @@ Ext.onReady(function() {
                                      + '<div style="height:150px" id="viewID">'
                                      + '</div>';
                                      
-                          if(!miniScreen){
+                          if(!miniScreen||widescreen){
                             viewItForm += 'Above is an image of the problem area &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'
                                        + '&nbsp';
                           }
@@ -2437,7 +2422,7 @@ Ext.onReady(function() {
                                         + '</tr>';         
                            }
                                      
-                           if(miniScreen){
+                           if(miniScreen&&!widescreen){
                              viewItForm += '<TR><td colspan="4">&nbsp</td></TR>';
                            }
                            viewItForm += '<tr>'
@@ -2636,6 +2621,7 @@ Ext.onReady(function() {
             },
             failure: function(response) {
                 Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error getting the problem. Please try again later.');
+                startupSearch=false;
             }
         });
     }
@@ -2811,6 +2797,10 @@ Ext.onReady(function() {
             }, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     point = results[0].geometry.location;
+                    if(debug){
+                       alert("Lat="+point.lat()+",Lng="+point.lng());
+                       alert("location="+results[0].address_components[0].long_name);
+                    }
                     if (point.lat() == googleDefaultLatLng.lat() && point.lng() == googleDefaultLatLng.lng() && googleDefaultLocationName == results[0].address_components[0].long_name) {
                         googleLocalSearch(searchTerm, address, callbackFunction);
                     }
