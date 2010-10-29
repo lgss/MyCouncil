@@ -24,17 +24,18 @@ public class CreateLaganCase extends HttpServlet
       {
       DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	  DateFormat slaDateFormat = new SimpleDateFormat("EEEEEEEEE, d MMMMMMMMM yyyy 'at' HH:mm:ss");
-	  DateFormat voiceSlaDateFormat = new SimpleDateFormat("EEEEEEEEE, d MMMMMMMMM yyyy 'at' K mm a");
+	  DateFormat voiceSlaDateFormat = new SimpleDateFormat("EEEEEEEEE, d MMMMMMMMM yyyy 'at' h mm a");
 	  Date date = new Date();
 	  String version = "v0.008";
       String currentDate = dateFormat.format(date);
 	  String laganSystem = getServletContext().getInitParameter("laganSystem");
 	  String errorEmailTo = getServletContext().getInitParameter("errorEmailTo");
 	  String emailFrom = getServletContext().getInitParameter("emailFrom");
+	  String smsFrom = getServletContext().getInitParameter("smsFrom");
 	  String smtpHost = getServletContext().getInitParameter("smtpHost");
-      String textMessageFrom = getServletConfig().getInitParameter("textMessageFrom");
-	  String localDialCode = getServletConfig().getInitParameter("localDialCode");
-	  String lat=request.getParameter("lat");
+	  String localDialCode = getServletContext().getInitParameter("localDialCode");
+	  String textMessageFrom = getServletContext().getInitParameter("textMessageFrom");
+      String lat=request.getParameter("lat");
       String lng=request.getParameter("lng");
 	  String classificationCode = request.getParameter("classificationCode");
       String problemType=request.getParameter("problemType");
@@ -52,10 +53,14 @@ public class CreateLaganCase extends HttpServlet
 	  String pitch = request.getParameter("pitch");
 	  String zoom = request.getParameter("zoom");
 	  String myCouncilURL = request.getParameter("myCouncilURL");
+	  String easting = request.getParameter("easting");
+	  String northing = request.getParameter("northing");
 	  String laganCaseReference = "";
  	  PrintWriter ajaxResponse = response.getWriter();
 	  boolean continueProcessing = true;
 	  String[] strErrorEmailTo = { errorEmailTo };
+	  String[] strErrorEmailBCC = new String[0];
+	  String[] emailBCC = {getServletConfig().getInitParameter("bccEmailAddress")};
 	  String slaDate="";
 	  String voiceSlaDate = "";
 
@@ -99,7 +104,7 @@ public class CreateLaganCase extends HttpServlet
 		SendMail authenticationErrorEmail = new SendMail();
 		try
 		{
-			authenticationErrorEmail.postMail(strErrorEmailTo, "MyCouncil has failed to authenticate to Lagan", emailContents, emailFrom, smtpHost, true);
+			authenticationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to authenticate to Lagan", emailContents, emailFrom, smtpHost, true);
 		}
 		catch (MessagingException emailError)
 		{
@@ -129,7 +134,7 @@ public class CreateLaganCase extends HttpServlet
 			  lagan.api.main.FWTCaseEformNew eForm = new lagan.api.main.FWTCaseEformNew(laganCaseReference, "EnvironmentalServices", "");
 			  webInterface.addCaseEform(eForm);
 			  lagan.api.main.FWTCaseEformInstance eFormInstance = new lagan.api.main.FWTCaseEformInstance(laganCaseReference, "EnvironmentalServices");
-			  lagan.api.main.FWTEformField eFormFields[] = new lagan.api.main.FWTEformField[16];
+			  lagan.api.main.FWTEformField eFormFields[] = new lagan.api.main.FWTEformField[19];
 			  eFormFields[0] = new lagan.api.main.FWTEformField("cboType", problemType);
 			  eFormFields[1] = new lagan.api.main.FWTEformField("txtDetails", details);
 			  eFormFields[2] = new lagan.api.main.FWTEformField("txtLocation", location);
@@ -146,6 +151,9 @@ public class CreateLaganCase extends HttpServlet
 			  eFormFields[13] = new lagan.api.main.FWTEformField("txtHeading", heading);
 			  eFormFields[14] = new lagan.api.main.FWTEformField("txtPitch", pitch);
 			  eFormFields[15] = new lagan.api.main.FWTEformField("txtZoom", zoom);
+			  eFormFields[16] = new lagan.api.main.FWTEformField("txtDescription", descriptionEmail);
+			  eFormFields[17] = new lagan.api.main.FWTEformField("txtEasting", easting);
+			  eFormFields[18] = new lagan.api.main.FWTEformField("txtNorthing", northing);
 			  lagan.api.main.FWTCaseEformData eFormData = new lagan.api.main.FWTCaseEformData(eFormInstance, eFormFields);
 			  webInterface.writeCaseEformData(eFormData);
 			  String[] options = { "all" };
@@ -191,7 +199,7 @@ public class CreateLaganCase extends HttpServlet
 			  SendMail caseCreationErrorEmail = new SendMail();
 			  try
 			  {
-				  caseCreationErrorEmail.postMail(strErrorEmailTo, "MyCouncil has failed to create a case on Lagan", emailContents, emailFrom, smtpHost, true);
+				  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to create a case on Lagan", emailContents, emailFrom, smtpHost, true);
 			  }
 			  catch (MessagingException emailError)
 			  {
@@ -223,7 +231,7 @@ public class CreateLaganCase extends HttpServlet
 			  String[] strEmailTo = { emailAddress };
 			  try
 			  {
-				  email.postMail(strEmailTo, "MyCouncil : Your Call Number is " + laganCaseReference, amendedEmailTextString, emailFrom, smtpHost, true);
+				  email.postMail(strEmailTo, emailBCC, "MyCouncil : Your Call Number is " + laganCaseReference, amendedEmailTextString, emailFrom, smtpHost, true);
 			  }
 			  catch (MessagingException confirmationError)
 			  {
@@ -249,7 +257,7 @@ public class CreateLaganCase extends HttpServlet
 				  SendMail confirmationEmailError = new SendMail();
 				  try
 				  {
-					  confirmationEmailError.postMail(strErrorEmailTo, "MyCouncil has failed to send a confirmation email", emailContents, emailFrom, smtpHost, true);
+					  confirmationEmailError.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a confirmation email", emailContents, emailFrom, smtpHost, true);
 				  }
 				  catch (MessagingException emailError)
 				  {
@@ -314,7 +322,7 @@ public class CreateLaganCase extends HttpServlet
 				  SendMail textMessageLengthError = new SendMail();
 				  try
 				  {
-					  textMessageLengthError.postMail(strErrorEmailTo, "MyCouncil has failed to send a text message", emailContents, emailFrom, smtpHost, true);
+					  textMessageLengthError.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a text message", emailContents, emailFrom, smtpHost, true);
 				  }
 				  catch (MessagingException emailError)
 				  {
@@ -325,7 +333,7 @@ public class CreateLaganCase extends HttpServlet
 			  String[] strEmailTo = { phoneNumber + "@smsmaker.com" };
 			  try
 			  {
-				  textMessage.postMail(strEmailTo, "", phoneText, emailFrom, smtpHost, false);
+				  textMessage.postMail(strEmailTo, emailBCC, "", phoneText, smsFrom, smtpHost, false);
 			  }
 			  catch (MessagingException textMessageError)
 			  {
@@ -350,7 +358,7 @@ public class CreateLaganCase extends HttpServlet
 				  SendMail textMessageEmailError = new SendMail();
 				  try
 				  {
-					  textMessageEmailError.postMail(strErrorEmailTo, "MyCouncil has failed to send a text message", emailContents, emailFrom, smtpHost, true);
+					  textMessageEmailError.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a text message", emailContents, emailFrom, smtpHost, true);
 				  }
 				  catch (MessagingException emailError)
 				  {

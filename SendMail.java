@@ -6,7 +6,7 @@ import java.util.*;
 
 public class SendMail
 {
-	public void postMail(String recipients[ ], String subject, String message, String from, String smtpHost, boolean html) throws MessagingException
+	public void postMail(String emailTo[], String emailBCC[], String subject, String message, String from, String smtpHost, boolean html) throws MessagingException
 	{
 		Properties props = new Properties();
 		String messageType="text/html";
@@ -19,12 +19,18 @@ public class SendMail
 		Message msg = new MimeMessage(session);
 		InternetAddress addressFrom = new InternetAddress(from);
 		msg.setFrom(addressFrom);
-		InternetAddress[] addressTo = new InternetAddress[recipients.length];
-		for (int i = 0; i < recipients.length; i++)
+		InternetAddress[] addressTo = new InternetAddress[emailTo.length];
+		for (int currentEmail = 0; currentEmail < emailTo.length; currentEmail++)
 		{
-			addressTo[i] = new InternetAddress(recipients[i]);
+			addressTo[currentEmail] = new InternetAddress(emailTo[currentEmail]);
 		}
 		msg.setRecipients(Message.RecipientType.TO, addressTo);
+		InternetAddress[] addressBCC = new InternetAddress[emailBCC.length];
+		for (int currentEmail = 0; currentEmail < emailBCC.length; currentEmail++)
+		{
+			addressBCC[currentEmail] = new InternetAddress(emailBCC[currentEmail]);
+		}
+		msg.setRecipients(Message.RecipientType.BCC, addressBCC);
 		msg.setSubject(subject);
 		msg.setContent(message, messageType);
 		Transport.send(msg);

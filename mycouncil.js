@@ -156,16 +156,11 @@ Ext.onReady(function() {
     var readyCount=0;
     var debug=false;
     var widescreen=false;
-    //var viewingCall=false;
 
     if (navigator.userAgent.indexOf("IE") > -1) {
         internetExplorer = true;
     }
     
-//    if(Ext.isIE7){
-//      document.body.scroll='auto';
-//    }
-
     if (document.cookie.length > 0) {
         cookie_start = document.cookie.indexOf("viewedHelp=true");
         if (cookie_start != -1) {
@@ -239,17 +234,6 @@ Ext.onReady(function() {
           }
     }
     
-//    if (typeof screen.availHeight != 'undefined') {
-//        var mapHeight = screen.availHeight - 260;
-//        if (screen.availHeight < 800) {
-//            picHeight = 81;
-//            picWidth = 54;
-//            document.getElementById("info_panel_details").style.fontSize = "10px";
-//            miniScreen = true;
-//        }
-//        document.getElementById("map").style.height = mapHeight + "px";
-//    }
-
     if (politicalView) {
         document.getElementById("report_title").innerHTML = "Political Map";
     }
@@ -272,7 +256,8 @@ Ext.onReady(function() {
             position: google.maps.ControlPosition.TOP
         },
         mapTypeControl: true,
-        scaleControl: true
+        scaleControl: true,
+        streetViewControl : false
     };
 
     var map = new google.maps.Map(document.getElementById("map"), mapOptions);
@@ -763,7 +748,6 @@ Ext.onReady(function() {
         for (var currentWard = 0; currentWard < totalNumOfWards; currentWard++) {
             if (wardOperational[currentWard]) {
                 if (wards[currentWard].Contains(point)) {
-                    //sectorName = sectorWardNames[currentWard];
                     sectorName = sectorNames[wardSector[currentWard]];
                     sectorID = wardSector[currentWard];
                 }
@@ -1052,10 +1036,18 @@ Ext.onReady(function() {
                     }
                     else {
                         if (internetExplorer && !Ext.isIE8) {
-                            panelDiv.setAttribute('className', "menuContents");
+                           if(sla){
+                               panelDiv.setAttribute('className', "menuSLAContents");
+                           }else{
+                               panelDiv.setAttribute('className', "menuContents");
+                           }
                         }
                         else {
-                            panelDiv.setAttribute('class', "menuContents");
+                            if(sla){
+                               panelDiv.setAttribute('class', "menuSLAContents");
+                            }else{                       
+                               panelDiv.setAttribute('class', "menuContents");
+                            }
                         }
                     }
                     if (help) {
@@ -1511,11 +1503,6 @@ Ext.onReady(function() {
         var defaultClassName = 'formDefault';
         var activeClassName = 'formActive';
 
-//        if (miniScreen) {
-//            defaultClassName = 'miniFormDefault';
-//            activeClassName = 'miniFormActive';
-//        }
-
         var bubbleMenu = '<BR><div class="header"><div id="bubbleBack">'
                        + '<table width="350px" border="0" cellpadding="0" cellspacing="2" onmouseover="document.getElementById(\'callReference\').focus()">'
                        + '<tr>'
@@ -1687,7 +1674,7 @@ Ext.onReady(function() {
         });
     }
 
-    gotoConfirmationMenu = function(problemType, callNumber, slaDate) {
+    gotoConfirmationMenu = function(problemType, callNumber, slaDate, email, text) {
 
         var ward = displayWard;
 
@@ -1707,12 +1694,20 @@ Ext.onReady(function() {
         confirmationText = "Thank you for raising a call with us regarding ";
         confirmationText += reportItDescEmail[problemType];
         confirmationText += ", please use the call number above when enquiring about the current state of the problem.";
-        //confirmationText += "<BR><BR>Your call should be resolved on or before " + slaDate + ".";
-        //confirmationText += "<BR><BR>If you have provided us with a telephone number or email address we will notify you when your problem has been resolved.";
-        //confirmationText += "<BR><BR>If you wish to enquire about the current state of the problem then use the search box at the top of this page. You can also call us on " + callCenterNumber + ".";
-        confirmationText += "<BR><BR>If you wish to enquire about the current state of the problem then telephone us on " + callCenterNumber + ".";
-
-
+        confirmationText += "<BR><BR>";
+        if(email!=""&&text!=""){
+           confirmationText += "We will notify you via email and telephone when your problem has been resolved.";
+        }else if(email!=""){
+           confirmationText += "We will notify you via email when your problem has been resolved.";
+        }else if(text!=""){
+           confirmationText += "We will notify you via telephone when your problem has been resolved.";
+        }
+        if(email!=""){
+           confirmationText += " If you wish to enquire about the current state of the problem then use our search box, the main menu option or the link contained in your confirmation email.";
+        }else{
+           confirmationText += " If you wish to enquire about the current state of the problem then use our search box or the main menu option.";
+        }
+        
         var bubbleMenu = '<BR><div class="header"><div id="bubbleBack">'
                        + '<table border="0" cellpadding="0" cellspacing="2">'
                        + '<tr>'
@@ -1727,9 +1722,8 @@ Ext.onReady(function() {
                        + '<td style="text-align: centre" class="reverseButton">Your call number is ' + callNumber + '</td>'
                        + '<td width="5%" style="background: black"></td>'
                        + '</tr>'
-                        + '<tr>'
+                       + '<tr>'
                        + '<td width="5%" style="background: black"></td>'
-                       //+ '<td style="text-align: centre" class="slaText">Target resolution date is ' + slaDate + '</td>'
                        + '<td style="text-align: centre" class="slaText">' + slaDate + '</td>'
                        + '<td width="5%" style="background: black"></td>'
                        + '</tr>'
@@ -1742,14 +1736,18 @@ Ext.onReady(function() {
                        + '<td width="5%" style="background: black"></td>'
                        + '<td onClick="gotoMainMenu(\'' + currentLocation + '\',false,null,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Main Menu</td>'
                        + '<td width="5%" style="background: black"></td>'
-                       + '</tr>'
-                       + '<tr>'
-                       + '<td width="5%" style="background: black"></td>'
-                       + '<td id="clearMap" style="text-align: centre" cstyle="background: black">&nbsp</td>'
-                       + '<td width="5%" style="background: black"></td>'
-                       + '</tr>'
-                       + '</table>'
-                       + '</div></div>';
+                       + '</tr>';
+                         
+        if(!miniScreen){
+           bubbleMenu += '<tr>'
+                      + '<td width="5%" style="background: black"></td>'
+                      + '<td id="clearMap" style="text-align: centre" cstyle="background: black">&nbsp</td>'
+                      + '<td width="5%" style="background: black"></td>'
+                      + '</tr>';
+        }               
+                       
+        bubbleMenu += '</table>'
+                    + '</div></div>';
         currentBubble.setContent(bubbleMenu);
         currentBubble.open(map);
     }
@@ -1817,7 +1815,9 @@ Ext.onReady(function() {
         else
           {
           tempURL=document.location.href;
-          }  
+          } 
+          
+        var northingEasting=LLtoNE(tempLat, tempLng);
         Ext.Ajax.request({
             url: 'CreateCall?',
             params: { classificationCode: classificationCode, 
@@ -1836,7 +1836,9 @@ Ext.onReady(function() {
                       zoom: encodedZoom,
                       ward: wardNames[ward],
                       sector: sectorName,
-                      myCouncilURL: tempURL
+                      myCouncilURL: tempURL,
+                      northing: northingEasting.north,
+                      easting: northingEasting.east 
             },
             timeout: 30000,
             method: 'POST',
@@ -1849,7 +1851,7 @@ Ext.onReady(function() {
                     Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error handling your problem. Please try again later.');
                 }
                 if(reportItJson.result=="success"){
-                   gotoConfirmationMenu(problemType, reportItJson.callNumber, reportItJson.slaDate);
+                   gotoConfirmationMenu(problemType, reportItJson.callNumber, reportItJson.slaDate, emailAddress, phoneNumber);
                 }
                 else{
                    Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error processing your problem. Please try again later.');
@@ -2242,23 +2244,11 @@ Ext.onReady(function() {
         });
     }
 
-//    google.maps.event.addListener(map, "click", function(event) {
-//    alert("MapClick!");
-//        if (clckTimeOut) {
-//            window.clearTimeout(clckTimeOut);
-//            clckTimeOut = null;
-//        }
-//        else {
-//            clckTimeOut = window.setTimeout(function() { if(viewingCall){viewingCall=false}else{singleClick(event,false)} }, 500);
-//        }
-//    });
-
     var searchBox = Ext.get(document.getElementById("searchBox"));
     searchBox.on('mousedown', function() {
         searchBoxActive = true;
         document.getElementById("searchBox").value = "";
         document.getElementById("searchBox").setAttribute('style', "");
-        //document.getElementById("searchBox").style.cssText = "";
         document.getElementById("searchBox").focus();
     });
 
@@ -2598,18 +2588,12 @@ Ext.onReady(function() {
                           };
                           if(fromURL){
                              readyCount=1;
-                          }else{
-//                             readyCount=0;
                           }
-                          //alert("fired");
                           whenReady('viewID', function(viewID) {
-                             //alert("readyCount="+readyCount);
- //                            if(readyCount>0){
                                 window.setTimeout(function() { 
                                    document.getElementById("viewID").innerHTML = ".";
                                    streetView = new google.maps.StreetViewPanorama(document.getElementById("viewID"), panoramaOptions);
                                 }, 500);
- //                            }
                              readyCount++;
                           });
                         }
@@ -2641,19 +2625,6 @@ Ext.onReady(function() {
             checkWards(point);
         }
     });
-
-//    var clearButton = Ext.get(document.getElementById("clearMap"));
-//    clearButton.on('click', function() {
-//        clearBubble();
-//        var point = mapCenter;
-//        map.setCenter(point);
-//        map.setZoom(12);
-//        resetSearchBox();
-//        point = googleOutsideLatLng;
-//        if (!showPanel && !panelAnimation) {
-//            checkWards(point);
-//        }
-//    });
 
     var previousMessageButton = Ext.get(document.getElementById("previousMessage"));
     previousMessageButton.on('click', function() {
@@ -2912,22 +2883,82 @@ Ext.onReady(function() {
             if (view) {
                 viewClick();
             }
-            //if (help && !startupAnimation && !showInformation && !showFeedback) {
             if (help && !startupAnimation) {
                 panelClick(true, false, false, false);
             }
-            //if (sla && !startupAnimation && !showHelp && !showFeedback) {
             if (sla && !startupAnimation) {
                 panelClick(false, false, false, true);
             }
-            //if (information && !startupAnimation && !showHelp && !showFeedback) {
             if (information && !startupAnimation) {
                 panelClick(false, true, false, false);
             }
-            //if (feedback && !startupAnimation && !showHelp && !showInformation) {
             if (feedback && !startupAnimation) {
                 panelClick(false, false, true, false);
             }
         });
     }
+    
+    function OGBNorthEast(east, north)
+    {
+	    this.north = north;
+	    this.east = east;
+    }
+    
+    function LLtoNE(lat, lon)
+    {
+        var deg2rad = Math.PI / 180;
+        var rad2deg = 180.0 / Math.PI;
+
+        var phi = lat * deg2rad; // convert latitude to radians
+        var lam = lon * deg2rad; // convert longitude to radians
+        var a = 6377563.396; // OSGB semi-major axis
+        var b = 6356256.91; // OSGB semi-minor axis
+        var e0 = 400000; // easting of false origin
+        var n0 = -100000; // northing of false origin
+        var f0 = 0.9996012717; // OSGB scale factor on central meridian
+        var e2 = 0.0066705397616; // OSGB eccentricity squared
+        var lam0 = -0.034906585039886591; // OSGB false east
+        var phi0 = 0.85521133347722145; // OSGB false north
+        var af0 = a * f0;
+        var bf0 = b * f0;
+
+        // easting
+        var slat2 = Math.sin(phi) * Math.sin(phi);
+        var nu = af0 / (Math.sqrt(1 - (e2 * (slat2))));
+        var rho = (nu * (1 - e2)) / (1 - (e2 * slat2));
+        var eta2 = (nu / rho) - 1;
+        var p = lam - lam0;
+        var IV = nu * Math.cos(phi);
+        var clat3 = Math.pow(Math.cos(phi), 3);
+        var tlat2 = Math.tan(phi) * Math.tan(phi);
+        var V = (nu / 6) * clat3 * ((nu / rho) - tlat2);
+        var clat5 = Math.pow(Math.cos(phi), 5);
+        var tlat4 = Math.pow(Math.tan(phi), 4);
+        var VI = (nu / 120) * clat5 * ((5 - (18 * tlat2)) + tlat4 + (14 * eta2) - (58 * tlat2 * eta2));
+        var east = e0 + (p * IV) + (Math.pow(p, 3) * V) + (Math.pow(p, 5) * VI);
+
+        // northing
+        var n = (af0 - bf0) / (af0 + bf0);
+        var M = Marc(bf0, n, phi0, phi);
+        var I = M + (n0);
+        var II = (nu / 2) * Math.sin(phi) * Math.cos(phi);
+        var III = ((nu / 24) * Math.sin(phi) * Math.pow(Math.cos(phi), 3)) * (5 - Math.pow(Math.tan(phi), 2) + (9 * eta2));
+        var IIIA = ((nu / 720) * Math.sin(phi) * clat5) * (61 - (58 * tlat2) + tlat4);
+        var north = I + ((p * p) * II) + (Math.pow(p, 4) * III) + (Math.pow(p, 6) * IIIA);
+
+        // make whole number values
+        east = Math.round(east); // round to whole number of meters
+        north = Math.round(north); 
+
+        return new OGBNorthEast(east, north);
+    }
+
+function Marc( bf0,  n,  phi0,  phi)
+    {
+    return bf0 * (((1 + n + ((5 / 4) * (n * n)) + ((5 / 4) * (n * n * n))) * (phi - phi0))
+    - (((3 * n) + (3 * (n * n)) + ((21 / 8) * (n * n * n))) * (Math.sin(phi - phi0)) * (Math.cos(phi + phi0)))
+    + ((((15 / 8) * (n * n)) + ((15 / 8) * (n * n * n))) * (Math.sin(2 * (phi - phi0))) * (Math.cos(2 * (phi + phi0))))
+    - (((35 / 24) * (n * n * n)) * (Math.sin(3 * (phi - phi0))) * (Math.cos(3 * (phi + phi0)))));
+    }
+    
 });

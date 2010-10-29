@@ -14,9 +14,9 @@ public class SendMessage extends HttpServlet
                     throws ServletException, IOException
 	{
 		String smtpHost = getServletContext().getInitParameter("smtpHost");
+		String auditEmailTo = getServletContext().getInitParameter("auditEmailTo");
 		String emailVerification = getServletConfig().getInitParameter("emailVerification");
 		String emailFrom = getServletConfig().getInitParameter("emailFrom");
-		String auditEmailTo = getServletConfig().getInitParameter("auditEmailTo");
 		String testRun = getServletConfig().getInitParameter("test");
 		String testEmailAddress = getServletConfig().getInitParameter("testEmailAddress");
 		String eol = System.getProperty("line.separator");
@@ -27,6 +27,7 @@ public class SendMessage extends HttpServlet
 		String emailTo = request.getParameter("emailTo");
 		String subject = "MyCouncil : Message from citizen";
 		String recipients[] = emailTo.split(",");
+		String strErrorEmailBCC[] = new String[0];
 		String auditRecipients[] = {auditEmailTo};
 		String greeting = "";
 		boolean verified = true;
@@ -82,7 +83,7 @@ public class SendMessage extends HttpServlet
 			SendMail messageEmail = new SendMail();
 			try
 			{
-				messageEmail.postMail(recipients, subject, emailContent, emailFrom, smtpHost, false);
+				messageEmail.postMail(recipients, strErrorEmailBCC, subject, emailContent, emailFrom, smtpHost, false);
 			}
 			catch (MessagingException emailError)
 			{
@@ -92,7 +93,7 @@ public class SendMessage extends HttpServlet
 			SendMail auditMessageEmail = new SendMail();
 			try
 			{
-				auditMessageEmail.postMail(auditRecipients, subject, emailContentInternal, emailFrom, smtpHost, false);
+				auditMessageEmail.postMail(auditRecipients, strErrorEmailBCC, subject, emailContentInternal, emailFrom, smtpHost, false);
 			}
 			catch (MessagingException emailError)
 			{

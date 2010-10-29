@@ -14,25 +14,62 @@
     <param-value>mycouncil@northampton.gov.uk</param-value>
   </context-param>
   <context-param>
+    <param-name>smsFrom</param-name>
+    <param-value>kwhite@northampton.gov.uk</param-value>
+  </context-param>
+  <context-param>
     <param-name>smtpHost</param-name>
     <param-value>vscvex1</param-value>
+  </context-param>
+  <context-param>
+    <param-name>auditEmailTo</param-name>
+    <param-value>kwhite@northampton.gov.uk</param-value>
+  </context-param>
+  <context-param>
+    <param-name>localDialCode</param-name>
+    <param-value>01604</param-value>
+  </context-param>
+  <context-param>
+    <param-name>textMessageFrom</param-name>
+    <param-value>Northampton Borough Council</param-value>
   </context-param>
   <servlet>
     <servlet-name>CreateCall</servlet-name>
     <servlet-class>uk.gov.selfserve.CreateLaganCase</servlet-class>
     <init-param>
-      <param-name>textMessageFrom</param-name>
-      <param-value>Northampton Borough Council</param-value>
-    </init-param>
-    <init-param>
-      <param-name>localDialCode</param-name>
-      <param-value>01604</param-value>
+      <param-name>bccEmailAddress</param-name>
+      <param-value>kwhite@northampton.gov.uk</param-value>
     </init-param>
   </servlet>
   <servlet>
     <servlet-name>ViewCall</servlet-name>
     <servlet-class>uk.gov.selfserve.ViewLaganCase</servlet-class>
    </servlet>
+  <servlet>
+    <servlet-name>ClosedCalls</servlet-name>
+    <servlet-class>uk.gov.selfserve.ClosedLaganCases</servlet-class>
+    <load-on-startup/>
+    <init-param>
+      <param-name>enabled</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>checkEvery</param-name>
+      <param-value>minute</param-value>
+    </init-param>
+    <init-param>
+      <param-name>overrideCheckRestrictions</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>bccEmailAddress</param-name>
+      <param-value>kwhite@northampton.gov.uk</param-value>
+    </init-param>
+    <init-param>
+      <param-name>slaEmailAddress</param-name>
+      <param-value>dhorton@northampton.gov.uk</param-value>
+    </init-param>
+  </servlet>
    <servlet>
     <servlet-name>SendMessage</servlet-name>
     <servlet-class>uk.gov.selfserve.SendMessage</servlet-class>
@@ -52,11 +89,7 @@
       <param-name>emailFrom</param-name>
       <param-value>mycouncil@northampton.gov.uk</param-value>
     </init-param>
-    <init-param>
-      <param-name>auditEmailTo</param-name>
-      <param-value>opsanalysts@northampton.gov.uk</param-value>
-    </init-param>
-  </servlet>
+   </servlet>
   <servlet-mapping>
     <servlet-name>CreateCall</servlet-name>
     <url-pattern>/CreateCall</url-pattern>

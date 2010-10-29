@@ -154,6 +154,12 @@ font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helv
 font-size: 14px;
 text-align: left;
 }
+.menuSLAContents
+{
+font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
+font-size: 10px;
+text-align: left;
+}
 .menuMiniContents
 {
 font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
@@ -163,7 +169,7 @@ text-align: left;
 .menuMiniSLAContents
 {
 font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;
-font-size: 11px;
+font-size: 9px;
 text-align: left;
 }
 .messageBar

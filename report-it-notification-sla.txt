@@ -1,0 +1,2 @@
+<div style="font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;background: #808080;Color: #FFFFFF;font-size: 14px;text-align: center"> <label>Our target resolution date was AAA</label></div>
+</div>

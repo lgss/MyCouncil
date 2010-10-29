@@ -26,7 +26,7 @@ public class ViewLaganCase extends HttpServlet
       DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
       Date date = new Date();
 	  Calendar today = Calendar.getInstance();
-	  String version = "v0.001";
+	  String version = "v1.00";
       String currentDate = dateFormat.format(date);
 	  String laganSystem = getServletContext().getInitParameter("laganSystem");
 	  String errorEmailTo = getServletContext().getInitParameter("errorEmailTo");
@@ -36,6 +36,7 @@ public class ViewLaganCase extends HttpServlet
  	  PrintWriter ajaxResponse = response.getWriter();
 	  boolean continueProcessing = true;
 	  String[] strErrorEmailTo = { errorEmailTo };
+	  String[] strErrorEmailBCC = new String[0];
 	  boolean dueFound = false;
 
 	  //Authenticate to Lagan.
@@ -73,7 +74,7 @@ public class ViewLaganCase extends HttpServlet
 		SendMail authenticationErrorEmail = new SendMail();
 		try
 		{
-			authenticationErrorEmail.postMail(strErrorEmailTo, "MyCouncil has failed to authenticate to Lagan", emailContents, errorEmailFrom, smtpHost, false);
+			authenticationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to authenticate to Lagan", emailContents, errorEmailFrom, smtpHost, false);
 		}
 		catch (MessagingException emailError)
 		{
@@ -117,7 +118,6 @@ public class ViewLaganCase extends HttpServlet
 			  }
 			  catch (NullPointerException exceptionError)
 			  {
-//				  ajaxResponse.print(",\"dueDate\":\"not available\"");
 			  }
 			 String slaColour = "";
    		     if(coreDetails.getStatus().equals("closed")){
@@ -201,7 +201,7 @@ public class ViewLaganCase extends HttpServlet
 			  SendMail caseCreationErrorEmail = new SendMail();
 			  try
 			  {
-				  caseCreationErrorEmail.postMail(strErrorEmailTo, "MyCouncil has failed to view a case on Lagan", emailContents, errorEmailFrom, smtpHost, false);
+				  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to view a case on Lagan", emailContents, errorEmailFrom, smtpHost, false);
 			  }
 			  catch (MessagingException emailError)
 			  {
