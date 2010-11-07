@@ -55,7 +55,7 @@
     </init-param>
     <init-param>
       <param-name>checkEvery</param-name>
-      <param-value>minute</param-value>
+      <param-value>hour</param-value>
     </init-param>
     <init-param>
       <param-name>overrideCheckRestrictions</param-name>

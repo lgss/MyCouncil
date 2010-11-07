@@ -134,7 +134,7 @@ public class CreateLaganCase extends HttpServlet
 			  lagan.api.main.FWTCaseEformNew eForm = new lagan.api.main.FWTCaseEformNew(laganCaseReference, "EnvironmentalServices", "");
 			  webInterface.addCaseEform(eForm);
 			  lagan.api.main.FWTCaseEformInstance eFormInstance = new lagan.api.main.FWTCaseEformInstance(laganCaseReference, "EnvironmentalServices");
-			  lagan.api.main.FWTEformField eFormFields[] = new lagan.api.main.FWTEformField[19];
+			  lagan.api.main.FWTEformField eFormFields[] = new lagan.api.main.FWTEformField[20];
 			  eFormFields[0] = new lagan.api.main.FWTEformField("cboType", problemType);
 			  eFormFields[1] = new lagan.api.main.FWTEformField("txtDetails", details);
 			  eFormFields[2] = new lagan.api.main.FWTEformField("txtLocation", location);
@@ -154,6 +154,7 @@ public class CreateLaganCase extends HttpServlet
 			  eFormFields[16] = new lagan.api.main.FWTEformField("txtDescription", descriptionEmail);
 			  eFormFields[17] = new lagan.api.main.FWTEformField("txtEasting", easting);
 			  eFormFields[18] = new lagan.api.main.FWTEformField("txtNorthing", northing);
+			  eFormFields[19] = new lagan.api.main.FWTEformField("txtCaseID", laganCaseReference);
 			  lagan.api.main.FWTCaseEformData eFormData = new lagan.api.main.FWTCaseEformData(eFormInstance, eFormFields);
 			  webInterface.writeCaseEformData(eFormData);
 			  String[] options = { "all" };
@@ -222,8 +223,14 @@ public class CreateLaganCase extends HttpServlet
 			  }
 			  emailTemplate.close();
 			  String emailTextString = emailTextBuffer.toString();
+			  String slaText;
+			  if(slaDate.equals("not available")){
+			     slaText="This type of problem currently has no target resolution date";
+			  }else{
+				 slaText="Our target resolution date is " + slaDate;
+			  }
 			  String amendedEmailTextString = emailTextString.replace("AAA", laganCaseReference);
-			  amendedEmailTextString = amendedEmailTextString.replace("BBB", slaDate);
+			  amendedEmailTextString = amendedEmailTextString.replace("BBB", slaText);
 			  amendedEmailTextString = amendedEmailTextString.replace("CCC", descriptionEmail);
 			  amendedEmailTextString = amendedEmailTextString.replace("DDD", myCouncilURL + "?search=");
 
@@ -278,7 +285,15 @@ public class CreateLaganCase extends HttpServlet
 		  {
 			  String phoneText = "";
 			  String voiceMessagePart1 = "This is a message from " + textMessageFrom + " regarding call number  ";
-			  String voiceMessagePart2 = ". Your call should be resolved by ";
+			  String voiceMessagePart2;
+			  if (slaDate.equals("not available"))
+			  {
+				  voiceMessagePart2 = ". We will notify you when your call has been resolved.";
+			  }
+			  else
+			  {
+				  voiceMessagePart2 = ". Your call should be resolved by ";
+			  }
 			  String voiceCaseReference = "";
 			  String tempVoiceSlaDate = "";
 			  if (phoneNumber.startsWith("07"))
@@ -298,7 +313,14 @@ public class CreateLaganCase extends HttpServlet
 				  }
 				  tempVoiceSlaDate = voiceSlaDate;
 			  }
-			  phoneText = voiceMessagePart1 + voiceCaseReference + voiceMessagePart2 + tempVoiceSlaDate + ".";
+			  if (slaDate.equals("not available"))
+			  {
+				  phoneText = voiceMessagePart1 + voiceCaseReference + voiceMessagePart2;
+			  }
+			  else
+			  {
+				  phoneText = voiceMessagePart1 + voiceCaseReference + voiceMessagePart2 + tempVoiceSlaDate + ".";
+			  }
 			  if (phoneText.length() > 160)
 			  {
 				  String errorLine1 = "";

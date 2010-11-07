@@ -353,11 +353,21 @@ Ext.onReady(function() {
                     reportItDescEmail[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].descriptionEmail;
                     reportItSLA[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].sla;
                 }
-                for (var currentCode = 0; currentCode < jsonData.classificationCodes.length; currentCode++) {
-                    codesType[currentCode] = jsonData.classificationCodes[currentCode].type;
-                    codesIncident[currentCode] = jsonData.classificationCodes[currentCode].incident;
-                    codesSectorID[currentCode] = jsonData.classificationCodes[currentCode].sectorID;
-                    codesClassificationCodes[currentCode] = jsonData.classificationCodes[currentCode].classificationCode;
+                if (jsonData.instance == "test"){
+                   for (var currentCode = 0; currentCode < jsonData.classificationCodesTest.length; currentCode++) {
+                       codesType[currentCode] = jsonData.classificationCodesTest[currentCode].type;
+                       codesIncident[currentCode] = jsonData.classificationCodesTest[currentCode].incident;
+                       codesSectorID[currentCode] = jsonData.classificationCodesTest[currentCode].sectorID;
+                       codesClassificationCodes[currentCode] = jsonData.classificationCodesTest[currentCode].classificationCode;
+                   }
+                }
+                if (jsonData.instance == "live"){
+                   for (var currentCode = 0; currentCode < jsonData.classificationCodesLive.length; currentCode++) {
+                       codesType[currentCode] = jsonData.classificationCodesLive[currentCode].type;
+                       codesIncident[currentCode] = jsonData.classificationCodesLive[currentCode].incident;
+                       codesSectorID[currentCode] = jsonData.classificationCodesLive[currentCode].sectorID;
+                       codesClassificationCodes[currentCode] = jsonData.classificationCodesLive[currentCode].classificationCode;
+                   }
                 }
                 for (var currentPartiesURL = 0; currentPartiesURL < jsonData.partiesURL.length; currentPartiesURL++) {
                     partiesURL[currentPartiesURL] = jsonData.partiesURL[currentPartiesURL].url;
@@ -1777,7 +1787,7 @@ Ext.onReady(function() {
         }
         var classificationCode="";
         var descriptionEmail="";
-        for (var currentCode = 0; currentCode < jsonData.classificationCodes.length; currentCode++) {
+        for (var currentCode = 0; currentCode < codesClassificationCodes.length; currentCode++) {
            if(codesType[currentCode].toLowerCase()==reportItTypes[problemType].toLowerCase()&&
               (codesIncident[currentCode].toLowerCase()==reportItIncidents[problemType].toLowerCase()||codesIncident[currentCode]=="*")&&
               (codesSectorID[currentCode]==sectorID||codesSectorID[currentCode]=="*"))
