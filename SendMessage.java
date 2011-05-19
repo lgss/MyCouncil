@@ -63,7 +63,7 @@ public class SendMessage extends HttpServlet
 			if (recipients[currentRecipient].indexOf(emailVerification) == -1)
 			{
 			PrintWriter output = response.getWriter();
-			output.println("{\"message\":\"Apologies, but there was an error in the email address used. Please try again later.\"}");
+			ajaxResponse.println("{\"message\":\"Apologies, but there was an error in the email address used. Please try again later.\"}");
 			verified = false;
 			}
 		}

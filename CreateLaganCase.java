@@ -22,6 +22,8 @@ public class CreateLaganCase extends HttpServlet
                      HttpServletResponse response) 
                     throws ServletException, IOException
       {
+      //System.getProperties().put("http.proxyHost", "localhost");
+	  //System.getProperties().put("http.proxyPort", "8888");
       DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	  DateFormat slaDateFormat = new SimpleDateFormat("EEEEEEEEE, d MMMMMMMMM yyyy 'at' HH:mm:ss");
 	  DateFormat voiceSlaDateFormat = new SimpleDateFormat("EEEEEEEEE, d MMMMMMMMM yyyy 'at' h mm a");
@@ -29,12 +31,21 @@ public class CreateLaganCase extends HttpServlet
 	  String version = "v0.008";
       String currentDate = dateFormat.format(date);
 	  String laganSystem = getServletContext().getInitParameter("laganSystem");
+	  String host = getServletContext().getInitParameter("host") + "/" + getServletContext().getServletContextName();
 	  String errorEmailTo = getServletContext().getInitParameter("errorEmailTo");
 	  String emailFrom = getServletContext().getInitParameter("emailFrom");
 	  String smsFrom = getServletContext().getInitParameter("smsFrom");
 	  String smtpHost = getServletContext().getInitParameter("smtpHost");
 	  String localDialCode = getServletContext().getInitParameter("localDialCode");
 	  String textMessageFrom = getServletContext().getInitParameter("textMessageFrom");
+	  String twitterTESTConsumerKey = getServletContext().getInitParameter("twitter-TEST-Consumer-Key");
+	  String twitterTESTConsumerSecret = getServletContext().getInitParameter("twitter-TEST-Consumer-Secret");
+	  String twitterTESTAccessTokenKey = getServletContext().getInitParameter("twitter-TEST-Access-Token-Key");
+	  String twitterTESTAccessTokenSecret = getServletContext().getInitParameter("twitter-TEST-Access-Token-Secret");
+	  String twitterALLConsumerKey = getServletContext().getInitParameter("twitter-ALL-Consumer-Key");
+	  String twitterALLConsumerSecret = getServletContext().getInitParameter("twitter-ALL-Consumer-Secret");
+	  String twitterALLAccessTokenKey = getServletContext().getInitParameter("twitter-ALL-Access-Token-Key");
+	  String twitterALLAccessTokenSecret = getServletContext().getInitParameter("twitter-ALL-Access-Token-Secret");
       String lat=request.getParameter("lat");
       String lng=request.getParameter("lng");
 	  String classificationCode = request.getParameter("classificationCode");
@@ -133,7 +144,7 @@ public class CreateLaganCase extends HttpServlet
 			  laganCaseReference = webInterface.createCase(caseCreate);
 			  lagan.api.main.FWTCaseEformNew eForm = new lagan.api.main.FWTCaseEformNew(laganCaseReference, "EnvironmentalServices", "");
 			  webInterface.addCaseEform(eForm);
-			  lagan.api.main.FWTCaseEformInstance eFormInstance = new lagan.api.main.FWTCaseEformInstance(laganCaseReference, "EnvironmentalServices");
+			  lagan.api.main.FWTCaseEformInstance eFormInstance = new lagan.api.main.FWTCaseEformInstance(laganCaseReference, "EnvironmentalServices","");
 			  lagan.api.main.FWTEformField eFormFields[] = new lagan.api.main.FWTEformField[20];
 			  eFormFields[0] = new lagan.api.main.FWTEformField("cboType", problemType);
 			  eFormFields[1] = new lagan.api.main.FWTEformField("txtDetails", details);
@@ -206,6 +217,49 @@ public class CreateLaganCase extends HttpServlet
 			  {
 				  System.out.println("Email error : " + emailError.toString());
 			  }
+		  }
+	  }
+
+      //Post Entry to 'All' twitter stream.
+	  if (continueProcessing && laganSystem.equals("test") && !twitterTESTConsumerKey.equals("")){
+		  TwitterEntry caseTwitterEntry = new TwitterEntry();
+		  caseTwitterEntry.createTwitterEntry(
+				  host,
+				  descriptionEmail, 
+				  laganCaseReference,
+				  twitterTESTConsumerKey,
+				  twitterTESTConsumerSecret,
+				  twitterTESTAccessTokenKey,
+				  twitterTESTAccessTokenSecret);		  
+	  }
+	  else{
+		  if (continueProcessing && !twitterALLConsumerKey.equals(""))
+		  {
+			  TwitterEntry caseTwitterEntry = new TwitterEntry();
+			  caseTwitterEntry.createTwitterEntry( 
+					  host,
+					  descriptionEmail, 
+					  laganCaseReference,
+					  twitterALLConsumerKey,
+					  twitterALLConsumerSecret,
+					  twitterALLAccessTokenKey,
+					  twitterALLAccessTokenSecret);
+		  }
+		  //Post Entry to Sector twitter stream.
+		  try
+		  {
+			  TwitterEntry caseTwitterEntry = new TwitterEntry();
+			  caseTwitterEntry.createTwitterEntry(
+					  host,
+					  descriptionEmail,
+					  laganCaseReference,
+					  getServletContext().getInitParameter("twitter-sector-" + sector + "-Consumer-Key"),
+					  getServletContext().getInitParameter("twitter-sector-" + sector + "-Consumer-Secret"),
+					  getServletContext().getInitParameter("twitter-sector-" + sector + "-Access-Token-Key"),
+					  getServletContext().getInitParameter("twitter-sector-" + sector + "-Access-Token-Secret"));
+		  }
+		  catch(NullPointerException error){
+			  System.out.println("Null Pointer Exception error sending twitter message");
 		  }
 	  }
 

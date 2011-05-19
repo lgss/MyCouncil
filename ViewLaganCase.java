@@ -38,6 +38,7 @@ public class ViewLaganCase extends HttpServlet
 	  String[] strErrorEmailTo = { errorEmailTo };
 	  String[] strErrorEmailBCC = new String[0];
 	  boolean dueFound = false;
+	  String eol = System.getProperty("line.separator");
 
 	  //Authenticate to Lagan.
 	  EngineConfiguration config = new FileProvider(getServletContext().getRealPath("/WEB-INF/mycouncil.wsdd"));
@@ -65,11 +66,11 @@ public class ViewLaganCase extends HttpServlet
 		System.out.println(errorLine4);
 		System.out.println(errorLine5);
 		System.out.println(errorLine6);
-		String emailContents = errorLine1 + "<BR>" +
-			                   errorLine2 + "<BR>" +
-							   errorLine3 + "<BR>" +
-							   errorLine4 + "<BR>" +
-							   errorLine5 + "<BR>" +
+		String emailContents = errorLine1 + eol +
+			                   errorLine2 + eol +
+							   errorLine3 + eol +
+							   errorLine4 + eol +
+							   errorLine5 + eol +
 							   errorLine6;
 		SendMail authenticationErrorEmail = new SendMail();
 		try
@@ -184,7 +185,8 @@ public class ViewLaganCase extends HttpServlet
 			  String errorLine3 = "Date        : " + currentDate;
 			  String errorLine4 = "LaganSystem : " + laganSystem;
 			  String errorLine5 = "Error       : " + viewCaseError.toString();
-			  String errorLine6 = "";
+			  String errorLine6 = "CaseRef     : " + laganCaseReference;
+			  String errorLine7 = "";
 			  System.out.println(errorLine1);
 			  System.out.println(errorLine2);
 			  System.out.println(errorLine3);
@@ -192,12 +194,13 @@ public class ViewLaganCase extends HttpServlet
 			  System.out.println(errorLine5);
 			  System.out.println(errorLine6);
 			  viewCaseError.printStackTrace();
-			  String emailContents = errorLine1 + "<BR>" +
-									 errorLine2 + "<BR>" +
-									 errorLine3 + "<BR>" +
-									 errorLine4 + "<BR>" +
-									 errorLine5 + "<BR>" +
-									 errorLine6;
+			  String emailContents = errorLine1 + eol +
+									 errorLine2 + eol +
+									 errorLine3 + eol +
+									 errorLine4 + eol +
+									 errorLine5 + eol +
+									 errorLine6 + eol +
+									 errorLine7;
 			  SendMail caseCreationErrorEmail = new SendMail();
 			  try
 			  {

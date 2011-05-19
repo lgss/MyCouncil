@@ -1,21 +1,40 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
-<html> 
-  <head> 
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"> 
-    <meta name="description" content="Find out about your councillors and contact them. Find out what the council is doing for your area. Report problems to your council. Built using the free Open Source framework MyCouncil."/> 
-    <meta name="keywords" content="Northampton, Borough, Council, MyCouncil, problem, councillor, information, Sourceforge, Open Source, neighbourhood, twitter">
-    <meta name="robots" content="index,follow">
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/> 
-    <title>My Council - Northampton</title> 
-    <link rel="stylesheet" type="text/css" href="mycouncil.css"> 
-    <link rel="stylesheet" type="text/css" href="ext/resources/css/ext-all.css"> 
-    <script type="text/javascript" src="ext/adapter/ext/ext-base.js"></script> 
-    <script type="text/javascript" src="ext/ext-all-debug.js"></script> 
-    <script src="http://www.google.com/jsapi?" type="text/javascript"></script>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.1&sensor=false"></script> 
-    <script language="Javascript" type="text/javascript">google.load('search', '1');</script> 
-    <script type="text/javascript" src="mycouncil.js"></script>
-    <script type="text/javascript">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+    <head>
+        <meta name="generator" content="HTML Tidy, see www.w3.org">
+        <link rel="shortcut icon" type="image/x-icon" href=
+        "favicon.ico">
+        <meta name="description" content=
+        "Find out about your councillors and contact them. Find out what the council is doing for your area. Report problems to your council. Built using the free Open Source framework MyCouncil.">
+        <meta name="keywords" content=
+        "Northampton, Borough, Council, MyCouncil, problem, councillor, information, Sourceforge, Open Source, neighbourhood, twitter">
+        <meta name="robots" content="index,follow">
+        <meta http-equiv="content-type" content=
+        "text/html; charset=UTF-8">
+
+        <title>My Council - Northampton</title>
+        <link rel="stylesheet" type="text/css" href=
+        "mycouncil.css">
+        <link rel="stylesheet" type="text/css" href=
+        "lib/ext/resources/css/ext-all.css">
+<script type="text/javascript" src=
+"lib/ext/adapter/ext/ext-base.js">
+</script>
+<script type="text/javascript" src="lib/ext/ext-all-debug.js">
+</script>
+<script src="http://www.google.com/jsapi?" type="text/javascript">
+</script>
+<script type="text/javascript" src=
+"http://maps.google.com/maps/api/js?v=3.1&sensor=false">
+</script>
+<script language="Javascript" type="text/javascript">
+google.load('search', '1');
+</script>
+<script type="text/javascript" src="mycouncil.js">
+</script>
+<script type="text/javascript">
      var _gaq = _gaq || [];
      _gaq.push(['_setAccount', 'UA-17807518-1']);
      _gaq.push(['_trackPageview']);
@@ -24,73 +43,121 @@
        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
      })();
-   </script>
-  </head> 
-  <body> 
-    <table class="header" border="0" width="99%" cellpadding="0" cellspacing="0"> 
-    <tr> 
-    <td class="logo" width="25%" valign="center" halign="center" rowspan="3"> 
-    <A HREF="http://www.northampton.gov.uk"> 
-    <img id="logo" src="images/logo.gif" alt="Northampton Borough Council Logo"/> 
-    </A> 
-    </td> 
-    <td width="33%" align="center" style="font-size: 20px;"> 
-    My Council 
-    </td> 
-    <td width="42%"> 
-    &nbsp 
-    </td>       
-    </tr> 
-    <tr> 
-    <td id="report_title" width="32%" align="center" style="font-size: 15px;"> 
-    Political Map 
-    </td> 
-    <td id="headerButtonBack" width="42%" align="center" rowspan="2" > 
-       <table border="0" cellpadding="0" cellspacing="1" align="left"> 
-       <tr> 
-       <td style="padding:5px 5px 5px 5px"><input style="font-style:italic;color:#989898" name="searchBox" id="searchBox" type="textbox" value="Enter a postcode, address or call number" size="38"></td> 
-       <td id="findIt" onmouseover="this.style.cursor='pointer';this.className='reverseButton'" onmouseout="this.style.cursor='auto';this.className='button'" class="button">Find It!</td> 
-       <td id="resetMap" onmouseover="this.style.cursor='pointer';this.className='reverseButton'" onmouseout="this.style.cursor='auto';this.className='button'" class="button">Reset Map</td> 
-       </tr> 
-       </table> 
-    </td>        
-    </tr> 
-    <tr> 
-    <td id="Td1"  width="32%" align="center" style="font-size: 15px; background: black"> 
-    &nbsp
-    </td> 
-    </tr> 
-    </table> 
-    <table border="0" width="100%" cellpadding="0" cellspacing="0"> 
-    <tr id="message_bar" class="messageBar"> 
-    <td width="25%">&nbsp</td> 
-    <td width="71%" id="message_bar_text"> 
-    <td width="2%"><img id="previousMessage" width="12" height="12" src="images/Previous.gif" alt="Click here for the previous message"/></td> 
-    <td width="2%"><img id="nextMessage" width="12" height="12" src="images/Next.gif" alt="Click here for the next message"/></td>
-    </tr> 
-    </table> 
-    <table border="0" width="100%" cellpadding="0"> 
-    <tr> 
-    <td width="25%" valign="top" halign="center" class="sidePanel">  
-    <div id="info_panel"> 
-    <div id="info_panel_title" class="sidePanelMainTitle"> 
-    </div> 
-    <div id="info_panel_details" class="sidePanelDetails"> 
-    </div> 
-    <div id="info_panel_list" class="sidePanelList"> 
-    </div> 
-    </div> 
-    </td> 
-    <td width="75%" valign="top" halign="center">  
-   <div id="map" class="map"></div> 
-   </td> 
-    </tr> 
-    </table> 
-   <noscript><b>JavaScript must be enabled in order for you to use Google Maps.</b> 
-      However, it seems JavaScript is either disabled or not supported by your browser. 
-      To view Google Maps, enable JavaScript by changing your browser options, and then 
-      try again.
-    </noscript> 
-    <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=342086&amp;type=14" width="150" height="40" alt="Get MyCouncil at SourceForge.net. Fast, secure and Free Open Source software downloads" class="hiddenPic">
-  </body> 
+   
+</script>
+    </head>
+
+    <body id="body">
+        <table id="mainTable" class="header" border="0" width="99%"
+        cellpadding="0" cellspacing="0">
+            <tr id="mainTR">
+                <td class="logo" width="25%" valign="center"
+                halign="center" rowspan="3"><a href=
+                "http://www.northampton.gov.uk"><img id="logo" src=
+                "images/logo.gif" alt=
+                "Northampton Borough Council Logo"></a> </td>
+
+                <td width="33%" align="center" style=
+                "font-size: 20px;">My Council</td>
+
+                <td width="42%"> </td>
+            </tr>
+
+            <tr>
+                <td id="report_title" width="32%" align="center"
+                style="font-size: 15px;">Political Map</td>
+
+                <td id="headerButtonBack" width="42%" align=
+                "center" rowspan="2">
+                    <table border="0" cellpadding="0" cellspacing=
+                    "1" align="left">
+                        <tr id="searchTR">
+                            <td id="searchTD" style=
+                            "padding:5px 5px 5px 5px"><input style=
+                            "font-style:italic;color:#989898" name=
+                            "searchBox" id="searchBox" type=
+                            "textbox" value=
+                            "Enter a postcode, address or call number"
+                             size="38"></td>
+
+                            <td id="findIt" onmouseover=
+                            "this.style.cursor='pointer';this.className='reverseButton'"
+                             onmouseout=
+                            ";this.style.cursor='auto';this.className='button'"
+                             class="button">Find It!</td>
+
+                            <td id="resetMap" onmouseover=
+                            "this.style.cursor='pointer';this.className='reverseButton'"
+                             onmouseout=
+                            ";this.style.cursor='auto';this.className='button'"
+                             class="button">Reset Map</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td id="Td1" width="32%" align="center" style=
+                "font-size: 15px; background: black"> </td>
+            </tr>
+        </table>
+
+        <table id="messageTable" border="0" width="100%"
+        cellpadding="0" cellspacing="0">
+            <tr id="message_bar" class="messageBar">
+                <td width="25%"> </td>
+
+                <td width="71%" id="message_bar_text">
+                </td>
+
+                <td width="2%"><img id="previousMessage" width="12"
+                height="12" src="images/Previous.gif" alt=
+                "Click here for the previous message"></td>
+
+                <td width="2%"><img id="nextMessage" width="12"
+                height="12" src="images/Next.gif" alt=
+                "Click here for the next message"></td>
+            </tr>
+        </table>
+
+        <table border="0" width="100%" cellpadding="0">
+            <tr>
+                <td width="25%" valign="top" halign="center" class=
+                "sidePanel">
+                    <div id="info_panel">
+                        <div id="info_panel_title" class=
+                        "sidePanelMainTitle">
+                        </div>
+
+                        <div id="info_panel_details" class=
+                        "sidePanelDetails">
+                        </div>
+
+                        <div id="info_panel_list" class=
+                        "sidePanelList">
+                        </div>
+
+                        <div id="info_panel_list_small" class=
+                        "sidePanelListSmall">
+                        </div>
+                    </div>
+                </td>
+
+                <td width="75%" valign="top" halign="center">
+                    <div id="map" class="map">
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <noscript><b>JavaScript must be enabled in order for you to
+        use Google Maps.</b> However, it seems JavaScript is either
+        disabled or not supported by your browser. To view Google
+        Maps, enable JavaScript by changing your browser options,
+        and then try again.</noscript><img src=
+        "http://sflogo.sourceforge.net/sflogo.php?group_id=342086&amp;type=14"
+         width="150" height="40" alt=
+        "Get MyCouncil at SourceForge.net. Fast, secure and Free Open Source software downloads"
+         class="hiddenPic">
+    </body>
 </html>
+
