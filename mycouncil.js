@@ -1,3 +1,7 @@
+                                                                     
+                                                                     
+                                                                     
+                                             
 Ext.BLANK_IMAGE_URL = 'ext/resources/images/default/s.gif';
 
 Ext.onReady(function(){
@@ -18,6 +22,8 @@ Ext.onReady(function(){
     var wardSector = new Array();
     var wardPolitical = new Array();
     var wardOperational = new Array();
+    var wardPathsFull = new Array();
+    var wardPathsLite = new Array();
     var councillor_names = new Array();
     var councillor_emails = new Array();
     var councillor_parties = new Array();
@@ -170,15 +176,32 @@ Ext.onReady(function(){
     var preElectionDefaultText = "";
     var showCandidates = false;
     var overlayDelay = 0;
-    var jsonFileName = "mycouncil-lite.json";
+    var jsonFileName = "mycouncil.json";
     var mapTitle = "";
     var electionBreakdownTitle = "";
     var lastDeclaredWard = "";
+    var firstZoom = true;
+    var collectionDayMode = false;
+    var binDay = "";
+    var binRound = "";
+    var collectionWeekNumber = "";
+    var collectionWeek = new Array();
+    var collectionDayRound = new Array();
+    var collectionDayPdf = new Array();
+    var collectionDayPdfUrl = "";
+    var missedCollectionFormUrl = "";
+    var replacementBinFormUrl = "";
+    var useLite = false;
+    var showingLite = false;
     
     Ext.MessageBox.wait('Please wait whilst MyCouncil loads...');
     
-    if (Ext.isIE6 || Ext.isIE7 || Ext.isIE8) {
-        jsonFileName = "mycouncil-lite.json";
+    if ((Ext.isIE6 || Ext.isIE7 || Ext.isIE8) && !Ext.isIE9) {
+    	if (!Ext.urlDecode(location.search.substring(1)).search){
+           jsonFileName = "mycouncil-lite.json";
+    	}
+        useLite = true;
+        showingLite = true;
         overlayDelay = 5000;
     }
     
@@ -217,6 +240,15 @@ Ext.onReady(function(){
         if (Ext.urlDecode(location.search.substring(1)).mode == "electionCount") {
             electionCountMode = true;
             normalMode = false;
+        }
+    };
+    
+    if (location.search) {
+        if (Ext.urlDecode(location.search.substring(1)).mode == "collectionDay") {
+            collectionDayMode = true;
+            binDay = Ext.urlDecode(location.search.substring(1)).day;
+            collectionWeekNumber = Ext.urlDecode(location.search.substring(1)).week;
+            binRound = binDay + collectionWeekNumber + "pdf";
         }
     };
     
@@ -320,6 +352,7 @@ Ext.onReady(function(){
     var map = new google.maps.Map(document.getElementById("map"), mapOptions);
     
     google.maps.Polygon.prototype.Contains = function(latLng){
+
         var j = 0;
         var oddNodes = false;
         var x = latLng.lng();
@@ -346,18 +379,16 @@ Ext.onReady(function(){
     
     
     window.setTimeout(function(){
-        timer();
+        //timer();
+        function start_polling(){
+            message_timer = Ext.TaskMgr.start({
+                run: timer,
+                interval: 3600000
+            });
+        };
+        start_polling();
     }, overlayDelay);
-    
-    function start_polling(){
-        message_timer = Ext.TaskMgr.start({
-            run: timer,
-            interval: 3600000
-        });
-    };
-    
-    start_polling();
-    
+           
     function load_messages(){
         if (!preElectionMode && !electionCountMode) {
             Ext.Ajax.request({
@@ -468,12 +499,37 @@ Ext.onReady(function(){
     google.maps.event.addListener(map, "idle", function(){
         if (bounds) {
             if (!bounds.contains(map.getCenter())) {
-                map.setCenter(centerPoint)
+                map.setCenter(centerPoint);
             };
                     }
     });
     
     google.maps.event.addListener(map, 'zoom_changed', function(){
+    	if(!firstZoom&&useLite){
+    	  if(map.getZoom()<13){
+    		  if(!showingLite){
+    		     //alert("Lite");
+    		     showingLite=true;
+    		    	for(var currentWard = 0; currentWard < wards.length; currentWard++) {
+    		        	   //wards[currentWard].setMap(null);
+    		        	   wards[currentWard].setPath(wardPathsLite[currentWard]);
+    		        	   //wards[currentWard].setMap(map);
+    		         }
+    		  }
+    	  }	
+    	  else
+    	    {
+    		  if(showingLite){
+    		   //alert("Detailed");
+    		   showingLite=false;
+    	    	for(var currentWard = 0; currentWard < wards.length; currentWard++) {
+    	        	   //wards[currentWard].setMap(null);
+    	        	   wards[currentWard].setPath(wardPathsFull[currentWard]);
+    	        	   //wards[currentWard].setMap(map);
+    	         }
+    	       }
+    	    }
+    	}
         if (map.getMapTypeId() == "satellite") {
             if (map.getZoom() > 21) {
                 map.setZoom(21);
@@ -482,8 +538,8 @@ Ext.onReady(function(){
         if (map.getZoom() < 12) {
             map.setZoom(12);
         };
-            });
-    
+        firstZoom=false;
+    });
     moveListener = google.maps.event.addListener(map, "mousemove", function(event){
         if (!showPanel && !panelAnimation && !bubbleActive) {
             checkWards(event.latLng);
@@ -496,7 +552,7 @@ Ext.onReady(function(){
         var selectedWard = -1;
         for (var currentWard = 0; currentWard < totalNumOfWards; currentWard++) {
             if ((politicalView && wardPolitical[currentWard]) || (!politicalView && wardOperational[currentWard])) {
-                if (wards[currentWard].Contains(point)) {
+				if (wards[currentWard].Contains(point)) {
                     if (selectedWard == -1) {
                         selectedWard = currentWard;
                     }
@@ -713,18 +769,12 @@ Ext.onReady(function(){
                 }
                 else {
                     document.getElementById("info_panel_details").innerHTML += "<TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"images/" + leaderImage + ".jpg\" alt=\"Councillor " + leaderName + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
-                    //"<B>Councillor " + leaderName + "</B><BR>Leader of the Council<BR>";
-                    "<B>Councillor " +
-                    leaderName +
-                    "</B><BR>Leader of the Conservative Group<BR>";
+                    "<B>Councillor " + leaderName + "</B><BR>Leader of the Council<BR>";
                     if (!miniScreen) {
                         document.getElementById("info_panel_details").innerHTML += "<BR>";
                     }
                     document.getElementById("info_panel_details").innerHTML += "<TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"images/" + mayorImage + ".jpg\" alt=\"Councillor " + mayorName + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
-                    //"<B>Councillor " + mayorName + "</B><BR>Mayor<BR><BR>";
-                    "<B>" +
-                    mayorName +
-                    "</B><BR>Mayor<BR><BR>";
+                    "<B>Councillor " + mayorName + "</B><BR>Mayor<BR><BR>";
                 }
                 if (preElectionMode || electionCountMode) {
                     document.getElementById("info_panel_details").innerHTML += "<div class=\"sidePanelSubTitle\">" + electionBreakdownTitle + "</div>";
@@ -1284,7 +1334,6 @@ Ext.onReady(function(){
             clckTimeOut = null;
         });
     }
-    
     gotoMainMenu = function setBubbleContents(location, internal, internalLocationDescription, setBubbleContents){
         var tempText1;
         var tempText2;
@@ -1316,7 +1365,57 @@ Ext.onReady(function(){
             '</table>' +
             '</div></div>';
         }
-        else {
+        if(collectionDayMode){
+        	var address = menuLocation.substring(3).replace(/,/g, ", ");
+        	collectionWeek[0] = " weekly from the w/c 6th June 2011.<br><br>We will be collecting your refuse and all recycling every week.";
+        	collectionWeek[1] = "gin w/c 6th June when your Black Wheelie Bin will be collected.<br><br>Collections will then alternate weekly between <br>Brown and Black Wheelie Bins. We will collect all of your recycling every week.";
+        	collectionWeek[2] = "gin w/c 6th June when your Brown Wheelie Bin will be collected.<br><br>Collections will then alternate weekly between <br>Black and Brown Wheelie Bins. We will collect all of your recycling every week.";
+        	
+            bubbleMenu = '<BR><div class="header"><div id="bubbleBack">' +
+            '<table width="350px" border="0" cellpadding="0" cellspacing="2">' +
+            '<tr>' +
+            '<td colspan="3" class="sidePanelSubTitle">' +
+            'Your collection day is: ' + binDay +
+            '<BR><DIV class="bubbleMidiText"><BR><CENTER>' +
+            'Your new collection day will be'+
+            collectionWeek[collectionWeekNumber]+
+            '<BR></CENTER>';
+            
+            bubbleMenu += '</DIV><BR>' +
+            '</td>' +
+            '</tr>';
+            
+            bubbleMenu += '<tr>' +
+            '<td width="5%" style="background: black"></td>' +
+            '<td onClick="spawnWindow(\'' +
+            missedCollectionFormUrl +
+            '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report a Missed Collection</td>' +
+            '<td width="5%" style="background: black"></td>' +
+            '</tr>';
+            bubbleMenu += '<tr>' +
+            '<td width="5%" style="background: black"></td>' +
+            '<td onClick="spawnWindow(\'' +
+            replacementBinFormUrl +
+            '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Request a Replacement Bin/Box</td>' +
+            '<td width="5%" style="background: black"></td>' +
+            '</tr>';
+            
+            if(collectionDayPdfUrl !== ""){
+            bubbleMenu += '<tr>' +
+            '<td width="5%" style="background: black"></td>' +
+            '<td onClick="spawnWindow(\'' +
+            collectionDayPdfUrl +
+            '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Download Calendar</td>' +
+            '<td width="5%" style="background: black"></td>' +
+            '</tr>';
+            }
+            
+            bubbleMenu += '<tr>' +
+            '</tr>' +
+            '</table>' +
+            '</div></div>';
+        }
+        if(!preElectionMode && !collectionDayMode) {
             bubbleMenu = '<BR><div class="header"><div id="bubbleBack">' +
             '<table width="350px" border="0" cellpadding="0" cellspacing="2">' +
             '<tr>' +
@@ -2456,7 +2555,7 @@ Ext.onReady(function(){
             spawnWindow(councillor_main_url_base + councillor_main_url_array[selection]);
         }
     }
-    
+
     var enterKey = new Ext.KeyMap(document, {
         key: [13],
         fn: function(e){
@@ -3311,7 +3410,7 @@ Ext.onReady(function(){
     }
     
     function timer(){
-        Ext.Ajax.request({
+    	Ext.Ajax.request({
             url: jsonFileName,
             timeout: 30000,
             method: 'GET',
@@ -3367,6 +3466,15 @@ Ext.onReady(function(){
                 }
                 if (electionCountMode) {
                     document.getElementById("report_title").innerHTML = jsonData.electionCountMapTitle;
+                }
+                if (collectionDayMode){
+                	for (var currentCalendar = 0; currentCalendar < jsonData.refuseCalendars.length; currentCalendar++) {
+                		if(binRound == jsonData.refuseCalendars[currentCalendar].round ){
+                        	collectionDayPdfUrl=jsonData.refuseCalendars[currentCalendar].url;
+                        }
+                	}
+                	missedCollectionFormUrl = jsonData.missedCollectionURL;
+                	replacementBinFormUrl = jsonData.replacementBinURL;
                 }
                 if (jsonData.debug == "true") {
                     debug = true;
@@ -3538,6 +3646,12 @@ Ext.onReady(function(){
                     if (initialColour == null) {
                         initialColour = "";
                     }
+                    if(useLite&&!startupSearch){
+                       wardPathsLite[currentWard] = jsonData.wards[currentWard].points;
+                    }
+                    else{
+                       wardPathsFull[currentWard] = jsonData.wards[currentWard].points;
+                    }
                     wards[currentWard] = new google.maps.Polygon({
                         paths: jsonData.wards[currentWard].points,
                         strokeColor: "black",
@@ -3561,6 +3675,11 @@ Ext.onReady(function(){
                                 }, 500);
                             }
                         }
+                    });
+					google.maps.event.addListener(wards[currentWard], "mousemove", function(event){
+						 if(!showPanel && !panelAnimation && !bubbleActive) {
+                            checkWards(event.latLng);
+                         }
                     });
                     if ((politicalView && wardPolitical[currentWard]) || (!politicalView && wardOperational[currentWard])) {
                         wards[currentWard].setMap(map);
@@ -3689,8 +3808,41 @@ Ext.onReady(function(){
                         document.cookie = "viewedHelp=true" + ((365 == null) ? "" : ";expires=" + expiryDate.toUTCString());
                     }
                 }, 14000);
+                if(firstLoad && useLite){
+                	secondaryMapLoader();
+                }
                 firstLoad = false;
             }
+        });
+    }
+    
+    function secondaryMapLoader(){
+    	var secondaryMapFile="mycouncil.json";
+    	if(startupSearch){
+    	   secondaryMapFile="mycouncil-lite.json";
+    	}
+    	Ext.Ajax.request({
+            url: secondaryMapFile,
+            timeout: 30000,
+            method: 'GET',
+            success: function(wardData){
+                try {
+                    jsonData = Ext.util.JSON.decode(wardData.responseText);
+                } 
+                catch (err) {
+                    Ext.MessageBox.alert('Hello', 'There is a problem with the MyCouncil page, please try again later.');
+                }
+                if(startupSearch){
+                    for(var currentWard = 0; currentWard < jsonData.wards.length; currentWard++) {
+                    	   wardPathsLite[currentWard] = jsonData.wards[currentWard].points;
+                     }                	
+                }
+                else{
+                    for(var currentWard = 0; currentWard < jsonData.wards.length; currentWard++) {
+               	       wardPathsFull[currentWard] = jsonData.wards[currentWard].points;
+                    }
+                }
+             }
         });
     }
     

@@ -246,10 +246,11 @@ public class CreateLaganCase extends HttpServlet
 					  twitterALLAccessTokenSecret);
 		  }
 		  //Post Entry to Sector twitter stream.
-		  try
-		  {
-			  TwitterEntry caseTwitterEntry = new TwitterEntry();
-			  caseTwitterEntry.createTwitterEntry(
+		  if(continueProcessing && !laganSystem.equals("test")){
+		     try
+		      {
+			     TwitterEntry caseTwitterEntry = new TwitterEntry();
+			     caseTwitterEntry.createTwitterEntry(
 					  host,
 					  descriptionEmail,
 					  laganCaseReference,
@@ -257,9 +258,10 @@ public class CreateLaganCase extends HttpServlet
 					  getServletContext().getInitParameter("twitter-sector-" + sector + "-Consumer-Secret"),
 					  getServletContext().getInitParameter("twitter-sector-" + sector + "-Access-Token-Key"),
 					  getServletContext().getInitParameter("twitter-sector-" + sector + "-Access-Token-Secret"));
-		  }
-		  catch(NullPointerException error){
-			  System.out.println("Null Pointer Exception error sending twitter message");
+		     }
+		     catch(NullPointerException error){
+			     System.out.println("Null Pointer Exception error sending twitter message");
+		     }
 		  }
 	  }
 

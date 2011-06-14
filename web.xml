@@ -1,6 +1,5 @@
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee" version="2.4"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http:/java.sun.com/dtd/web-app_2_3.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:javaee="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
   <display-name>mycouncil</display-name>
   <context-param>
     <param-name>laganSystem</param-name>
@@ -8,7 +7,7 @@
   </context-param>
   <context-param>
     <param-name>host</param-name>
-    <param-value>http://localhost</param-value>
+    <param-value>http://localhost:8080</param-value>
   </context-param>
   <context-param>
     <param-name>errorEmailTo</param-name>
@@ -38,7 +37,7 @@
     <param-name>textMessageFrom</param-name>
     <param-value>Northampton Borough Council</param-value>
   </context-param>
-   <context-param>
+  <context-param>
     <param-name>twitter-TEST-Consumer-Key</param-name>
     <param-value></param-value>
   </context-param>
@@ -86,55 +85,7 @@
     <param-name>twitter-sector-North-Access-Token-Secret</param-name>
     <param-value></param-value>
   </context-param>
-  <context-param>
-    <param-name>twitter-sector-East-Consumer-Key</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-East-Consumer-Secret</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-East-Access-Token-Key</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-East-Access-Token-Secret</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-Central-Consumer-Key</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-Central-Consumer-Secret</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-Central-Access-Token-Key</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-Central-Access-Token-Secret</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-Southwest-Consumer-Key</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-Southwest-Consumer-Secret</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-Southwest-Access-Token-Key</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-Southwest-Access-Token-Secret</param-name>
-    <param-value></param-value>
-  </context-param>
-   <servlet>
+  <servlet>
     <servlet-name>CreateCall</servlet-name>
     <servlet-class>uk.gov.selfserve.CreateLaganCase</servlet-class>
     <init-param>
@@ -145,7 +96,7 @@
   <servlet>
     <servlet-name>ViewCall</servlet-name>
     <servlet-class>uk.gov.selfserve.ViewLaganCase</servlet-class>
-   </servlet>
+  </servlet>
   <servlet>
     <servlet-name>PayLink</servlet-name>
     <servlet-class>uk.gov.selfserve.LaganUpdateReceipt</servlet-class>
@@ -153,7 +104,7 @@
   <servlet>
     <servlet-name>PollingStationFinder</servlet-name>
     <servlet-class>uk.gov.selfserve.PollingStationFinder</servlet-class>
-	<init-param>
+    <init-param>
       <param-name>electionsPhoneNumber</param-name>
       <param-value>01604 837111</param-value>
     </init-param>
@@ -162,13 +113,17 @@
     <servlet-name>PollingStationLoader</servlet-name>
     <servlet-class>uk.gov.selfserve.PollingStationLoader</servlet-class>
   </servlet>
-   <servlet>
+  <servlet>
     <servlet-name>PollingStationLocationLoader</servlet-name>
     <servlet-class>uk.gov.selfserve.PollingStationLocationLoader</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>ConfigFinder</servlet-name>
     <servlet-class>uk.gov.selfserve.ConfigFinder</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>QnomyTest</servlet-name>
+    <servlet-class>uk.gov.selfserve.QnomyTest</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>ClosedCalls</servlet-name>
@@ -194,7 +149,7 @@
       <param-value>dhorton@northampton.gov.uk</param-value>
     </init-param>
   </servlet>
-   <servlet>
+  <servlet>
     <servlet-name>SendMessage</servlet-name>
     <servlet-class>uk.gov.selfserve.SendMessage</servlet-class>
     <init-param>
@@ -204,7 +159,7 @@
     <init-param>
       <param-name>testEmailAddress</param-name>
       <param-value>kwhite@northampton.gov.uk</param-value>
-    </init-param> 
+    </init-param>
     <init-param>
       <param-name>emailVerification</param-name>
       <param-value>@northampton.gov.uk</param-value>
@@ -213,28 +168,38 @@
       <param-name>emailFrom</param-name>
       <param-value>mycouncil@northampton.gov.uk</param-value>
     </init-param>
-   </servlet>
-   <servlet>
+  </servlet>
+  <servlet>
     <servlet-name>ModernGovScraper</servlet-name>
-    <load-on-startup>1</load-on-startup>
     <servlet-class>uk.gov.selfserve.ModernGovScraper</servlet-class>
     <init-param>
-       <description>This is the URL for the ModernGov meetings page</description>
-       <param-name>modernGovURL</param-name>
-       <param-value>http://www.northamptonboroughcouncil.com/councillors/mgCalendarAgendaView.aspx</param-value>
+      <description>This is the URL for the ModernGov meetings page</description>
+      <param-name>modernGovURL</param-name>
+      <param-value>http://www.northamptonboroughcouncil.com/councillors/mgCalendarAgendaView.aspx</param-value>
     </init-param>
     <init-param>
-    	<description>Boolean to tell the serlvet if it needs to use a base URL if the meetings URL is relative</description>
-    	<param-name>useModernGovBaseURL</param-name>
-    	<param-value>true</param-value></init-param>
+      <description>Boolean to tell the serlvet if it needs to use a base URL if the meetings URL is relative</description>
+      <param-name>useModernGovBaseURL</param-name>
+      <param-value>true</param-value>
+    </init-param>
     <init-param>
-    	<description>This is the base URL to use if the meetings URL is relative</description>
-    	<param-name>modernGovBaseURL</param-name>
-    	<param-value>http://www.northamptonboroughcouncil.com/councillors/ieListDocuments.aspx?</param-value></init-param>
-   </servlet>
+      <description>This is the base URL to use if the meetings URL is relative</description>
+      <param-name>modernGovBaseURL</param-name>
+      <param-value>http://www.northamptonboroughcouncil.com/councillors/ieListDocuments.aspx?</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
   <servlet>
     <servlet-name>CreateTwitterEntry</servlet-name>
     <servlet-class>uk.gov.selfserve.CreateTwitterEntry</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>BinRoundFinder</servlet-name>
+    <servlet-class>uk.gov.selfserve.BinRoundFinder</servlet-class>
+    <init-param>
+      <param-name>phoneNumber</param-name>
+      <param-value>0300 330 7000</param-value>
+    </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>CreateTwitterEntry</servlet-name>
@@ -260,19 +225,27 @@
     <servlet-name>PollingStationLoader</servlet-name>
     <url-pattern>/PollingStationLoader</url-pattern>
   </servlet-mapping>
-   <servlet-mapping>
+  <servlet-mapping>
     <servlet-name>PollingStationLocationLoader</servlet-name>
     <url-pattern>/PollingStationLocationLoader</url-pattern>
   </servlet-mapping>
-   <servlet-mapping>
+  <servlet-mapping>
     <servlet-name>ConfigFinder</servlet-name>
     <url-pattern>/ConfigFinder</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>QnomyTest</servlet-name>
+    <url-pattern>/QnomyTest</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>SendMessage</servlet-name>
     <url-pattern>/SendMessage</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>BinRoundFinder</servlet-name>
+    <url-pattern>/BinRoundFinder</url-pattern>
+  </servlet-mapping>
   <welcome-file-list>
     <welcome-file>mycouncil.html</welcome-file>
-  </welcome-file-list>
+  </welcome-file-list>    
 </web-app>
