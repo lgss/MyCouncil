@@ -1311,17 +1311,16 @@ Ext.onReady(function(){
         if (clickSearch || (!clickSearch && (menuLocation.substr(3, 2)).toLowerCase() == "nn")) {
             menuLocation = "near " + location.substring(0, location.indexOf(","));
         }
-        gotoMainMenu(location, false, null, false)
-        currentLocation = location;
-        
+        gotoMainMenu(location, false, null, false);
+        currentLocation = location;       
         if (point.latLng) {
-            currentBubble = new google.maps.InfoWindow({
+        	currentBubble = new google.maps.InfoWindow({
                 content: bubbleMenu,
                 position: point.latLng
             });
         }
         else {
-            currentBubble = new google.maps.InfoWindow({
+        	currentBubble = new google.maps.InfoWindow({
                 content: bubbleMenu,
                 position: point
             });

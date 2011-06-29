@@ -17,13 +17,14 @@ import javax.mail.*;
 
 public class CreateLaganCase extends HttpServlet
    {
+	private static final long serialVersionUID = 1L;
 
-   public void doPost(HttpServletRequest request,
+public void doPost(HttpServletRequest request,
                      HttpServletResponse response) 
                     throws ServletException, IOException
       {
-      //System.getProperties().put("http.proxyHost", "localhost");
-	  //System.getProperties().put("http.proxyPort", "8888");
+      //System.getProperties().put("http.proxyHost", "172.17.11.194");
+	  //System.getProperties().put("http.proxyPort", "80");
       DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	  DateFormat slaDateFormat = new SimpleDateFormat("EEEEEEEEE, d MMMMMMMMM yyyy 'at' HH:mm:ss");
 	  DateFormat voiceSlaDateFormat = new SimpleDateFormat("EEEEEEEEE, d MMMMMMMMM yyyy 'at' h mm a");
@@ -38,6 +39,7 @@ public class CreateLaganCase extends HttpServlet
 	  String smtpHost = getServletContext().getInitParameter("smtpHost");
 	  String localDialCode = getServletContext().getInitParameter("localDialCode");
 	  String textMessageFrom = getServletContext().getInitParameter("textMessageFrom");
+	  String googleURLAPIKey = getServletContext().getInitParameter("googleURLAPIKey");
 	  String twitterTESTConsumerKey = getServletContext().getInitParameter("twitter-TEST-Consumer-Key");
 	  String twitterTESTConsumerSecret = getServletContext().getInitParameter("twitter-TEST-Consumer-Secret");
 	  String twitterTESTAccessTokenKey = getServletContext().getInitParameter("twitter-TEST-Access-Token-Key");
@@ -54,7 +56,6 @@ public class CreateLaganCase extends HttpServlet
 	  String location = request.getParameter("problemLocation");
 	  String street = request.getParameter("problemStreet");
 	  String descriptionEmail = request.getParameter("descriptionEmail");
-	  String eol = System.getProperty("line.separator");
 	  String ward = request.getParameter("ward");
 	  String sector = request.getParameter("sector");
 	  String name = request.getParameter("name");
@@ -74,6 +75,7 @@ public class CreateLaganCase extends HttpServlet
 	  String[] emailBCC = {getServletConfig().getInitParameter("bccEmailAddress")};
 	  String slaDate="";
 	  String voiceSlaDate = "";
+	  String twitterMessage="";
 
 	  if(phoneNumber.length()>3&&phoneNumber.substring(1,3).equals("44"))
 	  {
@@ -82,12 +84,11 @@ public class CreateLaganCase extends HttpServlet
 
 	  //Authenticate to Lagan.
 	  EngineConfiguration config = new FileProvider(getServletContext().getRealPath("/WEB-INF/mycouncil.wsdd"));
-	  PWCallback pwCallback = new PWCallback();
-	  lagan.api.auth.FLAuthService authService = new lagan.api.auth.FLAuthServiceLocator(config);
+	  FLAuthService authService = new FLAuthServiceLocator(config);
 	  org.apache.axis.client.Stub authStub = null;
 	  try
 	  {
-		  lagan.api.auth.FLAuthWebInterface authInterface = authService.getFLAuth();
+		  FLAuthWebInterface authInterface = authService.getFLAuth();
  		  authInterface.authenticate();
 		  authStub = (Stub)authInterface;            
 	  } 
@@ -126,52 +127,52 @@ public class CreateLaganCase extends HttpServlet
 	  //Create case on Lagan.
 	  if (continueProcessing)
 	  {
-		  lagan.api.main.FLWebService webService = new lagan.api.main.FLWebServiceLocator(config);
+		  FLWebService webService = new FLWebServiceLocator(config);
 		  org.apache.axis.client.Stub webStub = null;
 		  try
 		  {
-			  lagan.api.main.FLWebInterface webInterface = webService.getFL();
+			  FLWebInterface webInterface = webService.getFL();
 			  webStub = (Stub)webInterface;
 			  SOAPHeaderElement[] respHdrs = authStub.getResponseHeaders();
 			  for (int i = 0; i < respHdrs.length; i++)
 			  {
 				  webStub.setHeader(respHdrs[i]);
 			  }
-			  lagan.api.main.FWTCaseCreate caseCreate = new lagan.api.main.FWTCaseCreate();
+			  FWTCaseCreate caseCreate = new FWTCaseCreate();
 			  caseCreate.setClassificationEventCode(Integer.parseInt(classificationCode));
 			  caseCreate.setTitle("Reported via MyCouncil");
 			  caseCreate.setDescription("Enquiry sent from IP: <" + request.getRemoteHost() + ">");
 			  laganCaseReference = webInterface.createCase(caseCreate);
-			  lagan.api.main.FWTCaseEformNew eForm = new lagan.api.main.FWTCaseEformNew(laganCaseReference, "EnvironmentalServices", "");
+			  FWTCaseEformNew eForm = new FWTCaseEformNew(laganCaseReference, "EnvironmentalServices", "");
 			  webInterface.addCaseEform(eForm);
-			  lagan.api.main.FWTCaseEformInstance eFormInstance = new lagan.api.main.FWTCaseEformInstance(laganCaseReference, "EnvironmentalServices","");
-			  lagan.api.main.FWTEformField eFormFields[] = new lagan.api.main.FWTEformField[20];
-			  eFormFields[0] = new lagan.api.main.FWTEformField("cboType", problemType);
-			  eFormFields[1] = new lagan.api.main.FWTEformField("txtDetails", details);
-			  eFormFields[2] = new lagan.api.main.FWTEformField("txtLocation", location);
-			  eFormFields[3] = new lagan.api.main.FWTEformField("txtStreet", street);
-			  eFormFields[4] = new lagan.api.main.FWTEformField("txtWard", ward);
-			  eFormFields[5] = new lagan.api.main.FWTEformField("txtSector", sector);
-			  eFormFields[6] = new lagan.api.main.FWTEformField("txtCustomerName", name);
-			  eFormFields[7] = new lagan.api.main.FWTEformField("txtEmail", emailAddress);
-			  eFormFields[8] = new lagan.api.main.FWTEformField("txtCustomerTelephone", phoneNumber);
-			  eFormFields[9] = new lagan.api.main.FWTEformField("txtLatitude", lat);
-			  eFormFields[10] = new lagan.api.main.FWTEformField("txtLongtitude", lng);
-			  eFormFields[11] = new lagan.api.main.FWTEformField("txtNotifiedBy", "SelfServe");
-			  eFormFields[12] = new lagan.api.main.FWTEformField("txtFormCompletedBy", "MyCouncil");
-			  eFormFields[13] = new lagan.api.main.FWTEformField("txtHeading", heading);
-			  eFormFields[14] = new lagan.api.main.FWTEformField("txtPitch", pitch);
-			  eFormFields[15] = new lagan.api.main.FWTEformField("txtZoom", zoom);
-			  eFormFields[16] = new lagan.api.main.FWTEformField("txtDescription", descriptionEmail);
-			  eFormFields[17] = new lagan.api.main.FWTEformField("txtEasting", easting);
-			  eFormFields[18] = new lagan.api.main.FWTEformField("txtNorthing", northing);
-			  eFormFields[19] = new lagan.api.main.FWTEformField("txtCaseID", laganCaseReference);
-			  lagan.api.main.FWTCaseEformData eFormData = new lagan.api.main.FWTCaseEformData(eFormInstance, eFormFields);
+			  FWTCaseEformInstance eFormInstance = new FWTCaseEformInstance(laganCaseReference, "EnvironmentalServices","");
+			  FWTEformField eFormFields[] = new FWTEformField[20];
+			  eFormFields[0] = new FWTEformField("cboType", problemType);
+			  eFormFields[1] = new FWTEformField("txtDetails", details);
+			  eFormFields[2] = new FWTEformField("txtLocation", location);
+			  eFormFields[3] = new FWTEformField("txtStreet", street);
+			  eFormFields[4] = new FWTEformField("txtWard", ward);
+			  eFormFields[5] = new FWTEformField("txtSector", sector);
+			  eFormFields[6] = new FWTEformField("txtCustomerName", name);
+			  eFormFields[7] = new FWTEformField("txtEmail", emailAddress);
+			  eFormFields[8] = new FWTEformField("txtCustomerTelephone", phoneNumber);
+			  eFormFields[9] = new FWTEformField("txtLatitude", lat);
+			  eFormFields[10] = new FWTEformField("txtLongtitude", lng);
+			  eFormFields[11] = new FWTEformField("txtNotifiedBy", "SelfServe");
+			  eFormFields[12] = new FWTEformField("txtFormCompletedBy", "MyCouncil");
+			  eFormFields[13] = new FWTEformField("txtHeading", heading);
+			  eFormFields[14] = new FWTEformField("txtPitch", pitch);
+			  eFormFields[15] = new FWTEformField("txtZoom", zoom);
+			  eFormFields[16] = new FWTEformField("txtDescription", descriptionEmail);
+			  eFormFields[17] = new FWTEformField("txtEasting", easting);
+			  eFormFields[18] = new FWTEformField("txtNorthing", northing);
+			  eFormFields[19] = new FWTEformField("txtCaseID", laganCaseReference);
+			  FWTCaseEformData eFormData = new FWTCaseEformData(eFormInstance, eFormFields);
 			  webInterface.writeCaseEformData(eFormData);
 			  String[] options = { "all" };
-			  lagan.api.main.FWTCaseFullDetailsRequest caseRequest = new lagan.api.main.FWTCaseFullDetailsRequest(laganCaseReference, options);
-			  lagan.api.main.FWTCaseFullDetails caseDetails = webInterface.retrieveCaseDetails(caseRequest);
-			  lagan.api.main.FWTCaseCoreDetails coreDetails = caseDetails.getCoreDetails();
+			  FWTCaseFullDetailsRequest caseRequest = new FWTCaseFullDetailsRequest(laganCaseReference, options);
+			  FWTCaseFullDetails caseDetails = webInterface.retrieveCaseDetails(caseRequest);
+			  FWTCaseCoreDetails coreDetails = caseDetails.getCoreDetails();
 			  try
 			  {
 				  slaDate = slaDateFormat.format(coreDetails.getDueDate().getTime());
@@ -220,13 +221,28 @@ public class CreateLaganCase extends HttpServlet
 		  }
 	  }
 
+	  URLShortener shortURL = new URLShortener();
+	  String shortenedURL = shortURL.shortenURL(host + "/?search=" + laganCaseReference,googleURLAPIKey);
+	  System.out.println("CP1="+shortenedURL);
+	  
       //Post Entry to 'All' twitter stream.
+	  String noWardMessage="A problem has been reported regarding " + descriptionEmail + ". More details " + shortenedURL;
+	  String wardMessage=ward + " : " + noWardMessage;
+	  if(wardMessage.length()>140){
+          twitterMessage = noWardMessage;
+		  }
+	  else{
+		  twitterMessage = wardMessage;
+		  }
 	  if (continueProcessing && laganSystem.equals("test") && !twitterTESTConsumerKey.equals("")){
 		  TwitterEntry caseTwitterEntry = new TwitterEntry();
 		  caseTwitterEntry.createTwitterEntry(
-				  host,
-				  descriptionEmail, 
-				  laganCaseReference,
+                  twitterMessage,
+                  currentDate,
+                  strErrorEmailTo,
+                  strErrorEmailBCC,
+                  emailFrom,
+                  smtpHost,
 				  twitterTESTConsumerKey,
 				  twitterTESTConsumerSecret,
 				  twitterTESTAccessTokenKey,
@@ -237,9 +253,12 @@ public class CreateLaganCase extends HttpServlet
 		  {
 			  TwitterEntry caseTwitterEntry = new TwitterEntry();
 			  caseTwitterEntry.createTwitterEntry( 
-					  host,
-					  descriptionEmail, 
-					  laganCaseReference,
+					  twitterMessage,
+					  currentDate,
+	                  strErrorEmailTo,
+	                  strErrorEmailBCC,
+	                  emailFrom,
+	                  smtpHost,
 					  twitterALLConsumerKey,
 					  twitterALLConsumerSecret,
 					  twitterALLAccessTokenKey,
@@ -251,9 +270,12 @@ public class CreateLaganCase extends HttpServlet
 		      {
 			     TwitterEntry caseTwitterEntry = new TwitterEntry();
 			     caseTwitterEntry.createTwitterEntry(
-					  host,
-					  descriptionEmail,
-					  laganCaseReference,
+			    	  twitterMessage,
+			    	  currentDate,
+	                  strErrorEmailTo,
+	                  strErrorEmailBCC,
+	                  emailFrom,
+	                  smtpHost,
 					  getServletContext().getInitParameter("twitter-sector-" + sector + "-Consumer-Key"),
 					  getServletContext().getInitParameter("twitter-sector-" + sector + "-Consumer-Secret"),
 					  getServletContext().getInitParameter("twitter-sector-" + sector + "-Access-Token-Key"),

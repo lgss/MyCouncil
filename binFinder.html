@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>Check Your Bin Round</title>
+<link rel='stylesheet' type='text/css' href='nbc.css' />
+</head>
+<body>
+	<div id="Logo">
+		<img src="images/logo.gif">
+	</div>
+	<div id="TitleBar"> 
+		Check Your Collection Day
+	</div>
+<div id="main">
+	<form name="search" method="get" action="BinRoundFinder">
+		<table>
+			<tr>
+				<td>
+					<label>Your Postcode</label>
+				</td>
+				<td>
+					<input style="font-style:italic;color:#989898" onfocus="this.value = '';this.setAttribute('style', '');this.focus();" onmousedown="this.value = '';this.setAttribute('style', '');this.focus();" name="postcode" id="postcode" type="textbox" value="postcode" size="22"> 
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+				<p class="advice">Don't know your postcode? <a href='http://postcode.royalmail.com/portal/rm/postcodefinder' target='_blank'>Click Here</a></p>
+				</td>
+			</tr>
+		</table>
+		<div id="submit">
+			<input type="submit" value="Search" />
+		</div>
+	</form>
+</div>
+</body>
+</html>
+
+
+
+

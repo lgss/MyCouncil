@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="PollingStations">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="Polling_Station_Location" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+             <xs:element name="Polling_Station_Name" type="xs:string"/>
+             <xs:element name="Lat" type="xs:decimal"/>
+			 <xs:element name="Lng" type="xs:decimal"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+</xs:schema>

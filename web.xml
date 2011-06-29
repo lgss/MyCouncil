@@ -7,7 +7,7 @@
   </context-param>
   <context-param>
     <param-name>host</param-name>
-    <param-value>http://localhost:8080</param-value>
+    <param-value>http://selfserve.northampton.gov.uk</param-value>
   </context-param>
   <context-param>
     <param-name>errorEmailTo</param-name>
@@ -23,7 +23,7 @@
   </context-param>
   <context-param>
     <param-name>smtpHost</param-name>
-    <param-value></param-value>
+    <param-value>vscvex1</param-value>
   </context-param>
   <context-param>
     <param-name>auditEmailTo</param-name>
@@ -36,6 +36,10 @@
   <context-param>
     <param-name>textMessageFrom</param-name>
     <param-value>Northampton Borough Council</param-value>
+  </context-param>  
+  <context-param>
+    <param-name>googleURLAPIKey</param-name>
+    <param-value></param-value>
   </context-param>
   <context-param>
     <param-name>twitter-TEST-Consumer-Key</param-name>
@@ -67,22 +71,6 @@
   </context-param>
   <context-param>
     <param-name>twitter-ALL-Access-Token-Secret</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-North-Consumer-Key</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-North-Consumer-Secret</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-North-Access-Token-Key</param-name>
-    <param-value></param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-sector-North-Access-Token-Secret</param-name>
     <param-value></param-value>
   </context-param>
   <servlet>
