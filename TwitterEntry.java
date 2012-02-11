@@ -24,8 +24,8 @@ public class TwitterEntry
 	   AccessToken accessToken = new AccessToken(accessTokenKey, accessTokenSecret);
        twitter.setOAuthAccessToken(accessToken);
        try{
-		   twitter.updateStatus(twitterMessage);
-       }
+    	   twitter.updateStatus(twitterMessage);
+		   }
        catch(TwitterException twitterError){    	   
 		   String errorLine1 = "";
 		   String errorLine2 = "TwitterEntry - Failed - Sending tweet";

@@ -38,7 +38,7 @@ public class PollingStationFinder extends HttpServlet
       int numOfPollingStations=0;
 		try
 		{
-			Connection dbConnection = DriverManager.getConnection("jdbc:sqlite:" + getServletContext().getRealPath("/mycouncil.db3"));
+			Connection dbConnection = DriverManager.getConnection("jdbc:sqlite:" + getServletContext().getRealPath("/WEB-INF/mycouncil.db3"));
 			Statement dbStatement = dbConnection.createStatement();
 			ResultSet dbResult = dbStatement.executeQuery("SELECT COUNT(distinct PollingPlaceAddress1) from pollingStationLookup where PostCode = \"" + postCode + "\";");
             if(dbResult.next()){

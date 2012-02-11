@@ -31,7 +31,7 @@ public class PollingStationLoader extends HttpServlet
 		}
 		try
 		{
-			Connection dbConnection = DriverManager.getConnection("jdbc:sqlite:" + getServletContext().getRealPath("/mycouncil.db3"));
+			Connection dbConnection = DriverManager.getConnection("jdbc:sqlite:" + getServletContext().getRealPath("/WEB-INF/mycouncil.db3"));
 			Statement dbStatement = dbConnection.createStatement();
 			//
 			DocumentBuilder builder = domFactory.newDocumentBuilder();

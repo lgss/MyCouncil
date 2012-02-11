@@ -4,7 +4,6 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
-import com.google.gson.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -12,6 +11,7 @@ import javax.xml.xpath.*;
 
 public class BinRoundLoader extends HttpServlet
 {
+	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest request,
 					  HttpServletResponse response) 
@@ -31,7 +31,7 @@ public class BinRoundLoader extends HttpServlet
 		}
 		try
 		{
-			Connection dbConnection = DriverManager.getConnection("jdbc:sqlite:" + getServletContext().getRealPath("/mycouncil.db3"));
+			Connection dbConnection = DriverManager.getConnection("jdbc:sqlite:" + getServletContext().getRealPath("/WEB-INF/mycouncil.db3"));
 			Statement dbStatement = dbConnection.createStatement();
 			DocumentBuilder builder = domFactory.newDocumentBuilder();
 			Document doc = builder.parse("http://localhost:8080/" + getServletContext().getServletContextName() + "/data/BinCollections.xml");

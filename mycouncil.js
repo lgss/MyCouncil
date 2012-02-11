@@ -1,7 +1,3 @@
-                                                                     
-                                                                     
-                                                                     
-                                             
 Ext.BLANK_IMAGE_URL = 'ext/resources/images/default/s.gif';
 
 Ext.onReady(function(){
@@ -193,6 +189,11 @@ Ext.onReady(function(){
     var replacementBinFormUrl = "";
     var useLite = false;
     var showingLite = false;
+    var mapTypeControl = true;
+    var confirmWard = -1;
+    var confirmSelection = -1;
+    var confirmCouncillor = -1;
+    var submitFeedback = false;
     
     Ext.MessageBox.wait('Please wait whilst MyCouncil loads...');
     
@@ -220,6 +221,7 @@ Ext.onReady(function(){
         if (Ext.urlDecode(location.search.substring(1)).internal == "true") {
             politicalView = false;
             internal = true;
+            mapTypeControl = false;
         }
     };
     
@@ -344,7 +346,7 @@ Ext.onReady(function(){
             style: google.maps.NavigationControlStyle.ANDROID,
             position: google.maps.ControlPosition.TOP_CENTER
         },
-        mapTypeControl: true,
+        mapTypeControl: mapTypeControl,
         scaleControl: true,
         streetViewControl: false
     };
@@ -369,12 +371,12 @@ Ext.onReady(function(){
                 (this.getPath().getAt(j).lat() - this.getPath().getAt(i).lat()) *
                 (this.getPath().getAt(j).lng() - this.getPath().getAt(i).lng()) <
                 x) {
-                    oddNodes = !oddNodes
+                    oddNodes = !oddNodes;
                 }
             }
         }
         return oddNodes;
-    }
+    };
     
     
     
@@ -446,7 +448,7 @@ Ext.onReady(function(){
                 }
             }
             
-            if (internetExplorer) {
+            if (internetExplorer||Ext.isChrome) {
                 document.getElementById("message_bar_text").innerHTML = "";
                 window.setTimeout(function(){
                     document.getElementById("message_bar_text").innerHTML = messages_array[currentMessage];
@@ -624,7 +626,7 @@ Ext.onReady(function(){
         }
         if (electionCountMode) {
             if (councillor_names_array[0] == "") {
-                document.getElementById("info_panel_title").innerHTML += "<BR>(Not Yet Declared)"
+                document.getElementById("info_panel_title").innerHTML += "<BR>(Not Yet Declared)";
             }
             else {
                 //document.getElementById("info_panel_title").innerHTML+="<BR>(Declared)"
@@ -1090,7 +1092,7 @@ Ext.onReady(function(){
                         '</tr>' +
                         '<tr>' +
                         '<td width="5%" style="background: black"></td>' +
-                        '<td onClick="formClick(false,document.getElementById(\'feedbackContactDetails\').value,document.getElementById(\'feedbackDetails\').value,0,\'\',\'\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Send Feedback</td>' +
+                        '<td onClick="formClick(false,document.getElementById(\'feedbackContactDetails\').value,document.getElementById(\'feedbackDetails\').value,0,\'\',\'\',false,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Send Feedback</td>' +
                         '<td width="5%" style="background: black"></td>' +
                         '</tr>' +
                         '<tr>' +
@@ -1236,7 +1238,7 @@ Ext.onReady(function(){
         if (status == google.maps.StreetViewStatus.OK && inWard) {
             insideLocation = data.location.description;
             outsideLocation = "'" + data.location.description + "'<BR><BR>Is not within the " + boundaryType + " boundary.";
-            checkLocation(currentPoint, insideLocation, outsideLocation)
+            checkLocation(currentPoint, insideLocation, outsideLocation);
         }
         else {
             var tempPoint;
@@ -1366,9 +1368,9 @@ Ext.onReady(function(){
         }
         if(collectionDayMode){
         	var address = menuLocation.substring(3).replace(/,/g, ", ");
-        	collectionWeek[0] = " weekly from the w/c 6th June 2011.<br><br>We will be collecting your refuse and all recycling every week.";
-        	collectionWeek[1] = "gin w/c 6th June when your Black Wheelie Bin will be collected.<br><br>Collections will then alternate weekly between <br>Brown and Black Wheelie Bins. We will collect all of your recycling every week.";
-        	collectionWeek[2] = "gin w/c 6th June when your Brown Wheelie Bin will be collected.<br><br>Collections will then alternate weekly between <br>Black and Brown Wheelie Bins. We will collect all of your recycling every week.";
+        	collectionWeek[0] = " weekly from the w/c 23rd January 2012.<br><br>We will be collecting your refuse and all recycling every week.";
+        	collectionWeek[2] = "gin w/c 23rd January when your Black Wheelie Bin will be collected.<br><br>Collections will then alternate weekly between <br>Brown and Black Wheelie Bins. We will collect all of your recycling every week.";
+        	collectionWeek[1] = "gin w/c 23rd January when your Brown Wheelie Bin will be collected.<br><br>Collections will then alternate weekly between <br>Black and Brown Wheelie Bins. We will collect all of your recycling every week.";
         	
             bubbleMenu = '<BR><div class="header"><div id="bubbleBack">' +
             '<table width="350px" border="0" cellpadding="0" cellspacing="2">' +
@@ -1471,7 +1473,7 @@ Ext.onReady(function(){
             currentBubble.setContent(bubbleMenu);
         };
         
-            }
+            };
     
     gotoCouncillorMenu = function(){
         var ward = displayWard;
@@ -1528,7 +1530,7 @@ Ext.onReady(function(){
         
         currentBubble.setContent(bubbleMenu);
         
-    }
+    };
     
     gotoCoordinatorMenu = function(){
     
@@ -1589,7 +1591,7 @@ Ext.onReady(function(){
         
         currentBubble.setContent(bubbleMenu);
         
-    }
+    };
     
     gotoViewMenu = function(){
     
@@ -1652,7 +1654,7 @@ Ext.onReady(function(){
         
         currentBubble.setContent(bubbleMenu);
         
-    }
+    };
     
     gotoProblemMenu = function(){
     
@@ -1933,7 +1935,7 @@ Ext.onReady(function(){
             document.getElementById("formID").innerHTML = ".";
             streetView = new google.maps.StreetViewPanorama(document.getElementById("formID"), panoramaOptions);
         });
-    }
+    };
     
     gotoConfirmationMenu = function(problemType, callNumber, slaDate, email, text){
     
@@ -2026,7 +2028,7 @@ Ext.onReady(function(){
         '</div></div>';
         currentBubble.setContent(bubbleMenu);
         currentBubble.open(map);
-    }
+    };
     
     reportProblem = function(ward, problemType, problemDetails, problemLocation, problemStreet, name, emailAddress, phoneNumber, streetviewed){
         Ext.MessageBox.wait('Please wait whilst the problem is being registered...');
@@ -2083,7 +2085,7 @@ Ext.onReady(function(){
         var encodedHeading = encodeURIComponent(heading);
         var encodedPitch = encodeURIComponent(pitch);
         var encodedZoom = encodeURIComponent(zoom);
-        var tempURL = ""
+        var tempURL = "";
         if (document.location.href.indexOf("?") != -1) {
             tempURL = document.location.href.substring(0, document.location.href.indexOf("?"));
         }
@@ -2136,67 +2138,94 @@ Ext.onReady(function(){
                 Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error reporting your problem. Please try again later.');
             }
         });
-    }
+    };
     
-    formClick = function(contact, contactDetails, messageDetails, ward, selection, councillor){
-        if (contactDetails == "Enter your contact details here" || contactDetails == "Enter your email address here") {
-            contactDetails = "";
-        }
-        if (messageDetails != 'Enter your message here' && messageDetails != '') {
-            var emailAddress;
-            var messageType;
-            if (contact) {
-                if (councillor) {
-                    messageType = 1;
-                    var councillor_emails_array = councillor_emails[ward].toString().split(",");
-					if (selection == -1) {
-                        emailAddress = councillor_emails_array;
-                    }
-                    else {
-                        emailAddress = councillor_emails_array[selection];
-                    }
-				}
-                else {
-                    messageType = 2;
-                    emailAddress = sectorEmails[wardSector[ward]];
-                }
-            }
-            else {
-                messageType = 3;
-                emailAddress = feedbackEmailAddress;
-            }
-            var encodedContactDetails = encodeURIComponent(contactDetails);
-            var encodedMessageDetails = encodeURIComponent(messageDetails);
-            var encodedEmailTo = encodeURIComponent(emailAddress);
-            var encodedSector = encodeURIComponent(sectorNames[wardSector[ward]]);
-            Ext.Ajax.request({
-                            url: 'SendMessage?contact=' + encodedContactDetails + '&message=' + encodedMessageDetails + '&emailTo=' + encodedEmailTo + '&messageType=' + messageType + '&sector=' + encodedSector,
-                            timeout: 30000,
-                            method: 'POST',
-                            success: function (response) {
-                                var sendEmailResponse;
-                                try {
-                                    sendEmailResponse = Ext.util.JSON.decode(response.responseText);
-                                    if (contact) {
-                                        redirectFromContact(councillor, sendEmailResponse.message);
-                                    }
-                                    else {
-                                        Ext.MessageBox.alert('<CENTER>Hello</CENTER>', sendEmailResponse.message);
-                                        MenuClick(false, false, true, false);
-                                    }
-                                }
-                                catch (err) {
-                                    Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
-                                    sendEmailResponse = Ext.util.JSON.decode(response.responseText);
-                                }
-                            },
-                            failure: function (response) {
-                                Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
-                                sendEmailResponse = Ext.util.JSON.decode(response.responseText);
-                            }
-                        });
-        }
-    }
+    formClick = function(contact, contactDetails, messageDetails, ward, selection, councillor, confirmed, feedback){
+    	if(feedback){
+    		submitFeedback=true;
+    	}else{
+    		submitFeedback=false;
+    	}
+    	if(messageDetails==''||messageDetails=='Enter your message here'||messageDetails=='Enter your feedback here'){
+				Ext.MessageBox.alert('<CENTER>Hello</CENTER>',"No message entered");
+    	}else{
+	        if (!confirmed && (contactDetails == "Enter your contact details here" || contactDetails == "Enter your email address here" || contactDetails == "")) {
+	            contactDetails = "";
+	            Ext.MessageBox.confirm('<CENTER>Hello</CENTER>', 'Are you sure you want to report this anonymously? Please click \'No\' if you want to enter an email address.',testAnonymous);
+	            verifiedAnonymous = false;
+	        }
+	        else
+	        	{
+	        	if (contactDetails == "Enter your contact details here" || contactDetails == "Enter your email address here") {
+	        		contactDetails = "";
+	        	}
+	        	if (messageDetails != 'Enter your message here' && messageDetails != '') {
+	        		var emailAddress;
+	        		var messageType;
+	        		if (contact) {
+	        			if (councillor) {
+	        				messageType = 1;
+	        				var councillor_emails_array = councillor_emails[ward].toString().split(",");
+	        				if (selection == -1) {
+	        					emailAddress = councillor_emails_array;
+	        				}
+	        				else {
+	        					emailAddress = councillor_emails_array[selection];
+	        				}
+	        			}
+	        			else {
+	        				messageType = 2;
+	        				emailAddress = sectorEmails[wardSector[ward]];
+	        			}
+	        		}
+	        		else {
+	        			messageType = 3;
+	        			emailAddress = feedbackEmailAddress;
+	        		}
+	        		var encodedContactDetails = encodeURIComponent(contactDetails);
+	        		var encodedMessageDetails = encodeURIComponent(messageDetails);
+	        		var encodedEmailTo = encodeURIComponent(emailAddress);
+	        		var encodedSector = encodeURIComponent(sectorNames[wardSector[ward]]);
+	        		Ext.Ajax.request({
+	        			url: 'SendMessage?contact=' + encodedContactDetails + '&message=' + encodedMessageDetails + '&emailTo=' + encodedEmailTo + '&messageType=' + messageType + '&sector=' + encodedSector,
+	        			timeout: 30000,
+	        			method: 'POST',
+	        			success: function (response) {
+	        				var sendEmailResponse;
+	        				try {
+	        					sendEmailResponse = Ext.util.JSON.decode(response.responseText);
+	        					if (contact) {
+	        						redirectFromContact(councillor, sendEmailResponse.message);
+	        					}
+	        					else {
+	        						Ext.MessageBox.alert('<CENTER>Hello</CENTER>', sendEmailResponse.message);
+	        						MenuClick(false, false, true, false);
+	        					}
+	        				}
+	        				catch (err) {
+	        					Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
+	        					sendEmailResponse = Ext.util.JSON.decode(response.responseText);
+	        				}
+	        			},
+	        			failure: function (response) {
+	        				Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
+	        				sendEmailResponse = Ext.util.JSON.decode(response.responseText);
+	        			}
+	        		});
+	        	}
+        	}
+    	}
+    };
+    
+    function testAnonymous(btn){
+    	if(btn=="yes"){
+    		if(submitFeedback){
+    			formClick(false,document.getElementById('feedbackContactDetails').value,document.getElementById('feedbackDetails').value,0,'','',true,true);
+    		}else{
+    			formClick(true,document.getElementById('contactDetails').value,document.getElementById('messageDetails').value,confirmWard,confirmSelection,confirmCouncillor,true,false);	
+    		}
+    	}
+    };
     
     function redirectFromContact(councillor, message){
         if (councillor) {
@@ -2211,11 +2240,11 @@ Ext.onReady(function(){
     
     gotoArea = function(ward){
         spawnWindow(wardDocumentsURL[displayWard]);
-    }
+    };
     
     gotoPriorities = function(ward){
         window.open(localPrioritiesURL);
-    }
+    };
     
     gotoCouncillorDetailsSelector = function(ward, contact){
         var councillorArrayItem = ward;
@@ -2300,10 +2329,14 @@ Ext.onReady(function(){
         '</table>' +
         '</div></div>';
         currentBubble.setContent(bubbleMenuCouncillorDetailsSelect);
-    }
+    };
     
     gotoContactMessage = function(ward, selection, councillor){
     
+    	confirmWard = ward;
+    	confirmSelection = selection;
+    	confirmCouncillor = councillor;
+    	
         var councillorArrayItem = ward;
         if (displaySubWard != -1) {
             councillorArrayItem = displaySubWard;
@@ -2356,7 +2389,7 @@ Ext.onReady(function(){
         ' Ward' +
         '</DIV>' +
         '</td>' +
-        '</tr>'
+        '</tr>';
         
         bubbleMenuContact += '<tr>' +
         '<td width="5%" style="background: black"></td>' +
@@ -2370,7 +2403,7 @@ Ext.onReady(function(){
         defaultClassName +
         '\'){this.value=\'\';this.className=\'' +
         activeClassName +
-        '\'}" onmouseover="this.style.cursor=\'text\'" type="textbox" value="Enter your contact details here" size="30"></td>' +
+        '\'}" onmouseover="this.style.cursor=\'text\'" type="textbox" value="Enter your email address here" size="30"></td>' +
         '<td width="5%" style="background: black"></td>' +
         '</tr>';
         
@@ -2400,7 +2433,7 @@ Ext.onReady(function(){
         selection +
         ',' +
         councillor +
-        ')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Send Message</td>' +
+        ',false,false)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Send Message</td>' +
         '<td width="5%" style="background: black"></td>' +
         '</tr>';
         
@@ -2423,14 +2456,14 @@ Ext.onReady(function(){
         bubbleMenuContact += '</table>' + '</div></div>';
         currentBubble.setContent(bubbleMenuContact);
         currentBubble.open(map);
-    }
+    };
     
     spawnWindow = function(url){
         var subWindow = window.open(url);
         window.setTimeout(function(){
             subWindow.focus();
         }, 500);
-    }
+    };
     
     gotoCouncillorDetails = function(ward, selection){
         var councillor_parties_array = candidate_parties[ward].toString().split(",");
@@ -2553,7 +2586,7 @@ Ext.onReady(function(){
         else {
             spawnWindow(councillor_main_url_base + councillor_main_url_array[selection]);
         }
-    }
+    };
 
     var enterKey = new Ext.KeyMap(document, {
         key: [13],
@@ -2961,11 +2994,11 @@ Ext.onReady(function(){
                 startupSearch = false;
             }
         });
-    }
+    };
     
     returnToMainMenu = function(){
         singleClick(currentPoint, true);
-    }
+    };
     
     var resetButton = Ext.get(document.getElementById("resetMap"));
     resetButton.on('click', function(){
@@ -3073,10 +3106,10 @@ Ext.onReady(function(){
                         }
                         else {
                             if (selectedWard == -1) {
-                                selectedWard = subWard
+                                selectedWard = subWard;
                             }
                             pointWard = wardNames[selectedWard] + " Ward, " + sectorNames[wardSector[selectedWard]] + " Sector";
-                            infoWard = wardNames[selectedWard]
+                            infoWard = wardNames[selectedWard];
                         }
                     }
                     else {
@@ -3088,7 +3121,7 @@ Ext.onReady(function(){
                     if (internal) {
                         clearBubble();
                         bubbleActive = true;
-                        gotoMainMenu(searchAddress, internal, infoWard + " ward, " + sectorNames[wardSector[selectedWard]] + " sector", false)
+                        gotoMainMenu(searchAddress, internal, infoWard + " ward, " + sectorNames[wardSector[selectedWard]] + " sector", false);
                         currentBubble = new google.maps.InfoWindow({
                             content: bubbleMenu,
                             position: point
@@ -3174,7 +3207,7 @@ Ext.onReady(function(){
                                     callbackFunction(point, true, true);
                                 }
                             }
-                        })
+                        });
                     }
                     else {
                         Ext.MessageBox.alert("Search Result", "Geocode was not successful for the following reason: " + status);
@@ -3201,7 +3234,7 @@ Ext.onReady(function(){
                     callbackFunction(point, true);
                 }
                 else {
-                    displayConfirmation("'" + searchTerm + "' cannot be found within the " + boundaryType + " boundary.")
+                    displayConfirmation("'" + searchTerm + "' cannot be found within the " + boundaryType + " boundary.");
                     var point = mapCenter;
                     callbackFunction(point, false);
                 }
@@ -3670,7 +3703,7 @@ Ext.onReady(function(){
                             }
                             else {
                                 clckTimeOut = window.setTimeout(function(){
-                                    singleClick(event, false)
+                                    singleClick(event, false);
                                 }, 500);
                             }
                         }
@@ -3788,7 +3821,7 @@ Ext.onReady(function(){
                 window.setTimeout(function(){
                     if (startupAnimation) {
                         highlightHelp = true;
-                        map.controls[google.maps.ControlPosition.LEFT].removeAt(0);
+                        map.controls[google.maps.ControlPosition.LEFT_TOP].removeAt(0);
                         createMenu();
                         highlightHelp = false;
                         MenuClick(true, false, false, false);
@@ -3797,7 +3830,7 @@ Ext.onReady(function(){
                 window.setTimeout(function(){
                     if (startupAnimation) {
                         highlightHelp = true;
-                        map.controls[google.maps.ControlPosition.LEFT].removeAt(0);
+                        map.controls[google.maps.ControlPosition.LEFT_TOP].removeAt(1);
                         createMenu();
                         highlightHelp = false;
                         MenuClick(true, false, false, false);

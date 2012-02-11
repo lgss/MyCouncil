@@ -7,18 +7,18 @@ import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.*;
 
-public class SendMessage extends HttpServlet
+public class SendEmail extends HttpServlet
 {
 	public void doPost(HttpServletRequest request,
 					  HttpServletResponse response) 
                     throws ServletException, IOException
 	{
-		String smtpHost = getServletContext().getInitParameter("smtpHost");
-		String auditEmailTo = getServletContext().getInitParameter("auditEmailTo");
 		String emailVerification = getServletConfig().getInitParameter("emailVerification");
 		String emailFrom = getServletConfig().getInitParameter("emailFrom");
+		String auditEmailTo = getServletConfig().getInitParameter("auditEmailTo");
 		String testRun = getServletConfig().getInitParameter("test");
 		String testEmailAddress = getServletConfig().getInitParameter("testEmailAddress");
+		String smtpHost = getServletConfig().getInitParameter("smtpHost");
 		String eol = System.getProperty("line.separator");
 		String contact=request.getParameter("contact");
 		String sector = request.getParameter("sector");
@@ -27,8 +27,6 @@ public class SendMessage extends HttpServlet
 		String emailTo = request.getParameter("emailTo");
 		String subject = "MyCouncil : Message from citizen";
 		String recipients[] = emailTo.split(",");
-		String strErrorEmailBCC[] = new String[0];
-		String auditRecipients[] = {auditEmailTo};
 		String greeting = "";
 		boolean verified = true;
 		PrintWriter ajaxResponse = response.getWriter();
@@ -56,19 +54,14 @@ public class SendMessage extends HttpServlet
 		{
 			emailContent = greeting + "," + eol + eol + "You have received the feedback below from the MyCouncil web page." + eol + eol;
 		}
-		if(contact.equals("")){
-			emailContent += "Contact details of sender : Anonymous" + eol + eol;
-		}else{
-			emailContent += "Contact details of sender : " + contact + eol + eol;
-			emailFrom = contact;
-		}
+		emailContent += "Contact details of sender : " + contact + eol + eol;
 		emailContent += "Message from sender       : " + message;
 		for (int currentRecipient = 0; currentRecipient < recipients.length; currentRecipient++)
 		{
 			if (recipients[currentRecipient].indexOf(emailVerification) == -1)
 			{
 			PrintWriter output = response.getWriter();
-			ajaxResponse.println("{\"message\":\"Apologies, but there was an error in the email address used. Please try again later.\"}");
+			output.println("{\"message\":\"Apologies, but there was an error in the email address used. Please try again later.\"}");
 			verified = false;
 			}
 		}
@@ -78,39 +71,57 @@ public class SendMessage extends HttpServlet
 
 		if (verified)
 		{
-			if (testRun.equals("true"))
+			try
+			{
+				boolean debug = false;
+				Properties props = new Properties();
+				props.put("mail.smtp.host", smtpHost);
+				Session session = Session.getDefaultInstance(props, null);
+				session.setDebug(debug);
+				Message msg = new MimeMessage(session);
+				InternetAddress addressFrom = new InternetAddress(emailFrom);
+				msg.setFrom(addressFrom);
+				InternetAddress[] addressTo = new InternetAddress[recipients.length];
+				for (int currentRecipient = 0; currentRecipient < recipients.length; currentRecipient++)
 				{
-			    for (int currentRecipient = 0; currentRecipient < recipients.length; currentRecipient++)
-			    {
-					recipients[currentRecipient] = testEmailAddress;
+					if (testRun.equals("true"))
+					{
+						addressTo[currentRecipient] = new InternetAddress(testEmailAddress);
+					}
+					else
+					{
+						addressTo[currentRecipient] = new InternetAddress(recipients[currentRecipient]);
+					}
 				}
+				msg.setRecipients(Message.RecipientType.TO, addressTo);
+				msg.setSubject(subject);
+				msg.setText(emailContent);
+				Transport.send(msg);
+
+				msg = new MimeMessage(session);
+				addressFrom = new InternetAddress(emailFrom);
+				msg.setFrom(addressFrom);
+				addressTo = new InternetAddress[1];
+				addressTo[0] = new InternetAddress(auditEmailTo);
+				msg.setRecipients(Message.RecipientType.TO, addressTo);
+				msg.setSubject(subject);
+				msg.setText(emailContentInternal);
+				Transport.send(msg);
+
+				String name = "{\"message\":\"Your message has been sent.\"}";
+				if (messageType.equals("3"))
+				{
+					name = "{\"message\":\"Thank you for your feedback, it has been successfully sent.\"}";
+				}
+				ajaxResponse.println(name);
 			}
-			SendMail messageEmail = new SendMail();
-			try
+			catch (MessagingException error)
 			{
-				messageEmail.postMail(recipients, strErrorEmailBCC, subject, emailContent, emailFrom, smtpHost, false);
+				String name = "{\"message\":\"Apologies, but there was an error sending your message. Please try again later.\"}";
+				System.out.println(error);
+				ajaxResponse.println(name);
 			}
-			catch (MessagingException emailError)
-			{
-				System.out.println(emailError);
-				ajaxResponse.print("{\"message\":\"Apologies, but there was an error sending your message. Please try again later.\"}");
-			}
-			SendMail auditMessageEmail = new SendMail();
-			try
-			{
-				auditMessageEmail.postMail(auditRecipients, strErrorEmailBCC, subject, emailContentInternal, emailFrom, smtpHost, false);
-			}
-			catch (MessagingException emailError)
-			{
-				System.out.println(emailError);
-				ajaxResponse.print("{\"message\":\"Apologies, but there was an error sending your message. Please try again later.\"}");
-			}
-			String messageText = "{\"message\":\"Your message has been sent.\"}";
-			if (messageType.equals("3"))
-			{
-				messageText = "{\"message\":\"Thank you for your feedback, it has been successfully sent.\"}";
-			}
-			ajaxResponse.print(messageText);
 		}
+
 	}
 }

@@ -3,13 +3,10 @@ package uk.gov.selfserve;
 import java.util.Date;
 import java.text.*;
 import java.io.*;
-import javax.servlet.*;
 import javax.servlet.http.*;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -17,6 +14,8 @@ import java.net.MalformedURLException;
 
 public class ModernGovScraper extends HttpServlet
 {
+	private static final long serialVersionUID = 1L;
+	Timer timer = new Timer();
 
 	public void init()
 	{
@@ -26,12 +25,17 @@ public class ModernGovScraper extends HttpServlet
 		RunScraper scraper = new RunScraper();
 		scraper.scrape();
 	}
+	
+	public void destroy(){  
+        timer.purge();
+        timer.cancel();
+	} 
 
  	public final class RunScraper extends TimerTask
 	{
 		private final long final_now = 0;
-		private final long final_minute = 1000 * 60;
-		private final long final_hour = 1000 * 60 * 60;
+//		private final long final_minute = 1000 * 60;
+//		private final long final_hour = 1000 * 60 * 60;
 		private final long final_day = 1000 * 60 * 60 * 60;
 		private String fileLock = "";
 		private String modernGovURL = "";
@@ -51,16 +55,14 @@ public class ModernGovScraper extends HttpServlet
 		public void scrape()
 		{
 			TimerTask runScraper = new RunScraper();
-			Timer timer = new Timer();
+			
 			timer.scheduleAtFixedRate(runScraper, final_now, final_day);
 		}
-
+		
 		public void run()
 		{
 			synchronized (fileLock)
 			{
-		 	   DateFormat dbFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			   String todaysDate = dbFormat.format(new Date());
 			   FileWriter outputFile;
 			   BufferedWriter outputFileBuffer;
 			   try
@@ -109,18 +111,33 @@ public class ModernGovScraper extends HttpServlet
 										 {
 											 firstEntry=false;
 										 }
-			   						     outputFileBuffer.write("{\"html\":\"" + 
-			   						    		                "<a href='" +
-			   						    		                modernGovBaseURL + 
-			   						    		                webPageLine.substring(webPageLine.indexOf("<a  href") + 10, webPageLine.indexOf("amp;")) + 
-		  	   						    		                webPageLine.substring(webPageLine.indexOf("amp;") + 4, webPageLine.indexOf("   title=")-1) +
-		  	   						    		                "' target='_blank'>" +
-		  	   						    		                meetingDate + " - " +
-		  	   						    		                webPageLine.substring(webPageLine.indexOf("mgTimeTxt") + 12, webPageLine.indexOf("</span>",webPageLine.indexOf("mgTimeTxt"))) +
-		  	   						    		                " : " +
-		  	   						    		                webPageLine.substring(webPageLine.indexOf("</span>") + 7, webPageLine.indexOf("<span",webPageLine.indexOf("</span>"))) +
-			   						    		                "</a>\"}");
+										 if(webPageLine.indexOf("<span")>50){
+				   						     outputFileBuffer.write("{\"html\":\"" + 
+				   						    		                "<a href='" +
+				   						    		                modernGovBaseURL + 
+				   						    		                webPageLine.substring(webPageLine.indexOf("<a  href") + 10, webPageLine.indexOf("amp;")) + 
+			  	   						    		                webPageLine.substring(webPageLine.indexOf("amp;") + 4, webPageLine.indexOf("   title=")-1) +
+			  	   						    		                "' target='_blank'>" +
+			  	   						    		                meetingDate + " - " +
+			  	   						    		                webPageLine.substring(webPageLine.indexOf("mgTimeTxt") + 12, webPageLine.indexOf("</span>",webPageLine.indexOf("mgTimeTxt"))) +
+			  	   						    		                " : " +
+			  	   						    		                webPageLine.substring(webPageLine.indexOf("</span>") + 7, webPageLine.indexOf("<span",webPageLine.indexOf("</span>"))) +
+				   						    		                "</a>\"}");
 										 }
+										 else{
+				   						     outputFileBuffer.write("{\"html\":\"" + 
+	   						    		                "<a href='" +
+	   						    		                modernGovBaseURL + 
+	   						    		                webPageLine.substring(webPageLine.indexOf("<a  href") + 10, webPageLine.indexOf("amp;")) + 
+	   						    		                webPageLine.substring(webPageLine.indexOf("amp;") + 4, webPageLine.indexOf("   title=")-1) +
+	   						    		                "' target='_blank'>" +
+	   						    		                meetingDate + " - " +
+	   						    		                webPageLine.substring(webPageLine.indexOf("mgTimeTxt") + 12, webPageLine.indexOf("</span>",webPageLine.indexOf("mgTimeTxt"))) +
+	   						    		                " : " +
+	   						    		                webPageLine.substring(webPageLine.indexOf("'>")+2, webPageLine.indexOf("</a>")-1) +
+	   						    		                "</a>\"}");	
+				   						  }
+									 }
 								 }
 							   }
 				           }

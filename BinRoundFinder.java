@@ -12,13 +12,15 @@ import javax.servlet.http.*;
 
 public class BinRoundFinder extends HttpServlet
    {
+	private static final long serialVersionUID = 1L;
 
-   public void doGet(HttpServletRequest request,
+public void doGet(HttpServletRequest request,
                      HttpServletResponse response) 
                     throws ServletException, IOException
       {
 	  String host = getServletContext().getInitParameter("host") + "/" + getServletContext().getServletContextName();
-	  String phoneNumber = getServletConfig().getInitParameter("phoneNumber");
+	  String phoneNumber = getServletContext().getInitParameter("contactNumber");
+	  String postCodeFinderURL = getServletConfig().getInitParameter("postCodeFinderURL");
       response.setContentType("text/html");
       PrintWriter webPageOutput=null;
       webPageOutput=response.getWriter();
@@ -41,7 +43,7 @@ public class BinRoundFinder extends HttpServlet
       String week="";
 		try
 		{
-			Connection dbConnection = DriverManager.getConnection("jdbc:sqlite:" + getServletContext().getRealPath("/mycouncil.db3"));
+			Connection dbConnection = DriverManager.getConnection("jdbc:sqlite:" + getServletContext().getRealPath("/WEB-INF/mycouncil.db3"));
 			Statement dbStatement = dbConnection.createStatement();
 			ResultSet dbResult = dbStatement.executeQuery("SELECT COUNT(distinct Day) from binRoundLookup where PostCode = \"" + postCode + "\";");
 			if(dbResult.next()){
@@ -94,13 +96,14 @@ public class BinRoundFinder extends HttpServlet
               		catch(NullPointerException error){
               		};
             	  }
+            	  postCode=dbResult.getString(4);
             	  binDay=dbResult.getString(5);
             	  week=dbResult.getString(6);
-            	  webPageOutput.println("<a href='" + host + "?mode=collectionDay&search=" + homeAddress + "&day=" + binDay + "&week=" + week + "'>" + homeAddress + "</a><BR>");
+            	  webPageOutput.println("<a href='" + host + "?mode=collectionDay&search=" + postCode + "&day=" + binDay + "&week=" + week + "'>" + homeAddress + "</a><BR>");
               }
         	  if (!propertiesFound)
         	  {
-        		  webPageOutput.println("There were no properties found for postcode " + postCode + ". If you're not sure about your postcode, please <a href='http://postcode.royalmail.com/portal/rm/postcodefinder' target='_blank'>Click Here</a> to find your postcode.<BR><BR>If you are sure the postcode is correct, please ring us on " + phoneNumber + " to check you are registered.");
+        		  webPageOutput.println("There were no properties found for postcode " + postCode + ". If you're not sure about your postcode, please <a href='" + postCodeFinderURL + "' target='_blank'>Click Here</a> to find your postcode.<BR><BR>If you are sure the postcode is correct, please ring us on " + phoneNumber + " to check you are registered.");
         	  }
         	  else
         	  {
