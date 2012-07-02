@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PollingStations>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Abbey Centre Baptist Church</Polling_Station_Name>
+		<Lat>52.2156426343204</Lat>
+		<Lng>-0.915284075280239</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Abington Avenue Utd. Reformed Church Hall</Polling_Station_Name>
+		<Lat>52.248587555606</Lat>
+		<Lng>-0.874286652610389</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Abington Community Centre</Polling_Station_Name>
+		<Lat>52.2519504963741</Lat>
+		<Lng>-0.863068154540145</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Abington Vale Primary School</Polling_Station_Name>
+		<Lat>52.240910323905</Lat>
+		<Lng>-0.858458657874905</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>All Saints Church</Polling_Station_Name>
+		<Lat>52.2483416292308</Lat>
+		<Lng>-0.823244505932254</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Alliston Gardens Youth &amp; Community Centre</Polling_Station_Name>
+		<Lat>52.2463157901491</Lat>
+		<Lng>-0.898424319545125</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Arlbury Road Community Room</Polling_Station_Name>
+		<Lat>52.2663770396912</Lat>
+		<Lng>-0.821433617138386</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Barry Primary School - Gym Annexe</Polling_Station_Name>
+		<Lat>52.2422581091553</Lat>
+		<Lng>-0.873348352323427</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Bective Mobile</Polling_Station_Name>
+		<Lat>52.2618931457392</Lat>
+		<Lng>-0.845348160808105</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Bellinge Community Centre</Polling_Station_Name>
+		<Lat>52.2524057772081</Lat>
+		<Lng>-0.814288737276372</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Blackymore Community Centre</Polling_Station_Name>
+		<Lat>52.2038968123481</Lat>
+		<Lng>-0.899327058455458</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Boothville Community Centre</Polling_Station_Name>
+		<Lat>52.2714236909784</Lat>
+		<Lng>-0.852765477487017</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Briar Hill Community Centre</Polling_Station_Name>
+		<Lat>52.2260402240018</Lat>
+		<Lng>-0.916729066392868</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Bridgewater Primary School</Polling_Station_Name>
+		<Lat>52.2432477920635</Lat>
+		<Lng>-0.85195429467904</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Broadmead Baptist Church</Polling_Station_Name>
+		<Lat>52.2572526768864</Lat>
+		<Lng>-0.870316670758697</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Camp Hill &amp; Hunsbury Community Centre</Polling_Station_Name>
+		<Lat>52.2215189626106</Lat>
+		<Lng>-0.921757805946162</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Camrose Sure Start Centre</Polling_Station_Name>
+		<Lat>52.2483587623244</Lat>
+		<Lng>-0.914178876882617</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Cardigan Close Community Room</Polling_Station_Name>
+		<Lat>52.2486546496898</Lat>
+		<Lng>-0.91702802328793</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Cedar Road Primary School</Polling_Station_Name>
+		<Lat>52.2529782295718</Lat>
+		<Lng>-0.868037372920023</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Chiltern Primary School</Polling_Station_Name>
+		<Lat>52.2480266650818</Lat>
+		<Lng>-0.931984096436815</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Collingtree Village Room</Polling_Station_Name>
+		<Lat>52.1935850958734</Lat>
+		<Lng>-0.903268467158422</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Doddridge Centre</Polling_Station_Name>
+		<Lat>52.2378079670355</Lat>
+		<Lng>-0.912693643827804</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Duston Community Centre</Polling_Station_Name>
+		<Lat>52.2509141903679</Lat>
+		<Lng>-0.942139602415991</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Duston Eldean Primary School</Polling_Station_Name>
+		<Lat>52.2540121776319</Lat>
+		<Lng>-0.949771698447037</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Duston United Reformed Church</Polling_Station_Name>
+		<Lat>52.2436489173164</Lat>
+		<Lng>-0.945065870515297</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>East Hunsbury Primary School</Polling_Station_Name>
+		<Lat>52.2058057693083</Lat>
+		<Lng>-0.905440796263186</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Eden Close Community Room</Polling_Station_Name>
+		<Lat>52.2671993354683</Lat>
+		<Lng>-0.859395637485209</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Elim Christian Centre</Polling_Station_Name>
+		<Lat>52.2434511412653</Lat>
+		<Lng>-0.910417373077305</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Esporta Northampton</Polling_Station_Name>
+		<Lat>52.1984063381035</Lat>
+		<Lng>-0.899638250366768</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Fairfields School</Polling_Station_Name>
+		<Lat>52.2539040113792</Lat>
+		<Lng>-0.887878967790421</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Far Cotton Rec Centre</Polling_Station_Name>
+		<Lat>52.2247643391021</Lat>
+		<Lng>-0.905121162115329</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Gloucester Nursery School</Polling_Station_Name>
+		<Lat>52.2193759919956</Lat>
+		<Lng>-0.908693680988619</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Goldcrest Community Room</Polling_Station_Name>
+		<Lat>52.2700355377222</Lat>
+		<Lng>-0.827682315171696</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Grangewood Club</Polling_Station_Name>
+		<Lat>52.2121352131973</Lat>
+		<Lng>-0.913217996076075</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Hardingstone Village Hall</Polling_Station_Name>
+		<Lat>52.213897428465</Lat>
+		<Lng>-0.882408802944483</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Headlands Primary School</Polling_Station_Name>
+		<Lat>52.2572210674003</Lat>
+		<Lng>-0.85119800174508</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Headlands United Reformed Church</Polling_Station_Name>
+		<Lat>52.259976</Lat>
+		<Lng>-0.85379</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Heroes Room, Franklins Gardens</Polling_Station_Name>
+		<Lat>52.2401447512771</Lat>
+		<Lng>-0.919461227016495</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Holy Trinity Church Hall</Polling_Station_Name>
+		<Lat>52.2558662592535</Lat>
+		<Lng>-0.895785091885188</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Kings Heath Community Centre</Polling_Station_Name>
+		<Lat>52.2559923592294</Lat>
+		<Lng>-0.921097976775726</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Kings Meadow School</Polling_Station_Name>
+		<Lat>52.2790426547445</Lat>
+		<Lng>-0.855940143308306</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Kingsley Park Methodist Church</Polling_Station_Name>
+		<Lat>52.2522153882556</Lat>
+		<Lng>-0.878545665944858</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Kingsley Primary School</Polling_Station_Name>
+		<Lat>52.2575325998324</Lat>
+		<Lng>-0.876096713722576</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Kingsthorpe Community Centre</Polling_Station_Name>
+		<Lat>52.259227</Lat>
+		<Lng>-0.903575</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Kingsthorpe Village Primary School</Polling_Station_Name>
+		<Lat>52.261719586371</Lat>
+		<Lng>-0.906453177697181</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Lings Primary School</Polling_Station_Name>
+		<Lat>52.2649151018688</Lat>
+		<Lng>-0.831744490883289</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Lodge Farm Community Centre</Polling_Station_Name>
+		<Lat>52.2682941545401</Lat>
+		<Lng>-0.829779890846366</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Lumbertubs Primary School</Polling_Station_Name>
+		<Lat>52.2632285317917</Lat>
+		<Lng>-0.835759760415048</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Lyncrest Primary School</Polling_Station_Name>
+		<Lat>52.2436639750854</Lat>
+		<Lng>-0.928764096439511</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Mereway Butterfly Pre-School Centre</Polling_Station_Name>
+		<Lat>52.216696</Lat>
+		<Lng>-0.901456</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Mobile Unit 1, Errington Park</Polling_Station_Name>
+		<Lat>52.250335</Lat>
+		<Lng>-0.955558</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Mobile Unit 1, Local Centre Car Park</Polling_Station_Name>
+		<Lat>52.2540762910569</Lat>
+		<Lng>-0.963130787165373</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Mobile Unit 2, Errington Park</Polling_Station_Name>
+		<Lat>52.250335</Lat>
+		<Lng>-0.955558</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Mobile Unit 2, Local Centre Car Park</Polling_Station_Name>
+		<Lat>52.2540762910569</Lat>
+		<Lng>-0.963130787165373</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Mobile Unit, Banbury Lane</Polling_Station_Name>
+		<Lat>52.2197801203993</Lat>
+		<Lng>-0.939219754348589</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Mobile Unit, Ladybridge Drive</Polling_Station_Name>
+		<Lat>52.2123302707963</Lat>
+		<Lng>-0.928654307537399</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Mobile Unit, Park Lane</Polling_Station_Name>
+		<Lat>52.2541170252467</Lat>
+		<Lng>-0.959584588003971</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Mobile Unit, Pioneer PH Car Park</Polling_Station_Name>
+		<Lat>52.2630926329701</Lat>
+		<Lng>-0.880278755234802</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Mounts Baths</Polling_Station_Name>
+		<Lat>52.241601658891</Lat>
+		<Lng>-0.893297857274882</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Northampton Church of Christ</Polling_Station_Name>
+		<Lat>52.2707690067438</Lat>
+		<Lng>-0.813798908241705</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Northamptonshire Music Service</Polling_Station_Name>
+		<Lat>52.2438806369242</Lat>
+		<Lng>-0.884204274131591</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Old Northamptonians Association</Polling_Station_Name>
+		<Lat>52.240602939368</Lat>
+		<Lng>-0.865745337628437</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Parklands Community Centre</Polling_Station_Name>
+		<Lat>52.2706965698534</Lat>
+		<Lng>-0.870605186004047</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Parklands Primary School</Polling_Station_Name>
+		<Lat>52.2678817750564</Lat>
+		<Lng>-0.869592275586087</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Parsons Mead Community Room</Polling_Station_Name>
+		<Lat>52.2212722544924</Lat>
+		<Lng>-0.92823422748699</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Parsons Memorial Hall</Polling_Station_Name>
+		<Lat>52.2170259230713</Lat>
+		<Lng>-0.836777754431647</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Rectory Farm Community Centre</Polling_Station_Name>
+		<Lat>52.2683132617583</Lat>
+		<Lng>-0.810098197625827</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Reynard Way Evangelical Church</Polling_Station_Name>
+		<Lat>52.2770731489263</Lat>
+		<Lng>-0.893631223048458</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Semilong Community Centre</Polling_Station_Name>
+		<Lat>52.250230532685</Lat>
+		<Lng>-0.90075903667047</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Senior Citizens Community Room</Polling_Station_Name>
+		<Lat>52.2705750507259</Lat>
+		<Lng>-0.898673191614718</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Southfields Community Centre</Polling_Station_Name>
+		<Lat>52.2764760574836</Lat>
+		<Lng>-0.825284496211081</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Spring Lane Primary School</Polling_Station_Name>
+		<Lat>52.2404527704739</Lat>
+		<Lng>-0.903138827602177</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>St Albans Parish Hall</Polling_Station_Name>
+		<Lat>52.2593782657227</Lat>
+		<Lng>-0.863215229807132</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>St Andrews CEVA Primary School</Polling_Station_Name>
+		<Lat>52.2568587910764</Lat>
+		<Lng>-0.804734835005478</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>St Crispin Retirement Village</Polling_Station_Name>
+		<Lat>52.2413395949285</Lat>
+		<Lng>-0.95633914823652</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>St Davids Church Room</Polling_Station_Name>
+		<Lat>52.2628580143065</Lat>
+		<Lng>-0.888753962180553</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>St Marks Church Hall</Polling_Station_Name>
+		<Lat>52.2746445416288</Lat>
+		<Lng>-0.907029220530981</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>St Mary`s Church Rooms</Polling_Station_Name>
+		<Lat>52.2264196182667</Lat>
+		<Lng>-0.905226860582877</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>St Matthews Parish Centre</Polling_Station_Name>
+		<Lat>52.2515399351052</Lat>
+		<Lng>-0.877478667625344</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>St Peters Church Hall</Polling_Station_Name>
+		<Lat>52.2499868526949</Lat>
+		<Lng>-0.846008828433694</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Standens Barn Community Centre</Polling_Station_Name>
+		<Lat>52.251996700552</Lat>
+		<Lng>-0.83006225176506</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Stimpson Avenue Primary School</Polling_Station_Name>
+		<Lat>52.244856196649</Lat>
+		<Lng>-0.876153339571512</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Student Centre Reception</Polling_Station_Name>
+		<Lat>52.273475074093</Lat>
+		<Lng>-0.882933787959265</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>The Elgar Centre</Polling_Station_Name>
+		<Lat>52.230721</Lat>
+		<Lng>-0.940554</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>The Good Shepherd Catholic Primary School</Polling_Station_Name>
+		<Lat>52.2606488449576</Lat>
+		<Lng>-0.897658998975604</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>The Great Hall</Polling_Station_Name>
+		<Lat>52.2373532457922</Lat>
+		<Lng>-0.894706862174569</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>The Institute</Polling_Station_Name>
+		<Lat>52.2574849576367</Lat>
+		<Lng>-0.8133328450124</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>The Pastures Community Centre</Polling_Station_Name>
+		<Lat>52.271527495748</Lat>
+		<Lng>-0.91610440561883</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Thorplands Childrens Centre</Polling_Station_Name>
+		<Lat>52.2709650190257</Lat>
+		<Lng>-0.839865832882871</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Vernon Terrace Community Centre</Polling_Station_Name>
+		<Lat>52.2398144659571</Lat>
+		<Lng>-0.879209718633055</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Victoria Road Congregational Church</Polling_Station_Name>
+		<Lat>52.2389474078193</Lat>
+		<Lng>-0.884489073263345</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Weston Favell Parish Hall</Polling_Station_Name>
+		<Lat>52.2528891306003</Lat>
+		<Lng>-0.845830977913829</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Wootton Community &amp; Sports Centre</Polling_Station_Name>
+		<Lat>52.2016656421182</Lat>
+		<Lng>-0.88195472511468</Lng>
+	</Polling_Station_Location>
+	<Polling_Station_Location>
+		<Polling_Station_Name>Wootton Memorial Hall</Polling_Station_Name>
+		<Lat>52.2020211985063</Lat>
+		<Lng>-0.885325967192026</Lng>
+	</Polling_Station_Location>
+</PollingStations>

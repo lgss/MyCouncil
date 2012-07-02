@@ -153,11 +153,7 @@ Ext.onReady(function(){
     var sectorID;
     var callCenterNumber;
     var version;
-    var storePanel = false;
-    var codesType = new Array();
-    var codesIncident = new Array();
-    var codesSectorID = new Array();
-    var codesClassificationCodes = new Array();
+    var storePanel = false
     var reportItJson;
     var bigForm = false;
     var defaultStreetViewZoom = 0;
@@ -180,6 +176,8 @@ Ext.onReady(function(){
     var collectionDayMode = false;
     var binDay = "";
     var binRound = "";
+    var collectionType = "";
+    var collectionText = "";
     var collectionWeekNumber = "";
     var collectionWeek = new Array();
     var collectionDayRound = new Array();
@@ -249,6 +247,7 @@ Ext.onReady(function(){
         if (Ext.urlDecode(location.search.substring(1)).mode == "collectionDay") {
             collectionDayMode = true;
             binDay = Ext.urlDecode(location.search.substring(1)).day;
+            collectionType = Ext.urlDecode(location.search.substring(1)).type;
             collectionWeekNumber = Ext.urlDecode(location.search.substring(1)).week;
             binRound = binDay + collectionWeekNumber + "pdf";
         }
@@ -1368,9 +1367,13 @@ Ext.onReady(function(){
         }
         if(collectionDayMode){
         	var address = menuLocation.substring(3).replace(/,/g, ", ");
-        	collectionWeek[0] = " weekly from the w/c 23rd January 2012.<br><br>We will be collecting your refuse and all recycling every week.";
-        	collectionWeek[2] = "gin w/c 23rd January when your Black Wheelie Bin will be collected.<br><br>Collections will then alternate weekly between <br>Brown and Black Wheelie Bins. We will collect all of your recycling every week.";
-        	collectionWeek[1] = "gin w/c 23rd January when your Brown Wheelie Bin will be collected.<br><br>Collections will then alternate weekly between <br>Black and Brown Wheelie Bins. We will collect all of your recycling every week.";
+
+        	if(collectionType == "bags"){
+        		collectionText = "We will be collecting your refuse and all recycling every week.";
+        	}
+        	else{
+        		collectionText = "This week your "+ collectionType + " wheelie bin will be collected.<br><br>Collections alternate weekly between Black and Brown Wheelie Bins.<br><br>We will collect all of your recycling every week.";
+        	}
         	
             bubbleMenu = '<BR><div class="header"><div id="bubbleBack">' +
             '<table width="350px" border="0" cellpadding="0" cellspacing="2">' +
@@ -1378,8 +1381,7 @@ Ext.onReady(function(){
             '<td colspan="3" class="sidePanelSubTitle">' +
             'Your collection day is: ' + binDay +
             '<BR><DIV class="bubbleMidiText"><BR><CENTER>' +
-            'Your new collection day will be'+
-            collectionWeek[collectionWeekNumber]+
+            collectionText+
             '<BR></CENTER>';
             
             bubbleMenu += '</DIV><BR>' +
@@ -2053,15 +2055,6 @@ Ext.onReady(function(){
             pitch = streetviewPOV.pitch;
             zoom = streetviewPOV.zoom;
         }
-        var classificationCode = "";
-        var descriptionEmail = "";
-        for (var currentCode = 0; currentCode < codesClassificationCodes.length; currentCode++) {
-            if (codesType[currentCode].toLowerCase() == reportItTypes[problemType].toLowerCase() &&
-            (codesIncident[currentCode].toLowerCase() == reportItIncidents[problemType].toLowerCase() || codesIncident[currentCode] == "*") &&
-            (codesSectorID[currentCode] == sectorID || codesSectorID[currentCode] == "*")) {
-                classificationCode = codesClassificationCodes[currentCode];
-            }
-        }
         var tempLat;
         var tempLng;
         if (clickSearch) {
@@ -2085,24 +2078,12 @@ Ext.onReady(function(){
         var encodedHeading = encodeURIComponent(heading);
         var encodedPitch = encodeURIComponent(pitch);
         var encodedZoom = encodeURIComponent(zoom);
-        var tempURL = "";
-        if (document.location.href.indexOf("?") != -1) {
-            tempURL = document.location.href.substring(0, document.location.href.indexOf("?"));
-        }
-        else {
-            tempURL = document.location.href;
-        }
-        
-        var northingEasting = LLtoNE(tempLat, tempLng);
         Ext.Ajax.request({
             url: 'CreateCall?',
             params: {
-                classificationCode: classificationCode,
-                problemType: reportItNames[problemType],
                 problemDetails: problemDetails,
                 problemStreet: problemStreet,
                 problemLocation: problemLocation,
-                descriptionEmail: reportItDescEmail[problemType],
                 name: name,
                 emailAddress: emailAddress,
                 phoneNumber: phoneNumber,
@@ -2111,11 +2092,7 @@ Ext.onReady(function(){
                 heading: encodedHeading,
                 pitch: encodedPitch,
                 zoom: encodedZoom,
-                ward: wardNames[ward],
-                sector: sectorName,
-                myCouncilURL: tempURL,
-                northing: northingEasting.north,
-                easting: northingEasting.east
+                problemNumber: problemType
             },
             timeout: 30000,
             method: 'POST',
@@ -2131,7 +2108,11 @@ Ext.onReady(function(){
                     gotoConfirmationMenu(problemType, reportItJson.callNumber, reportItJson.slaDate, emailAddress, phoneNumber);
                 }
                 else {
-                    Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error processing your problem. Please try again later.');
+                	if(reportItJson.reason.indexOf("banned") != -1){
+                		Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Due to previous misuse from your computer, it has been prevented from reporting incidents');                        
+                	}else{
+                		Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error processing your problem. Please try again later.');               		
+                	}
                 }
             },
             failure: function(response){
@@ -2474,6 +2455,7 @@ Ext.onReady(function(){
         var councillor_twitter_url_array = councillor_twitter_urls[ward].toString().split(",");
         var councillor_blog_url_array = councillor_blog_urls[ward].toString().split(",");
         var councillor_personal_url_array = councillor_personal_urls[ward].toString().split(",");
+        var temp_candidate_names = candidate_names[ward].toString().split(",");
         var councillorNeedsMenu = false;
         if (councillor_parties_array[councillor_names_array[selection]] != 4) {
             councillorNeedsMenu = true;
@@ -2497,7 +2479,7 @@ Ext.onReady(function(){
             '<DIV class="' +
             cssPartyButton[councillor_parties_array[selection]] +
             '">Councillor ' +
-            councillor_names_array[selection] +
+            temp_candidate_names[councillor_names_array[selection]] +
             '</DIV>' +
             '<DIV class="bubbleMiniText">' +
             wardNames[ward] +
@@ -3318,71 +3300,6 @@ Ext.onReady(function(){
         });
     }
     
-    function OGBNorthEast(east, north){
-        this.north = north;
-        this.east = east;
-    }
-    
-    function LLtoNE(lat, lon){
-        var deg2rad = Math.PI / 180;
-        var rad2deg = 180.0 / Math.PI;
-        
-        var phi = lat * deg2rad; // convert latitude to radians
-        var lam = lon * deg2rad; // convert longitude to radians
-        var a = 6377563.396; // OSGB semi-major axis
-        var b = 6356256.91; // OSGB semi-minor axis
-        var e0 = 400000; // easting of false origin
-        var n0 = -100000; // northing of false origin
-        var f0 = 0.9996012717; // OSGB scale factor on central meridian
-        var e2 = 0.0066705397616; // OSGB eccentricity squared
-        var lam0 = -0.034906585039886591; // OSGB false east
-        var phi0 = 0.85521133347722145; // OSGB false north
-        var af0 = a * f0;
-        var bf0 = b * f0;
-        
-        // easting
-        var slat2 = Math.sin(phi) * Math.sin(phi);
-        var nu = af0 / (Math.sqrt(1 - (e2 * (slat2))));
-        var rho = (nu * (1 - e2)) / (1 - (e2 * slat2));
-        var eta2 = (nu / rho) - 1;
-        var p = lam - lam0;
-        var IV = nu * Math.cos(phi);
-        var clat3 = Math.pow(Math.cos(phi), 3);
-        var tlat2 = Math.tan(phi) * Math.tan(phi);
-        var V = (nu / 6) * clat3 * ((nu / rho) - tlat2);
-        var clat5 = Math.pow(Math.cos(phi), 5);
-        var tlat4 = Math.pow(Math.tan(phi), 4);
-        var VI = (nu / 120) * clat5 * ((5 - (18 * tlat2)) + tlat4 + (14 * eta2) - (58 * tlat2 * eta2));
-        var east = e0 + (p * IV) + (Math.pow(p, 3) * V) + (Math.pow(p, 5) * VI);
-        
-        // northing
-        var n = (af0 - bf0) / (af0 + bf0);
-        var M = Marc(bf0, n, phi0, phi);
-        var I = M + (n0);
-        var II = (nu / 2) * Math.sin(phi) * Math.cos(phi);
-        var III = ((nu / 24) * Math.sin(phi) * Math.pow(Math.cos(phi), 3)) * (5 - Math.pow(Math.tan(phi), 2) + (9 * eta2));
-        var IIIA = ((nu / 720) * Math.sin(phi) * clat5) * (61 - (58 * tlat2) + tlat4);
-        var north = I + ((p * p) * II) + (Math.pow(p, 4) * III) + (Math.pow(p, 6) * IIIA);
-        
-        // make whole number values
-        east = Math.round(east); // round to whole number of meters
-        north = Math.round(north);
-        
-        return new OGBNorthEast(east, north);
-    }
-    
-    function Marc(bf0, n, phi0, phi){
-        return bf0 *
-        (((1 + n + ((5 / 4) * (n * n)) + ((5 / 4) * (n * n * n))) * (phi - phi0)) -
-        (((3 * n) + (3 * (n * n)) + ((21 / 8) * (n * n * n))) * (Math.sin(phi - phi0)) * (Math.cos(phi + phi0))) +
-        ((((15 / 8) * (n * n)) + ((15 / 8) * (n * n * n))) * (Math.sin(2 * (phi - phi0))) * (Math.cos(2 * (phi + phi0)))) -
-        (((35 / 24) * (n * n * n)) * (Math.sin(3 * (phi - phi0))) * (Math.cos(3 * (phi + phi0)))));
-    }
-    
-    function sortNumber(a, b){
-        return b - a;
-    }
-    
     function addCommas(nStr){
         nStr += '';
         x = nStr.split('.');
@@ -3535,22 +3452,6 @@ Ext.onReady(function(){
                     reportItIncidents[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].incident;
                     reportItDescEmail[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].descriptionEmail;
                     reportItSLA[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].sla;
-                }
-                if (jsonData.instance == "test") {
-                    for (var currentCode = 0; currentCode < jsonData.classificationCodesTest.length; currentCode++) {
-                        codesType[currentCode] = jsonData.classificationCodesTest[currentCode].type;
-                        codesIncident[currentCode] = jsonData.classificationCodesTest[currentCode].incident;
-                        codesSectorID[currentCode] = jsonData.classificationCodesTest[currentCode].sectorID;
-                        codesClassificationCodes[currentCode] = jsonData.classificationCodesTest[currentCode].classificationCode;
-                    }
-                }
-                if (jsonData.instance == "live") {
-                    for (var currentCode = 0; currentCode < jsonData.classificationCodesLive.length; currentCode++) {
-                        codesType[currentCode] = jsonData.classificationCodesLive[currentCode].type;
-                        codesIncident[currentCode] = jsonData.classificationCodesLive[currentCode].incident;
-                        codesSectorID[currentCode] = jsonData.classificationCodesLive[currentCode].sectorID;
-                        codesClassificationCodes[currentCode] = jsonData.classificationCodesLive[currentCode].classificationCode;
-                    }
                 }
                 for (var currentPartiesURL = 0; currentPartiesURL < jsonData.partiesURL.length; currentPartiesURL++) {
                     partiesURL[currentPartiesURL] = jsonData.partiesURL[currentPartiesURL].url;

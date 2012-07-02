@@ -1,0 +1,37 @@
+<html>
+<body>
+<div id="logo" style="width: 100%">
+  <center>
+    <A HREF="http://www.northampton.gov.uk">
+      <img style="border: none;" src="http://selfserve.northampton.gov.uk/mycouncil/images/logo.gif" alt="Northampton Borough Council Logo"/>
+    </A>
+  </center>
+<div style="font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;background: #A89D1A;Color: #FFFFFF;font-size: 25px;text-align: center"> <label>Your call number is AAA</label></div>
+</div>
+<div style="font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;background: #808080;Color: #FFFFFF;font-size: 16px;text-align: center"> <label>BBB</label></div>
+</div>
+<div style="font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;font-size: 13px;margin: 5px;text-align: left">
+<br>
+Thank you for raising a call with us regarding CCC, please use the call number above when enquiring about the current state of the problem.
+<br>
+<br>
+<!--If you have provided us with a telephone number we will notify you by text or voice message when your problem has been resolved.
+<br>
+<br>-->
+<!--If you wish to enquire about the current state of the problem then use the link below, or follow the link from our home page. You can also telephone us on EEE.-->
+If you wish to enquire about the current state of the problem then then use the link below or telephone us on EEE.
+<br>
+<br>
+<center>
+    <A HREF="DDD">
+      Click here to see the status of your call
+    </A>
+    <BR><BR>
+    <A HREF="http://www.northampton.gov.uk/mycouncil">
+      <img style="border: none;" src="http://selfserve.northampton.gov.uk/mycouncil/images/mycouncil.jpg" alt="MyCouncil"/>
+    </A>
+  </center>
+  <BR>
+</div>
+</body>
+</html>

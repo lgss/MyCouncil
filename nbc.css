@@ -2,9 +2,6 @@ body{
 background-color:#FFFFFF;
 font-family:   Arial, Helvetica, Sans-Serif, Verdana, Tahoma;
 }
-#Logo{
-	margin:10px 0px 10px 0px;
-}
 #TitleBar {
 background-color: #A89D1A;
 color: #FFFFFF;
@@ -12,6 +9,46 @@ font-size: 25px;
 text-align: center;
 margin-bottom:20px;
 }
+#Logo{
+	margin:10px 0px 10px 0px;
+}
+input{
+	padding:2px;
+}
+.advice{
+	font-size:0.75em;
+	text-align:right;
+	padding-top:10px;
+}
+p{margin-top:0px;}
+#submit input,#findit{
+	width:100px;
+	cursor:pointer;
+	padding:10px;
+	background:#B7151E;
+	color:#fff;
+	margin-top:12px;
+	border:0px;
+	text-align:center;
+}
+input[type="submit"] {
+    -webkit-appearance: none;
+}
+#address{
+	width:100%;
+	max-width:300px;
+	}
+#main,#results{
+width:300px;
+margin:0 auto;
+}
+@media screen and (max-width:720px){
+	img{max-width:100%;}
+#Logo{width:100%;}
+
+#submit{margin-top:12px;}	
+}
+@media screen and (min-width:721px){
 #main{
 	width:350px;
 	margin:0 auto;
@@ -31,4 +68,5 @@ table{
 }
 input{
 	padding:2px;
+}
 }
