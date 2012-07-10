@@ -23,7 +23,7 @@
   </context-param>
   <context-param>
     <param-name>smtpHost</param-name>
-    <param-value>nbcmail</param-value>
+    <param-value></param-value>
   </context-param>
   <context-param>
     <param-name>auditEmailTo</param-name>
@@ -33,386 +33,68 @@
     <param-name>localDialCode</param-name>
     <param-value>01604</param-value>
   </context-param>
-    <context-param>
-    <param-name>contactNumber</param-name>
-    <param-value>0300 330 7000</param-value>
-  </context-param>
   <context-param>
     <param-name>textMessageFrom</param-name>
     <param-value>Northampton Borough Council</param-value>
-  </context-param> 
+  </context-param>
   <context-param>
     <param-name>googleURLAPIKey</param-name>
-    <param-value>AIzaSyC1tLRta9RGok1Us_2_Itf7_UpB34hcMvo</param-value>
+    <param-value></param-value>
   </context-param>
   <context-param>
     <param-name>twitter-TEST-Consumer-Key</param-name>
-    <param-value>Q2X4scerTFZNf0pmPsa0Q</param-value>
+    <param-value></param-value>
   </context-param>
   <context-param>
     <param-name>twitter-TEST-Consumer-Secret</param-name>
-    <param-value>pUBUZAU8Mv03K9rUDe56eX13PqGYd9z5qVArjF78SM</param-value>
+    <param-value></param-value>
   </context-param>
   <context-param>
     <param-name>twitter-TEST-Access-Token-Key</param-name>
-    <param-value>300924394-WdnwGulH7AJYI19T29NJCt2DtOaypGttKuV1wHAj</param-value>
+    <param-value></param-value>
   </context-param>
   <context-param>
     <param-name>twitter-TEST-Access-Token-Secret</param-name>
-    <param-value>styXBrqFvpsTXFTO5qOa4tqgoZuGFb5s4V4qxDX9SEU</param-value>
+    <param-value></param-value>
   </context-param>
   <context-param>
     <param-name>twitter-ALL-Consumer-Key</param-name>
-    <param-value>IgYcveAkUmESlb6nmy2g</param-value>
+    <param-value></param-value>
   </context-param>
   <context-param>
     <param-name>twitter-ALL-Consumer-Secret</param-name>
-    <param-value>BccBOT44SkYyyRpTomCgREh9SwjbZFuqmoFfTTvOXA</param-value>
+    <param-value></param-value>
   </context-param>
   <context-param>
     <param-name>twitter-ALL-Access-Token-Key</param-name>
-    <param-value>213999930-Ykc6F8PdSeCqaZgvJeg4i9ksLeoPMBIzIus8qFmQ</param-value>
+    <param-value></param-value>
   </context-param>
   <context-param>
     <param-name>twitter-ALL-Access-Token-Secret</param-name>
-    <param-value>VOH6RyAYN4GHUyTI12gaH66CfJw4ZutSxU5vI6sYgac</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Abington-Consumer-Key</param-name>
-    <param-value>XZh2UEh8D2kyZc6tiHZuvg</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Abington-Consumer-Secret</param-name>
-    <param-value>So9Nz46kB41FCVpcZZB3zFWBsZORAKgNq0ApwpBKaKc</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Abington-Access-Token-Key</param-name>
-    <param-value>338274501-SCTEMne4saFaqdGYQdpDKdZgVyoxE9XaRMZqRdv3</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Abington-Access-Token-Secret</param-name>
-    <param-value>mYoJSlOsYbSLglPVrg8qBppnX3Jg31msY1SedxpZw</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-Abington-Hashtag</param-name>
-    <param-value>#nnAbington</param-value>
-  </context-param>
-    <context-param>
-    <param-name>twitter-ward-Billing-Consumer-Key</param-name>
-    <param-value>ZsO8QJNSVxo1v3SktwwWcw</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Billing-Consumer-Secret</param-name>
-    <param-value>9QJ4eGXwcmW7ybd08tMypC08O4F0aQJQUNu7e4W62o</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Billing-Access-Token-Key</param-name>
-    <param-value>338368003-QLt9DfueLgXsKwmXwfKOOMRhlOZ2S73FPZoUFGOj</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Billing-Access-Token-Secret</param-name>
-    <param-value>suxRlFFsnFMY2HuVD1MQU2UcddSBehLQKzblkRw</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-Billing-Hashtag</param-name>
-    <param-value>#nnBilling</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Boothville-Consumer-Key</param-name>
-    <param-value>b0D89sv3qObvF8WR5ncw</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Boothville-Consumer-Secret</param-name>
-    <param-value>QZgqRWueFpoh0YQFT2hkmNV4NQauVAi5FecuKpcTVY</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Boothville-Access-Token-Key</param-name>
-    <param-value>338893006-LcQLP12E6mo7fAPxb4l84DF8Q8DcKOJBqXYHGEXc</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Boothville-Access-Token-Secret</param-name>
-    <param-value>QXtzPtl9jHLjggb5DlmqdOKWn2VeEmOSdU6HG9GQkCo</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-Boothville-Hashtag</param-name>
-    <param-value>#nnBoothville</param-value>
-  </context-param>
-   <context-param>
-    <param-name>twitter-ward-Brookside-Consumer-Key</param-name>
-    <param-value>UEZK93pQMBfSABo6Fyq5wg</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Brookside-Consumer-Secret</param-name>
-    <param-value>vRdy8SpAB74uTxop8CQnggJH7d4kbNEQUistWcXoA</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Brookside-Access-Token-Key</param-name>
-    <param-value>347110287-E1wJ5tgHDgmXaw9U8tVIRsCD7UBFzbhNbo2bo5cv</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Brookside-Access-Token-Secret</param-name>
-    <param-value>yaegKJGEobXhOqzyqOIFbLETgANXJaOSDpsT4l8sIYU</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-Brookside-Hashtag</param-name>
-    <param-value>#nnBrookside</param-value>
-  </context-param>
-   <context-param>
-    <param-name>twitter-ward-Castle-Consumer-Key</param-name>
-    <param-value>leWhbUmwhSdsgFP0ILaAg</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Castle-Consumer-Secret</param-name>
-    <param-value>HVvfvBMNRe6R3mtOJcraqSa3NRFF3i4NohP5TYa1EYs</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Castle-Access-Token-Key</param-name>
-    <param-value>347137663-REW4jTxdbxb7bU2m9LQJQ2GoGrDDq93SWXuGZaZg</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Castle-Access-Token-Secret</param-name>
-    <param-value>sKwkpsRPs8PDxSnQHl3hhAa819NckRM223zvDu7Hofk</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-Castle-Hashtag</param-name>
-    <param-value>#nnCastle</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-DelapreBriarHill-Consumer-Key</param-name>
-    <param-value>TAoIyYNsVKULkcE4qUsG4Q</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-DelapreBriarHill-Consumer-Secret</param-name>
-    <param-value>ujivW1VOA2udYdaaaS72J7C81SV4EoLRh3oBW31g4</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-DelapreBriarHill-Access-Token-Key</param-name>
-    <param-value>347149291-fd2vZu9qYZ3cZSjbhluekG9Of5avtLj14ywYRKwN</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-DelapreBriarHill-Access-Token-Secret</param-name>
-    <param-value>2kMDHNZqe1cFtZksgTrNfqmSPqYfDw7h91YhcRG7WY</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-DelapreBriarHill-Hashtag</param-name>
-    <param-value>#nnDelapreBriarHill</param-value>
-  </context-param>
-    <context-param>
-    <param-name>twitter-ward-EastHunsbury-Consumer-Key</param-name>
-    <param-value>3P2xS3Ijnt2Xhy7njVNQA</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-EastHunsbury-Consumer-Secret</param-name>
-    <param-value>YENFWtpbrfDnh9YESDcIkpvdu6FGvxAXMX03r15aY</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-EastHunsbury-Access-Token-Key</param-name>
-    <param-value>347855053-CJ1Upbpa9f45A9SwhBNCHVwQq0WmxdBNOOHwPs93</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-EastHunsbury-Access-Token-Secret</param-name>
-    <param-value>EJcgTszxQJWSuYIskNgNm01ikJzTzbus9CTiROYtA</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-EastHunsbury-Hashtag</param-name>
-    <param-value>#nnEastHunsbury</param-value>
-  </context-param>
-   <context-param>
-    <param-name>twitter-ward-Eastfield-Consumer-Key</param-name>
-    <param-value>8GbN9N9Ujh4GAC2u02cuCw</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Eastfield-Consumer-Secret</param-name>
-    <param-value>VwZb2sCaFM7lSP0epK16l6noEMbqxXsGKOBdamr4Nfk</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Eastfield-Access-Token-Key</param-name>
-    <param-value>347867078-BgfZXgI0kyHs1SSYxh2zvHtclmMhId1kct4gJzjn</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Eastfield-Access-Token-Secret</param-name>
-    <param-value>p0hXW0SLGO3LXKutnVgPe7Ng61HPOPJeVNXgGEbH4M</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-Eastfield-Hashtag</param-name>
-    <param-value>#nnEastfield</param-value>
-  </context-param> 
-    <context-param>
-    <param-name>twitter-ward-Headlands-Consumer-Key</param-name>
-    <param-value>qrPBZeMgEslJfPcQ7oKbA</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Headlands-Consumer-Secret</param-name>
-    <param-value>gnEOC4xklAYECSBSfKo7bPGGyObXzizAe08zCO7eJ8</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Headlands-Access-Token-Key</param-name>
-    <param-value>348380535-VuLuxwhEYR3O5tWtliOzWhtHeW5p3srDzF73tbQd</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Headlands-Access-Token-Secret</param-name>
-    <param-value>6t7Tomy4iw2eXgDmpo4RAQiKzlj1FNVYFLWXjNnyeo</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-Headlands-Hashtag</param-name>
-    <param-value>#nnHeadlands</param-value>
-  </context-param>
-    <context-param>
-    <param-name>twitter-ward-KingsHeath-Consumer-Key</param-name>
-    <param-value>JKWBYN9tnWQEUgUsBtkc6A</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-KingsHeath-Consumer-Secret</param-name>
-    <param-value>LTI9ho8KKA02mp1tLnJY61v4EWvmDqEpUkdwEGanI0</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-KingsHeath-Access-Token-Key</param-name>
-    <param-value>348398517-E8QGYK8GicVWekl5fsIRC9iMmeDCwFRzBLVnBAWB</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-KingsHeath-Access-Token-Secret</param-name>
-    <param-value>VAxwu782TZCkRiUVoIWq0AxrsfwvFEs01NqPy8qK8PU</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-KingsHeath-Hashtag</param-name>
-    <param-value>#nnKingsHeath</param-value>
-  </context-param>
-    <context-param>
-    <param-name>twitter-ward-Kingsley-Consumer-Key</param-name>
-    <param-value>Byb0CdOYvMIQqECuwiISA</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Kingsley-Consumer-Secret</param-name>
-    <param-value>LTMufUk60eivMY0s6dc5scvAvzYEa2GdBY2B4iiV4</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Kingsley-Access-Token-Key</param-name>
-    <param-value>353595627-2TqGnbcwtQpUEpiayNitXpY0JMUhYQHChRZ5PgQJ</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Kingsley-Access-Token-Secret</param-name>
-    <param-value>MbYnINpwb1V0bHEbTd62ngyjicITF8Gn18jWBp8wQ8M</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-Kingsley-Hashtag</param-name>
-    <param-value>#nnKingsley</param-value>
-  </context-param> 
-     <context-param>
-    <param-name>twitter-ward-Kingsthorpe-Consumer-Key</param-name>
-    <param-value>pyQeky6oHGvkgZ0UWfueLw</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Kingsthorpe-Consumer-Secret</param-name>
-    <param-value>bMHHIh6HQOBQKP3CH9iULxL5veiWgC9Ayn48GLfl0</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Kingsthorpe-Access-Token-Key</param-name>
-    <param-value>353667233-xWpEjeecU3fGzz3PoaCqWmS99hOP5XhtES9gB3kf</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Kingsthorpe-Access-Token-Secret</param-name>
-    <param-value>m4NmpSGRtWlF2OL68yU6vD2eJP1O54OszuB1K6qdaUY</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-Kingsthorpe-Hashtag</param-name>
-    <param-value>#nnKingsthorpe</param-value>
-  </context-param>
-     <context-param>
-    <param-name>twitter-ward-NeneValley-Consumer-Key</param-name>
-    <param-value>tLhznUzTpvJ6yzhE22q4w</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-NeneValley-Consumer-Secret</param-name>
-    <param-value>eUTYxOetg1Ca94btq9dq7ooVHssRIa7LPP5UoId1IIQ</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-NeneValley-Access-Token-Key</param-name>
-    <param-value>353707968-OdlXT76DQd09fLxeNMbDJtYiAwiPIEc6Y5J4QLRf</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-NeneValley-Access-Token-Secret</param-name>
-    <param-value>o4GsKCiLmmG4Y9Wg41sxMmOBAMqMF0NnDq9RpDcM</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-NeneValley-Hashtag</param-name>
-    <param-value>#nnNeneValley</param-value>
-  </context-param>
-     <context-param>
-    <param-name>twitter-ward-NewDuston-Consumer-Key</param-name>
-    <param-value>8rsQtuIIdGPkiBOgJHYA</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-NewDuston-Consumer-Secret</param-name>
-    <param-value>XjzSOHIWdB0JJe0r32aijG8UqIBKZeaNqdHp1N5CM</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-NewDuston-Access-Token-Key</param-name>
-    <param-value>378097316-ahK4Th7Nl2GWKU3ep6TUDVJiSM1d0FWRuHSrqNJT</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-NewDuston-Access-Token-Secret</param-name>
-    <param-value>gPcqOH0Zrt0QG6fO01cMo1wUqMB7xkgRjvchGDQWA</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-NewDuston-Hashtag</param-name>
-    <param-value>#nnNewDuston</param-value>
-  </context-param>
-     <context-param>
-    <param-name>twitter-ward-Obelisk-Consumer-Key</param-name>
-    <param-value>DakYVBwFIwL3KGAohbJgA</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Obelisk-Consumer-Secret</param-name>
-    <param-value>MYbVJV4xcunzpvezncfTsO5q2bBRs6pJAxCKr7NXEJ4</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Obelisk-Access-Token-Key</param-name>
-    <param-value>378494031-RZ7o9vfwnXTDMOaGtOzCfpFgjelW92NR79vksTF4</param-value>
-  </context-param>
-  <context-param>
-    <param-name>twitter-ward-Obelisk-Access-Token-Secret</param-name>
-    <param-value>9M4wJk4jOPDMkhBjQiAgvRD2SILT5ibx3f7mXQhSxHo</param-value>
-  </context-param>
-  <context-param>
-  <param-name>twitter-ward-Obelisk-Hashtag</param-name>
-    <param-value>#nnObelisk</param-value>
-  </context-param>
-  
-   <context-param>
-    <param-name>twitter-ward-nn-Consumer-Key</param-name>
     <param-value></param-value>
   </context-param>
   <context-param>
-    <param-name>twitter-ward-nn-Consumer-Secret</param-name>
+    <param-name>twitter-sector-North-Consumer-Key</param-name>
     <param-value></param-value>
   </context-param>
   <context-param>
-    <param-name>twitter-ward-nn-Access-Token-Key</param-name>
+    <param-name>twitter-sector-North-Consumer-Secret</param-name>
     <param-value></param-value>
   </context-param>
   <context-param>
-    <param-name>twitter-ward-nn-Access-Token-Secret</param-name>
+    <param-name>twitter-sector-North-Access-Token-Key</param-name>
     <param-value></param-value>
   </context-param>
   <context-param>
-  <param-name>twitter-ward-nn-Hashtag</param-name>
-    <param-value>#nn</param-value>
+    <param-name>twitter-sector-North-Access-Token-Secret</param-name>
+    <param-value></param-value>
   </context-param>
-  
   <servlet>
     <servlet-name>CreateCall</servlet-name>
     <servlet-class>uk.gov.selfserve.CreateLaganCase</servlet-class>
     <init-param>
       <param-name>bccEmailAddress</param-name>
       <param-value>kwhite@northampton.gov.uk</param-value>
-    </init-param>
-    <init-param>
-      <param-name>twitterAllHashTag</param-name>
-      <param-value>#northampton</param-value>
-    </init-param>
-    <init-param>
-      <param-name>twitterSectorHashTag</param-name>
-      <param-value>#lovenorthampton</param-value>
     </init-param>
   </servlet>
   <servlet>
@@ -439,18 +121,17 @@
     <servlet-name>PollingStationLocationLoader</servlet-name>
     <servlet-class>uk.gov.selfserve.PollingStationLocationLoader</servlet-class>
   </servlet>
-    <servlet>
-    <servlet-name>BinRoundLoader</servlet-name>
-    <servlet-class>uk.gov.selfserve.BinRoundLoader</servlet-class>
-  </servlet>
   <servlet>
     <servlet-name>ConfigFinder</servlet-name>
     <servlet-class>uk.gov.selfserve.ConfigFinder</servlet-class>
   </servlet>
   <servlet>
-  <servlet-name>ClosedCalls</servlet-name>
+    <servlet-name>QnomyTest</servlet-name>
+    <servlet-class>uk.gov.selfserve.QnomyTest</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ClosedCalls</servlet-name>
     <servlet-class>uk.gov.selfserve.ClosedLaganCases</servlet-class>
-    <load-on-startup>-1</load-on-startup>
     <init-param>
       <param-name>enabled</param-name>
       <param-value>false</param-value>
@@ -469,7 +150,7 @@
     </init-param>
     <init-param>
       <param-name>slaEmailAddress</param-name>
-      <param-value>dblundelln@northampton.gov.uk</param-value>
+      <param-value>dhorton@northampton.gov.uk</param-value>
     </init-param>
   </servlet>
   <servlet>
@@ -520,53 +201,9 @@
     <servlet-name>BinRoundFinder</servlet-name>
     <servlet-class>uk.gov.selfserve.BinRoundFinder</servlet-class>
     <init-param>
-      <param-name>postCodeFinderURL</param-name>
-      <param-value>http://www.royalmail.com/postcode-finder</param-value>
+      <param-name>phoneNumber</param-name>
+      <param-value>0300 330 7000</param-value>
     </init-param>
-  </servlet>
-  <servlet>
-    <servlet-name>CreateContact</servlet-name>
-    <servlet-class>uk.gov.selfserve.CreateContact</servlet-class>
-    <init-param>
-      <param-name>classificationCode-myNBC-test</param-name>
-      <param-value>2200435</param-value>
-    </init-param>
-    <init-param>
-      <param-name>classificationCode-mycouncil-test</param-name>
-      <param-value>2200111</param-value>
-    </init-param>
-    <init-param>
-      <param-name>classificationCode-myNBC-live</param-name>
-      <param-value>2002074</param-value>
-    </init-param>
-    <init-param>
-      <param-name>classificationCode-mycouncil-live</param-name>
-      <param-value>2001211</param-value>
-    </init-param>
-  </servlet>
-    <servlet>
-    <servlet-name>PostToSocial</servlet-name>
-    <servlet-class>uk.gov.selfserve.PostToSocial</servlet-class>
-    <init-param>
-      <param-name>localhostip</param-name>
-      <param-value>127.0.0.1</param-value>
-    </init-param>
-    <init-param>
-      <param-name>bpmserverip</param-name>
-      <param-value>172.16.106.111</param-value>
-    </init-param>
-       <init-param>
-      <param-name>useproxy</param-name>
-      <param-value>false</param-value>
-    </init-param>
-  </servlet>
-    <servlet>
-    <servlet-name>CreateMyNBCCase</servlet-name>
-    <servlet-class>uk.gov.selfserve.CreateMyNBCCase</servlet-class>
-  </servlet>
-    <servlet>
-    <servlet-name>WardLoader</servlet-name>
-    <servlet-class>uk.gov.selfserve.WardLoader</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>CreateTwitterEntry</servlet-name>
@@ -596,13 +233,13 @@
     <servlet-name>PollingStationLocationLoader</servlet-name>
     <url-pattern>/PollingStationLocationLoader</url-pattern>
   </servlet-mapping>
-   <servlet-mapping>
-    <servlet-name>BinRoundLoader</servlet-name>
-    <url-pattern>/BinRoundLoader</url-pattern>
-  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>ConfigFinder</servlet-name>
     <url-pattern>/ConfigFinder</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>QnomyTest</servlet-name>
+    <url-pattern>/QnomyTest</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>SendMessage</servlet-name>
@@ -611,22 +248,6 @@
   <servlet-mapping>
     <servlet-name>BinRoundFinder</servlet-name>
     <url-pattern>/BinRoundFinder</url-pattern>
-  </servlet-mapping>
-     <servlet-mapping>
-    <servlet-name>CreateContact</servlet-name>
-    <url-pattern>/CreateContact</url-pattern>
-  </servlet-mapping>
-       <servlet-mapping>
-    <servlet-name>PostToSocial</servlet-name>
-    <url-pattern>/PostToSocial</url-pattern>
-  </servlet-mapping>
-      <servlet-mapping>
-    <servlet-name>CreateMyNBCCase</servlet-name>
-    <url-pattern>/CreateMyNBCCase</url-pattern>
-  </servlet-mapping>
-     <servlet-mapping>
-    <servlet-name>WardLoader</servlet-name>
-    <url-pattern>/WardLoader</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
     <welcome-file>mycouncil.html</welcome-file>

@@ -4,7 +4,7 @@
 //Ensure Wards are in alphabetical order.
 //
 {"debug":"false",
- "version":"v3.13",
+ "version":"v3.14",
  "showOperationalInformation":"false",
  "showContactScreen":"true",
  "showReportIt":"true",
@@ -14,7 +14,7 @@
  "defaultZoom" : 12,
  "mapSWBounds" : new google.maps.LatLng(52.184668, -0.969543),
  "mapNEBounds" : new google.maps.LatLng(52.406176, -0.500000),
- "googleDefaultLatLng" : new google.maps.LatLng(52.2368744, -0.8973906),
+ "googleDefaultLatLng" : new google.maps.LatLng(52.240477, -0.902655999999979),
  "googleOutsideLatLng" : new google.maps.LatLng(52.276928, -0.914783),
  "googleDefaultLocationName" : "Northampton",
  "boundaryType" : "Borough",
@@ -90,8 +90,7 @@
  "sectors":[{"name":"North","sectorID":"0","email":"yourvoice@northampton.gov.uk","political":"true","backgroundColour":"blue","textColour":"white","subSectorOf":"-1","coOrdinators":[{"name":"Lee Owens","image":"TBC","telephone":"01604 838000","fax":"01604 838755"},{"name":"Jeanette Pidgen","image":"TBC","telephone":"01604 838000","fax":"01604 838755"}],"url":"http://docs.google.com/leaf?id=0B4K22xhfTJLSNjBiY2YwNzEtMjZiOS00M2Y0LTg3MTQtZDg5ZGU3MTM5OTY1&hl=en"},
             {"name":"East","sectorID":"1","email":"yourvoice@northampton.gov.uk","political":"true","backgroundColour":"yellow","textColour":"black","subSectorOf":"-1","coOrdinators":[{"name":"Peter Strachan","image":"TBC","telephone":"01604 838000","fax":"01604 838755"}],"url":"http://docs.google.com/leaf?id=0B4K22xhfTJLSY2RlOTIxZmEtMjVhMC00M2IyLTk1YTYtZDJkN2I5YTVlZDUy&hl=en"},
             {"name":"Southwest","sectorID":"2","email":"yourvoice@northampton.gov.uk","political":"true","backgroundColour":"red","textColour":"white","subSectorOf":"-1","coOrdinators":[{"name":"Pete Staffell","image":"TBC","telephone":"01604 838000","fax":"01604 838755"}],"url":"http://docs.google.com/leaf?id=0B4K22xhfTJLSMjcyNWM2Y2QtNTdkNy00MTBiLWI4ZTYtYmFiNDQ4MjM2ZmRh&hl=en"},
-            {"name":"Central","sectorID":"3","email":"yourvoice@northampton.gov.uk","political":"true","backgroundColour":"green","textColour":"white","subSectorOf":"-1","coOrdinators":[{"name":"Noella Crump","image":"TBC","telephone":"01604 838000","fax":"01604 838755"}],"url":"http://docs.google.com/leaf?id=0B4K22xhfTJLSOTg1ZTY0MmMtZDBmZS00M2VkLTk3NDYtYWVjOGIwOTgzNmY3&hl=en"},
-            {"name":"Town Centre","sectorID":"4","email":"yourvoice@northampton.gov.uk","political":"false","backgroundColour":"purple","textColour":"white","subSectorOf":"3","coOrdinators":[{"name":"Noella Crump","image":"TBC","telephone":"01604 838000","fax":"01604 838755"}],"url":"http://docs.google.com/leaf?id=0B4K22xhfTJLSZWVjNTc2ZmItZTIyMy00Y2RiLTljOTctNjkxNjkxNDdlZWFl&hl=en"}
+            {"name":"Central","sectorID":"3","email":"yourvoice@northampton.gov.uk","political":"true","backgroundColour":"green","textColour":"white","subSectorOf":"-1","coOrdinators":[{"name":"Noella Crump","image":"TBC","telephone":"01604 838000","fax":"01604 838755"}],"url":"http://docs.google.com/leaf?id=0B4K22xhfTJLSOTg1ZTY0MmMtZDBmZS00M2VkLTk3NDYtYWVjOGIwOTgzNmY3&hl=en"}
            ],
  "reportITentries":[{"name":"Flytipping - Black Bags Only","type":"Flytipping","incident":"Black Bags Only","descriptionEmail":"the fly-tipping of black bags","sla":"-"},
                     {"name":"Flytipping - Sofa","type":"Flytipping","incident":"Sofa","descriptionEmail":"the fly-tipping of a sofa","sla":"2"},

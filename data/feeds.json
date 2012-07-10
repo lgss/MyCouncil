@@ -1,0 +1,19 @@
+{
+    "feeds": [
+        {
+            "name": "northamptonbc",
+            "url": "http://search.twitter.com/search.json?q=from:northamptonbc%20-filter:retweets%20-filter:replies",
+            "format": "json"
+        },
+        {
+            "name": "lovenorthampton",
+            "url": "http://search.twitter.com/search.json?q=from:lovenorthampton%20-filter:retweets%20-filter:replies",
+            "format": "json"
+        },
+        {
+            "name": "nbc",
+            "url": "http://www.northampton.gov.uk/site/scripts/rss.php",
+            "format": "xml"
+        }
+    ]
+}

@@ -153,7 +153,7 @@ Ext.onReady(function(){
     var sectorID;
     var callCenterNumber;
     var version;
-    var storePanel = false
+    var storePanel = false;
     var reportItJson;
     var bigForm = false;
     var defaultStreetViewZoom = 0;
@@ -341,6 +341,7 @@ Ext.onReady(function(){
         keyboardShortcuts: false,
         disableDefaultUI: true,
         navigationControl: true,
+        scrollwheel: false,
         navigationControlOptions: {
             style: google.maps.NavigationControlStyle.ANDROID,
             position: google.maps.ControlPosition.TOP_CENTER
@@ -404,7 +405,8 @@ Ext.onReady(function(){
                     }
                     if (jsonMeetingData) {
                         for (var currentMeeting = 0; currentMeeting < jsonMeetingData.meetings.length; currentMeeting++) {
-                            messages_array.push(jsonMeetingData.meetings[currentMeeting].html);
+                            var trimmedMsg = trimMessage(jsonMeetingData.meetings[currentMeeting].html);
+                        	messages_array.push(trimmedMsg);
                         }
                         start_messages();
                     }
@@ -412,6 +414,29 @@ Ext.onReady(function(){
             });
         }
     };
+    
+    function trimMessage(m){
+    	var mStr = m,
+    		startText = ">",
+    		endText = "</a>",
+    		returnText = m;
+    	
+    	var startTextIndex = mStr.indexOf(startText),
+    		endTextIndex = mStr.lastIndexOf(endText),
+    		endTextNum = endTextIndex - endText.length,
+    		currentText = mStr.substring(startTextIndex + startText.length, endTextIndex),
+    		currentLink = mStr.substring(0,startTextIndex+startText.length);
+
+    	if(currentText.length > 80){
+    		returnText = currentLink;
+    		returnText += currentText.substr(0,80);
+    		returnText += "...";
+    		returnText += endText;
+    	}
+    	
+    	return returnText;
+    	
+    }
     
     function start_message_loader(){
         message_timer = Ext.TaskMgr.start({
@@ -1007,7 +1032,7 @@ Ext.onReady(function(){
                     }
                     if (help) {
                         panelDiv.innerHTML = "<BR>" +
-                        "1. Move the mouse around the map. If this help screen is closed (click on the red 'Help' button " +
+                        "1. Move the mouse around the map. If this help screen is closed (click on the 'Help' button " +
                         "in the top left corner of the map) then moving the mouse around the map will show you the relevant " +
                         "councillors for that area.<BR><BR>" +
                         "2. Move the mouse over the map legend (top right of the map) to a list of which wards are controlled " +
@@ -1054,11 +1079,11 @@ Ext.onReady(function(){
                         '<td colspan="3" class="sidePanelSubTitle">' +
                         '<DIV class="' +
                         cssPartyButton[0] +
-                        '"> Your Feedback</DIV><BR>' +
+                        '"> Your Feedback</DIV>' +
                         '</td>' +
                         '</tr>' +
                         '<tr>' +
-                        '<td width="5%" style="background: black"></td>' +
+                        '<td width="5%" ></td>' +
                         '<td style="padding:5px 5px 5px 5px"><input id="feedbackContactDetails" class="' +
                         defaultClassName +
                         '" onmousedown="if(this.className==\'' +
@@ -1070,10 +1095,10 @@ Ext.onReady(function(){
                         '\'){this.value=\'\';this.className=\'' +
                         activeClassName +
                         '\'}" onmouseover="this.style.cursor=\'text\'" type="textbox" value="Enter your email address here" size="30"></td>' +
-                        '<td width="5%" style="background: black"></td>' +
+                        '<td width="5%" ></td>' +
                         '</tr>' +
                         '<tr>' +
-                        '<td width="5%" style="background: black"></td>' +
+                        '<td width="5%" ></td>' +
                         '<td style="padding:5px 5px 5px 5px"><textarea id="feedbackDetails" rows="' +
                         tempRows +
                         '" cols="30" class="' +
@@ -1087,17 +1112,17 @@ Ext.onReady(function(){
                         '\'){this.value=\'\';this.className=\'' +
                         activeClassName +
                         '\'}" onmouseover="this.style.cursor=\'text\'">Enter your feedback here</textarea></td>' +
-                        '<td width="5%" style="background: black"></td>' +
+                        '<td width="5%" ></td>' +
                         '</tr>' +
                         '<tr>' +
-                        '<td width="5%" style="background: black"></td>' +
+                        '<td width="5%" ></td>' +
                         '<td onClick="formClick(false,document.getElementById(\'feedbackContactDetails\').value,document.getElementById(\'feedbackDetails\').value,0,\'\',\'\',false,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Send Feedback</td>' +
-                        '<td width="5%" style="background: black"></td>' +
+                        '<td width="5%" ></td>' +
                         '</tr>' +
                         '<tr>' +
-                        '<td width="5%" style="background: black"></td>' +
-                        '<td style="text-align: centre" cstyle="background: black">&nbsp</td>' +
-                        '<td width="5%" style="background: black"></td>' +
+                        '<td width="5%" ></td>' +
+                        '<td style="text-align: center">&nbsp</td>' +
+                        '<td width="5%" ></td>' +
                         '</tr>' +
                         '</table>' +
                         '</div></div>';
@@ -1389,27 +1414,27 @@ Ext.onReady(function(){
             '</tr>';
             
             bubbleMenu += '<tr>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '<td onClick="spawnWindow(\'' +
             missedCollectionFormUrl +
             '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report a Missed Collection</td>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '</tr>';
             bubbleMenu += '<tr>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '<td onClick="spawnWindow(\'' +
             replacementBinFormUrl +
             '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Request a Replacement Bin/Box</td>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '</tr>';
             
             if(collectionDayPdfUrl !== ""){
             bubbleMenu += '<tr>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '<td onClick="spawnWindow(\'' +
             collectionDayPdfUrl +
             '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Download Calendar</td>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '</tr>';
             }
             
@@ -1433,39 +1458,39 @@ Ext.onReady(function(){
                 bubbleMenu += '<BR> in ' + internalLocationDescription;
             }
             
-            bubbleMenu += '</DIV><BR>' +
+            bubbleMenu += '</DIV>' +
             '</td>' +
             '</tr>';
             
             if (showReportIt) {
                 bubbleMenu += '<tr>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%"></td>' +
                 '<td onClick="gotoProblemMenu()" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Report a problem</td>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%"></td>' +
                 '</tr>';
             }
             if (showViewIt) {
                 bubbleMenu += '<tr>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%"></td>' +
                 '<td onClick="gotoViewMenu()" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">View a problem</td>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%"></td>' +
                 '</tr>';
             }
             
             bubbleMenu += '<tr>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%"></td>' +
             '<td onClick="gotoCouncillorMenu()" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Your Councillors</td>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%"></td>' +
             '<td onClick="gotoCoordinatorMenu()" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Your Neighbourhood</td>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td width="5%" style="background: black"></td>' +
-            '<td id="clearMap" style="text-align: centre" cstyle="background: black">&nbsp</td>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%"></td>' +
+            '<td id="clearMap" style="text-align: centre">&nbsp</td>' +
+            '<td width="5%"></td>' +
             '</tr>' +
             '</table>' +
             '</div></div>';
@@ -1493,39 +1518,39 @@ Ext.onReady(function(){
         wardNames[ward] +
         ' Ward';
         
-        bubbleMenu += '</DIV><BR>' +
+        bubbleMenu += '</DIV>' +
         '</td>' +
         '</tr>' +
         '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%"></td>' +
         '<td onClick="gotoCouncillorDetailsSelector(' +
         displayWard +
         ',false)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Find out more about your councillors</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%"></td>' +
         '</tr>';
         
         if (showContactScreen) {
             bubbleMenu += '<tr>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%"></td>' +
             '<td onClick="gotoCouncillorDetailsSelector(' +
             displayWard +
             ',true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Contact your councillors</td>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%"></td>' +
             '</tr>';
         }
         
         
         bubbleMenu += '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%"></td>' +
         '<td onClick="gotoMainMenu(\'' +
         currentLocation +
         '\',false,null,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Main Menu</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%"></td>' +
         '</tr>' +
         '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
-        '<td id="clearMap" style="text-align: centre" cstyle="background: black">&nbsp</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%"></td>' +
+        '<td id="clearMap" style="text-align: center">&nbsp</td>' +
+        '<td width="5%"></td>' +
         '</tr>' +
         '</table>' +
         '</div></div>';
@@ -1551,42 +1576,42 @@ Ext.onReady(function(){
         wardNames[ward] +
         ' Ward';
         
-        bubbleMenu += '</DIV><BR>' +
+        bubbleMenu += '</DIV>' +
         '</td>' +
         '</tr>' +
         '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%"></td>' +
         '<td onClick="gotoPriorities()" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Tell us your local priorities</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%"></td>' +
         '</tr>' +
         '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%"></td>' +
         '<td onClick="gotoArea(' +
         displayWard +
         ')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">How we\'re dealing with your local priorities</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%"></td>' +
         '</tr>';
         
         if (showContactScreen) {
             bubbleMenu += '<tr>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%"></td>' +
             '<td onClick="gotoContactMessage(' +
             displayWard +
             ',-1,false)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Contact neighbourhood management</td>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%"></td>' +
             '</tr>';
         }
         bubbleMenu += '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%"></td>' +
         '<td onClick="gotoMainMenu(\'' +
         currentLocation +
         '\',false,null,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Main Menu</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%"></td>' +
         '</tr>' +
         '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%"></td>' +
         '<td id="clearMap" style="text-align: centre" cstyle="background: black">&nbsp</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%"></td>' +
         '</tr>' +
         '</table>' +
         '</div></div>';
@@ -1618,7 +1643,7 @@ Ext.onReady(function(){
         '</td>' +
         '</tr>' +
         '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '<td style="padding:5px 5px 5px 5px"><input id="callReference" class="' +
         defaultClassName +
         '" onmousedown="if(this.className==\'' +
@@ -1630,26 +1655,26 @@ Ext.onReady(function(){
         '\'){this.value=\'\';this.className=\'' +
         activeClassName +
         '\'}" onmouseover="this.style.cursor=\'text\'" type="textbox" value="" size="6"></td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '</tr>';
         
         bubbleMenu += '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '<td onClick="getCallDetails(document.getElementById(\'callReference\').value,true,false,false)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">View the problem</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '</tr>';
         
         bubbleMenu += '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '<td onClick="gotoMainMenu(\'' +
         currentLocation +
         '\',false,null,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Main Menu</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '</tr>' +
         '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
-        '<td id="clearMap" style="text-align: centre" cstyle="background: black">&nbsp</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
+        '<td id="clearMap" style="text-align: centre">&nbsp</td>' +
+        '<td width="5%" ></td>' +
         '</tr>' +
         '</table>' +
         '</div></div>';
@@ -1783,7 +1808,7 @@ Ext.onReady(function(){
             formActiveClass +
             '\'}" onmouseover="this.style.cursor=\'text\'" value="Your phone number here (optional)"><\/input><br>' +
             '</td>' +
-            '<td style="white-space:nowrap" valign="top" halign="center">' +
+            '<td class="streetViewText" style="white-space:nowrap" valign="top" halign="center">' +
             streetViewText1 +
             '<div style="height:150px" id="formID">' +
             '</div>' +
@@ -1907,11 +1932,11 @@ Ext.onReady(function(){
         '</td>' +
         '</tr>' +
         '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '<td><DIV class="bubbleMiniText">' +
         form +
         '</DIV></td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '</tr>' +
         '</table>' +
         '</div></div>';
@@ -1937,6 +1962,12 @@ Ext.onReady(function(){
             document.getElementById("formID").innerHTML = ".";
             streetView = new google.maps.StreetViewPanorama(document.getElementById("formID"), panoramaOptions);
         });
+        
+        if(streetviewAvailable){
+            window.setTimeout(function(){
+            	map.panBy(80,0);
+            }, 100);
+        }
     };
     
     gotoConfirmationMenu = function(problemType, callNumber, slaDate, email, text){
@@ -1990,39 +2021,39 @@ Ext.onReady(function(){
         '</td>' +
         '</tr>' +
         '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '<td style="text-align: centre" class="reverseButton">Your call number is ' +
         callNumber +
         '</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '</tr>' +
         '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '<td style="text-align: centre" class="slaText">' +
         slaDate +
         '</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '</tr>' +
         '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '<td><DIV class="bubbleMidiText">' +
         confirmationText +
         '</DIV></td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '</tr>' +
         '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '<td onClick="gotoMainMenu(\'' +
         currentLocation +
         '\',false,null,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Main Menu</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '</tr>';
         
         if (!miniScreen) {
             bubbleMenu += '<tr>' +
-            '<td width="5%" style="background: black"></td>' +
-            '<td id="clearMap" style="text-align: centre" cstyle="background: black">&nbsp</td>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
+            '<td id="clearMap" style="text-align: centre" >&nbsp</td>' +
+            '<td width="5%" ></td>' +
             '</tr>';
         }
         
@@ -2030,6 +2061,10 @@ Ext.onReady(function(){
         '</div></div>';
         currentBubble.setContent(bubbleMenu);
         currentBubble.open(map);
+        
+        window.setTimeout(function(){
+            map.panBy(80,0);
+        }, 100);
     };
     
     reportProblem = function(ward, problemType, problemDetails, problemLocation, problemStreet, name, emailAddress, phoneNumber, streetviewed){
@@ -2254,7 +2289,7 @@ Ext.onReady(function(){
         '<DIV class="bubbleMiniText">' +
         wardNames[ward] +
         ' Ward' +
-        '</DIV><BR>' +
+        '</DIV>' +
         '</td>' +
         '</tr>';
         
@@ -2262,11 +2297,11 @@ Ext.onReady(function(){
         
         if (contact) {
             bubbleMenuCouncillorDetailsSelect += '<tr>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '<td onClick="gotoContactMessage(' +
             councillorArrayItem +
             ',-1,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">All my councillors</td>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '</tr>';
         }
         
@@ -2279,7 +2314,7 @@ Ext.onReady(function(){
                     procCall = "gotoCouncillorDetails(" + councillorArrayItem + "," + currentCouncillor + ")";
                 }
                 bubbleMenuCouncillorDetailsSelect += '<tr>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%" ></td>' +
                 '<td onClick="' +
                 procCall +
                 '" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'' +
@@ -2289,23 +2324,23 @@ Ext.onReady(function(){
                 '">' +
                 candidate_names_array[councillor_names_array[currentCouncillor]] +
                 '</td>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%" ></td>' +
                 '</tr>';
             }
         }
         
         bubbleMenuCouncillorDetailsSelect += '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '<td onClick="gotoMainMenu(\'' +
         currentLocation +
         '\',false,null,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Main Menu</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '</tr>';
         
         bubbleMenuCouncillorDetailsSelect += '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
-        '<td style="text-align: centre" cstyle="background: black">&nbsp</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
+        '<td style="text-align: centre">&nbsp</td>' +
+        '<td width="5%" ></td>' +
         '</tr>' +
         '</table>' +
         '</div></div>';
@@ -2373,7 +2408,7 @@ Ext.onReady(function(){
         '</tr>';
         
         bubbleMenuContact += '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '<td style="padding:5px 5px 5px 5px"><input id="contactDetails" class="' +
         defaultClassName +
         '" onmousedown="if(this.className==\'' +
@@ -2385,11 +2420,11 @@ Ext.onReady(function(){
         '\'){this.value=\'\';this.className=\'' +
         activeClassName +
         '\'}" onmouseover="this.style.cursor=\'text\'" type="textbox" value="Enter your email address here" size="30"></td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '</tr>';
         
         bubbleMenuContact += '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '<td style="padding:5px 5px 5px 5px"><textarea id="messageDetails" rows="' +
         tempRows +
         '" cols="30" class="' +
@@ -2403,11 +2438,11 @@ Ext.onReady(function(){
         '\'){this.value=\'\';this.className=\'' +
         activeClassName +
         '\'}" onmouseover="this.style.cursor=\'text\'">Enter your message here</textarea></td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '</tr>';
         
         bubbleMenuContact += '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '<td onClick="formClick(true,document.getElementById(\'contactDetails\').value,document.getElementById(\'messageDetails\').value,' +
         ward +
         ',' +
@@ -2415,22 +2450,22 @@ Ext.onReady(function(){
         ',' +
         councillor +
         ',false,false)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Send Message</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '</tr>';
         
         bubbleMenuContact += '<tr>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '<td onClick="gotoMainMenu(\'' +
         currentLocation +
         '\',false,null,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Main Menu</td>' +
-        '<td width="5%" style="background: black"></td>' +
+        '<td width="5%" ></td>' +
         '</tr>';
         
         if(!miniScreen){
  		  bubbleMenuContact += //'<tr>' +
-          '<td width="5%" style="background: black"></td>' +
+          '<td width="5%" ></td>' +
           '<td style="text-align: centre" cstyle="background: black">&nbsp</td>' +
-          '<td width="5%" style="background: black"></td>' +
+          '<td width="5%" ></td>' +
           '</tr>';
         }
  
@@ -2484,82 +2519,82 @@ Ext.onReady(function(){
             '<DIV class="bubbleMiniText">' +
             wardNames[ward] +
             ' Ward<BR>(NBC is not responsible for external content)' +
-            '</DIV><BR>' +
+            '</DIV>' +
             '</td>' +
             '</tr>' +
             '<tr>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '<td onClick="spawnWindow(\'' +
             councillor_main_url_base +
             +councillor_main_url_array[selection] +
             '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">My Council profile</td>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '</tr>';
             
             if (councillor_social_url_array[selection]) {
                 bubbleMenuCouncillorDetailsSelect += '<tr>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%" ></td>' +
                 '<td onClick="spawnWindow(\'' +
                 councillor_social_url_array[selection] +
                 '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Add me on ' +
                 social_Networks[councillor_social_url_type_array[selection]] +
                 '</td>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%" ></td>' +
                 '</tr>';
             }
             
             if (councillor_twitter_url_array[selection]) {
                 bubbleMenuCouncillorDetailsSelect += '<tr>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%" ></td>' +
                 '<td onClick="spawnWindow(\'' +
                 councillor_twitter_url_array[selection] +
                 '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Follow me on Twitter</td>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%" ></td>' +
                 '</tr>';
             }
             
             if (councillor_blog_url_array[selection]) {
                 bubbleMenuCouncillorDetailsSelect += '<tr>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%" ></td>' +
                 '<td onClick="spawnWindow(\'' +
                 councillor_blog_url_array[selection] +
                 '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Read my blog</td>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%" ></td>' +
                 '</tr>';
             }
             
             if (councillor_personal_url_array[selection]) {
                 bubbleMenuCouncillorDetailsSelect += '<tr>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%" ></td>' +
                 '<td onClick="spawnWindow(\'' +
                 councillor_personal_url_array[selection] +
                 '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Visit my website</td>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%" ></td>' +
                 '</tr>';
             }
             
             if (partiesURL[councillor_parties_array[selection]]) {
                 bubbleMenuCouncillorDetailsSelect += '<tr>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%" ></td>' +
                 '<td onClick="spawnWindow(\'' +
                 partiesURL[councillor_parties_array[selection]] +
                 '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">My local party website</td>' +
-                '<td width="5%" style="background: black"></td>' +
+                '<td width="5%" ></td>' +
                 '</tr>';
             }
             
             bubbleMenuCouncillorDetailsSelect += '<tr>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '<td onClick="gotoMainMenu(\'' +
             currentLocation +
             '\',false,null,true)" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Main Menu</td>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '</tr>';
             
             bubbleMenuCouncillorDetailsSelect += '<tr>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '<td style="text-align: centre" cstyle="background: black">&nbsp</td>' +
-            '<td width="5%" style="background: black"></td>' +
+            '<td width="5%" ></td>' +
             '</tr>' +
             '</table>' +
             '</div></div>';
@@ -2896,11 +2931,11 @@ Ext.onReady(function(){
                         bubbleMenu += '</td>' +
                         '</tr>' +
                         '<tr>' +
-                        '<td width="5%" style="background: black"></td>' +
+                        '<td width="5%" ></td>' +
                         '<td><DIV class="bubbleMidiText">' +
                         viewItForm +
                         '</DIV></td>' +
-                        '<td width="5%" style="background: black"></td>' +
+                        '<td width="5%" ></td>' +
                         '</tr>' +
                         '</table>' +
                         '</div></div>';
@@ -2916,6 +2951,7 @@ Ext.onReady(function(){
                             if (currentBubble) {
                                 currentBubble.close();
                             }
+                            map.panTo(currentPoint);
                             currentBubble = new google.maps.InfoWindow({
                                 content: bubbleMenu,
                                 position: currentPoint
@@ -3211,8 +3247,9 @@ Ext.onReady(function(){
                         resultInWard = true;
                     }
                 }
-                if (resultInWard) {
+                if (resultInWard && resultLat == googleDefaultLatLng.lat() && resultLng == googleDefaultLatLng.lng()) {
                     menuLocation = "at " + localSearch.results[0].streetAddress;
+                    alert(localSearch.results[0].streetAddress);
                     callbackFunction(point, true);
                 }
                 else {
@@ -3220,10 +3257,15 @@ Ext.onReady(function(){
                     var point = mapCenter;
                     callbackFunction(point, false);
                 }
+            }else{
+                displayConfirmation("'" + searchTerm + "' cannot be found within the " + boundaryType + " boundary.");
+                var point = mapCenter;
+                callbackFunction(point, false);
             }
         });
         localSearch.execute(address + ", UK");
     }
+
     
     function clearBubble(){
         if (currentBubble != null) {

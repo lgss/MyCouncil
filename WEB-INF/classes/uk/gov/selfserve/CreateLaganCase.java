@@ -2,6 +2,7 @@ package uk.gov.selfserve;
 
 import java.awt.Polygon;
 import java.io.*;
+import java.net.URLDecoder;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -103,6 +104,7 @@ public void doPost(final HttpServletRequest request,
 		  phoneNumber = request.getHeader("ProblemPhone"); 
 		  deviceApproved=isApproved(dbLocation,deviceID);
 		  deviceBanned=isBanned(dbLocation,deviceID);
+		  details = URLDecoder.decode(details, "UTF-8");
 	  }else{
 	      lat=request.getParameter("lat");
 	      lng=request.getParameter("lng");

@@ -23,7 +23,7 @@
   </context-param>
   <context-param>
     <param-name>smtpHost</param-name>
-    <param-value>nbcmail</param-value>
+    <param-value></param-value>
   </context-param>
   <context-param>
     <param-name>auditEmailTo</param-name>
@@ -33,14 +33,10 @@
     <param-name>localDialCode</param-name>
     <param-value>01604</param-value>
   </context-param>
-    <context-param>
-    <param-name>contactNumber</param-name>
-    <param-value>0300 330 7000</param-value>
-  </context-param>
   <context-param>
     <param-name>textMessageFrom</param-name>
     <param-value>Northampton Borough Council</param-value>
-  </context-param> 
+  </context-param>
   <context-param>
     <param-name>googleURLAPIKey</param-name>
     <param-value></param-value>
@@ -76,42 +72,29 @@
   <context-param>
     <param-name>twitter-ALL-Access-Token-Secret</param-name>
     <param-value></param-value>
-  </context-param>  
-   <context-param>
-    <param-name>twitter-ward-nn-Consumer-Key</param-name>
+  </context-param>
+  <context-param>
+    <param-name>twitter-sector-North-Consumer-Key</param-name>
     <param-value></param-value>
   </context-param>
   <context-param>
-    <param-name>twitter-ward-nn-Consumer-Secret</param-name>
+    <param-name>twitter-sector-North-Consumer-Secret</param-name>
     <param-value></param-value>
   </context-param>
   <context-param>
-    <param-name>twitter-ward-nn-Access-Token-Key</param-name>
+    <param-name>twitter-sector-North-Access-Token-Key</param-name>
     <param-value></param-value>
   </context-param>
   <context-param>
-    <param-name>twitter-ward-nn-Access-Token-Secret</param-name>
+    <param-name>twitter-sector-North-Access-Token-Secret</param-name>
     <param-value></param-value>
   </context-param>
-  <context-param>
-  <param-name>twitter-ward-nn-Hashtag</param-name>
-    <param-value>#nn</param-value>
-  </context-param>
-  
   <servlet>
     <servlet-name>CreateCall</servlet-name>
     <servlet-class>uk.gov.selfserve.CreateLaganCase</servlet-class>
     <init-param>
       <param-name>bccEmailAddress</param-name>
       <param-value>kwhite@northampton.gov.uk</param-value>
-    </init-param>
-    <init-param>
-      <param-name>twitterAllHashTag</param-name>
-      <param-value>#northampton</param-value>
-    </init-param>
-    <init-param>
-      <param-name>twitterSectorHashTag</param-name>
-      <param-value>#lovenorthampton</param-value>
     </init-param>
   </servlet>
   <servlet>
@@ -138,18 +121,17 @@
     <servlet-name>PollingStationLocationLoader</servlet-name>
     <servlet-class>uk.gov.selfserve.PollingStationLocationLoader</servlet-class>
   </servlet>
-    <servlet>
-    <servlet-name>BinRoundLoader</servlet-name>
-    <servlet-class>uk.gov.selfserve.BinRoundLoader</servlet-class>
-  </servlet>
   <servlet>
     <servlet-name>ConfigFinder</servlet-name>
     <servlet-class>uk.gov.selfserve.ConfigFinder</servlet-class>
   </servlet>
   <servlet>
-  <servlet-name>ClosedCalls</servlet-name>
+    <servlet-name>QnomyTest</servlet-name>
+    <servlet-class>uk.gov.selfserve.QnomyTest</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ClosedCalls</servlet-name>
     <servlet-class>uk.gov.selfserve.ClosedLaganCases</servlet-class>
-    <load-on-startup>-1</load-on-startup>
     <init-param>
       <param-name>enabled</param-name>
       <param-value>false</param-value>
@@ -168,7 +150,7 @@
     </init-param>
     <init-param>
       <param-name>slaEmailAddress</param-name>
-      <param-value>dblundelln@northampton.gov.uk</param-value>
+      <param-value>dhorton@northampton.gov.uk</param-value>
     </init-param>
   </servlet>
   <servlet>
@@ -219,53 +201,9 @@
     <servlet-name>BinRoundFinder</servlet-name>
     <servlet-class>uk.gov.selfserve.BinRoundFinder</servlet-class>
     <init-param>
-      <param-name>postCodeFinderURL</param-name>
-      <param-value>http://www.royalmail.com/postcode-finder</param-value>
+      <param-name>phoneNumber</param-name>
+      <param-value>0300 330 7000</param-value>
     </init-param>
-  </servlet>
-  <servlet>
-    <servlet-name>CreateContact</servlet-name>
-    <servlet-class>uk.gov.selfserve.CreateContact</servlet-class>
-    <init-param>
-      <param-name>classificationCode-myNBC-test</param-name>
-      <param-value>2200435</param-value>
-    </init-param>
-    <init-param>
-      <param-name>classificationCode-mycouncil-test</param-name>
-      <param-value>2200111</param-value>
-    </init-param>
-    <init-param>
-      <param-name>classificationCode-myNBC-live</param-name>
-      <param-value>2002074</param-value>
-    </init-param>
-    <init-param>
-      <param-name>classificationCode-mycouncil-live</param-name>
-      <param-value>2001211</param-value>
-    </init-param>
-  </servlet>
-    <servlet>
-    <servlet-name>PostToSocial</servlet-name>
-    <servlet-class>uk.gov.selfserve.PostToSocial</servlet-class>
-    <init-param>
-      <param-name>localhostip</param-name>
-      <param-value>127.0.0.1</param-value>
-    </init-param>
-    <init-param>
-      <param-name>bpmserverip</param-name>
-      <param-value></param-value>
-    </init-param>
-       <init-param>
-      <param-name>useproxy</param-name>
-      <param-value>false</param-value>
-    </init-param>
-  </servlet>
-    <servlet>
-    <servlet-name>CreateMyNBCCase</servlet-name>
-    <servlet-class>uk.gov.selfserve.CreateMyNBCCase</servlet-class>
-  </servlet>
-    <servlet>
-    <servlet-name>WardLoader</servlet-name>
-    <servlet-class>uk.gov.selfserve.WardLoader</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>CreateTwitterEntry</servlet-name>
@@ -295,13 +233,13 @@
     <servlet-name>PollingStationLocationLoader</servlet-name>
     <url-pattern>/PollingStationLocationLoader</url-pattern>
   </servlet-mapping>
-   <servlet-mapping>
-    <servlet-name>BinRoundLoader</servlet-name>
-    <url-pattern>/BinRoundLoader</url-pattern>
-  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>ConfigFinder</servlet-name>
     <url-pattern>/ConfigFinder</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>QnomyTest</servlet-name>
+    <url-pattern>/QnomyTest</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>SendMessage</servlet-name>
@@ -310,22 +248,6 @@
   <servlet-mapping>
     <servlet-name>BinRoundFinder</servlet-name>
     <url-pattern>/BinRoundFinder</url-pattern>
-  </servlet-mapping>
-     <servlet-mapping>
-    <servlet-name>CreateContact</servlet-name>
-    <url-pattern>/CreateContact</url-pattern>
-  </servlet-mapping>
-       <servlet-mapping>
-    <servlet-name>PostToSocial</servlet-name>
-    <url-pattern>/PostToSocial</url-pattern>
-  </servlet-mapping>
-      <servlet-mapping>
-    <servlet-name>CreateMyNBCCase</servlet-name>
-    <url-pattern>/CreateMyNBCCase</url-pattern>
-  </servlet-mapping>
-     <servlet-mapping>
-    <servlet-name>WardLoader</servlet-name>
-    <url-pattern>/WardLoader</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
     <welcome-file>mycouncil.html</welcome-file>
