@@ -4,12 +4,13 @@
 //Ensure Wards are in alphabetical order.
 //
 {"debug":"false",
- "version":"v3.14",
+ "version":"v3.15",
  "showOperationalInformation":"false",
  "showContactScreen":"true",
  "showReportIt":"true",
  "showViewIt":"true",
  "showExternalPages":"true",
+ "showCalculatedLedBy":"false",
  "mapCenter" : new google.maps.LatLng(52.237178, -0.894635),
  "defaultZoom" : 12,
  "mapSWBounds" : new google.maps.LatLng(52.184668, -0.969543),

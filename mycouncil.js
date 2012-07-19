@@ -192,6 +192,7 @@ Ext.onReady(function(){
     var confirmSelection = -1;
     var confirmCouncillor = -1;
     var submitFeedback = false;
+    var showCalculatedLedBy = false;
     
     Ext.MessageBox.wait('Please wait whilst MyCouncil loads...');
     
@@ -759,7 +760,11 @@ Ext.onReady(function(){
                 document.getElementById("info_panel_title").innerHTML = "";
             }
             else {
-                document.getElementById("info_panel_title").innerHTML = "Led by " + ledByDescriptions[leadBy];
+            	if(showCalculatedLedBy){
+            	   document.getElementById("info_panel_title").innerHTML = "Led by " + ledByDescriptions[leadBy];
+            	}else{
+                   document.getElementById("info_panel_title").innerHTML = "Leader of the Council";
+            	}
             }
             
             document.getElementById("info_panel_details").innerHTML = "";
@@ -799,7 +804,7 @@ Ext.onReady(function(){
                     if (!miniScreen) {
                         document.getElementById("info_panel_details").innerHTML += "<BR>";
                     }
-                    document.getElementById("info_panel_details").innerHTML += "<TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"images/" + mayorImage + ".jpg\" alt=\"Councillor " + mayorName + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
+                    document.getElementById("info_panel_details").innerHTML += "<div id=\"info_panel_mayor_title\" class=\"sidePanelMainTitle\">Mayoralty</div><TABLE><TR><TD width=\"50%\"></TD><TD><DIV class=\"shadowed\"><img style=\"border: none;\" width=\"" + picWidth + "\" height=\"" + picHeight + "\" src=\"images/" + mayorImage + ".jpg\" alt=\"Councillor " + mayorName + "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
                     "<B>Councillor " + mayorName + "</B><BR>Mayor<BR><BR>";
                 }
                 if (preElectionMode || electionCountMode) {
@@ -3487,6 +3492,9 @@ Ext.onReady(function(){
                 }
                 if (jsonData.showCandidates == "true") {
                     showCandidates = true;
+                }
+                if (jsonData.showCalculatedLedBy == "true") {
+                	showCalculatedLedBy = true;
                 }
                 for (var currentReportItEntry = 0; currentReportItEntry < jsonData.reportITentries.length; currentReportItEntry++) {
                     reportItNames[currentReportItEntry] = jsonData.reportITentries[currentReportItEntry].name;
