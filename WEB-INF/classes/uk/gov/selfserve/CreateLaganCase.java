@@ -1,6 +1,5 @@
 package uk.gov.selfserve;
 
-import java.awt.Polygon;
 import java.io.*;
 import java.net.URLDecoder;
 
@@ -185,12 +184,16 @@ public void doPost(final HttpServletRequest request,
 		System.out.println(errorLine4);
 		System.out.println(errorLine5);
 		System.out.println(errorLine6);
+		authenticationError.printStackTrace();
+		StringWriter errors = new StringWriter();
+		authenticationError.printStackTrace(new PrintWriter(errors));
 		String emailContents = errorLine1 + "<BR>" +
 			                   errorLine2 + "<BR>" +
 							   errorLine3 + "<BR>" +
 							   errorLine4 + "<BR>" +
 							   errorLine5 + "<BR>" +
-							   errorLine6;
+							   errorLine6 + "<BR>" +
+							   errors.toString();
 		SendMail authenticationErrorEmail = new SendMail();
 		try
 		{
@@ -299,6 +302,32 @@ public void doPost(final HttpServletRequest request,
 				  details="Not in area - possible test - " + details;
 			  }
 			  
+			  //Store Image if from MyCouncilMobile
+			  String imageLocation="";
+			  if(storeImage){			
+					ServletInputStream in = request.getInputStream();
+					int filesize=request.getContentLength();
+					if(deviceApproved){
+						imageLocation="images/approved/";
+					}else{
+						imageLocation="WEB-INF/pending/";
+					}
+					FileOutputStream fos = new FileOutputStream(getServletContext().getRealPath("/") + imageLocation + laganCaseReference + ".jpg");
+					System.out.println(getServletContext().getRealPath("/") + imageLocation + laganCaseReference + ".jpg");
+					int chunk=1;
+				    byte[] dyn_data = new byte[chunk];
+				    while (filesize>chunk){
+				           in.read(dyn_data,0,chunk);
+				           fos.write(dyn_data,0,chunk);
+				       fos.flush();
+				       filesize -= chunk;
+				      }    
+				    in.read(dyn_data,0,(int) filesize );
+				    fos.write(dyn_data,0, (int) filesize);
+				    fos.flush();
+				    fos.close();
+			  }
+			  
 			  new Thread(new CreateCaseProcesses(host,
 					                             googleURLAPIKey,
 					                             laganFullCaseReference,
@@ -344,32 +373,11 @@ public void doPost(final HttpServletRequest request,
 					                             localDialCode,
 					                             textMessageFrom,
 					                             voiceSlaDate,
-					                             smsFrom
+					                             smsFrom,
+					                             storeImage,
+					                             deviceApproved,
+					                             getServletContext().getRealPath("/") + imageLocation + laganCaseReference + ".jpg"
 					                             )).start();
-			  //Store Image if from MyNBC
-			  if(storeImage){			
-					ServletInputStream in = request.getInputStream();
-					int filesize=request.getContentLength();
-					String imageLocation;
-					if(deviceApproved){
-						imageLocation="images/approved/";
-					}else{
-						imageLocation="WEB-INF/pending/";
-					}
-					FileOutputStream fos = new FileOutputStream(getServletContext().getRealPath("/") + imageLocation + laganCaseReference + ".jpg");
-					int chunk=1;
-				    byte[] dyn_data = new byte[chunk];
-				    while (filesize>chunk){
-				           in.read(dyn_data,0,chunk);
-				           fos.write(dyn_data,0,chunk);
-				       fos.flush();
-				       filesize -= chunk;
-				      }    
-				    in.read(dyn_data,0,(int) filesize );
-				    fos.write(dyn_data,0, (int) filesize);
-				    fos.flush();
-				    fos.close();
-			  }
 		  }
 		  catch (Exception createCaseError)
 		  {
@@ -388,12 +396,15 @@ public void doPost(final HttpServletRequest request,
 			  System.out.println(errorLine5);
 			  System.out.println(errorLine6);
 			  createCaseError.printStackTrace();
+			  StringWriter errors = new StringWriter();
+			  createCaseError.printStackTrace(new PrintWriter(errors));
 			  String emailContents = errorLine1 + "<BR>" +
 									 errorLine2 + "<BR>" +
 									 errorLine3 + "<BR>" +
 									 errorLine4 + "<BR>" +
 									 errorLine5 + "<BR>" +
-									 errorLine6;
+									 errorLine6 + "<BR>" +
+			                         errors.toString();
 			  SendMail caseCreationErrorEmail = new SendMail();
 			  try
 			  {

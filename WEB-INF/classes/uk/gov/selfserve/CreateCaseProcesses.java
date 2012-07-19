@@ -3,6 +3,8 @@ package uk.gov.selfserve;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.mail.MessagingException;
@@ -59,6 +61,9 @@ public class CreateCaseProcesses implements Runnable
     String voiceSlaDate;
     String smsFrom;
     String descriptionEmail;
+    boolean useImage;
+    boolean imageApproved;
+    String imageLocation;
 
 	public CreateCaseProcesses(String host,
 			                   String googleURLAPIKey,
@@ -105,7 +110,10 @@ public class CreateCaseProcesses implements Runnable
 			                   String localDialCode,
 			                   String textMessageFrom,
 			                   String voiceSlaDate,
-			                   String smsFrom) {
+			                   String smsFrom,
+			                   boolean useImage,
+			                   boolean imageApproved,
+			                   String imageLocation) {
 		this.googleURLAPIKey=googleURLAPIKey;
 		this.host=host;
 		this.laganCaseReference=laganCaseReference;
@@ -152,6 +160,9 @@ public class CreateCaseProcesses implements Runnable
 		this.textMessageFrom=textMessageFrom;
 		this.voiceSlaDate=voiceSlaDate;
 		this.smsFrom=smsFrom;
+		this.useImage=useImage;
+		this.imageApproved=imageApproved;
+		this.imageLocation=imageLocation;
 	}
 	
 	public void run() {
@@ -162,14 +173,9 @@ public class CreateCaseProcesses implements Runnable
 		String shortenedURLforTwitter = urlShortener.shortenURL(host + "/?search=" + laganCaseReference.substring(laganCaseReference.length() - 6) + "&url=2",googleURLAPIKey);
 		String shortenedURLforFacebook = urlShortener.shortenURL(host + "/?search=" + laganCaseReference.substring(laganCaseReference.length() - 6) + "&url=3",googleURLAPIKey);
 		
-		//if(thisLocation.getSuccess()){
-			ward=thisLocation.getWard();
-			sector=thisLocation.getSector();
-			descriptionEmail=thisLocation.getProblemEmailDescriptions()[Integer.parseInt(problemNumber)];
-		//}else{
-		//	ward="";
-		//	sector="";
-		//}
+		ward=thisLocation.getWard();
+		sector=thisLocation.getSector();
+		descriptionEmail=thisLocation.getProblemEmailDescriptions()[Integer.parseInt(problemNumber)];
 		
         if((new UpdateLaganCase()).updateCase(laganCaseReference,
         		                              wsddPath,
@@ -198,7 +204,10 @@ public class CreateCaseProcesses implements Runnable
         		                              shortenedURLforTwitter,
         		                              shortenedURLforFacebook,
         		                              shortenedURLforEmail,
-        		                              deviceID
+        		                              deviceID,
+        		                              useImage,
+        		                              imageApproved,
+        		                              imageLocation
                                               )){
           laganCaseReference=laganCaseReference.substring(laganCaseReference.length() - 6);
           String currentDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
@@ -241,11 +250,14 @@ public class CreateCaseProcesses implements Runnable
       				  System.out.println(errorLine4);
       				  System.out.println(errorLine5);
       				  error.printStackTrace();
+      				  StringWriter errors = new StringWriter();
+      				  error.printStackTrace(new PrintWriter(errors));
       				  String emailContents = errorLine1 + "<BR>" +
       										 errorLine2 + "<BR>" +
       										 errorLine3 + "<BR>" +
       										 errorLine4 + "<BR>" +
-      										 errorLine5;
+      										 errorLine5 + "<BR>" +
+      										 errors.toString();
       				  SendMail caseCreationErrorEmail = new SendMail();
       				  try
       				  {
@@ -284,11 +296,14 @@ public class CreateCaseProcesses implements Runnable
       				  System.out.println(errorLine4);
       				  System.out.println(errorLine5);
       				  error.printStackTrace();
+      				  StringWriter errors = new StringWriter();
+      				  error.printStackTrace(new PrintWriter(errors));
       				  String emailContents = errorLine1 + "<BR>" +
       										 errorLine2 + "<BR>" +
       										 errorLine3 + "<BR>" +
       										 errorLine4 + "<BR>" +
-      										 errorLine5;
+      										 errorLine5 + "<BR>" +
+      										 errors.toString();
       				  SendMail caseCreationErrorEmail = new SendMail();
       				  try
       				  {
@@ -327,11 +342,14 @@ public class CreateCaseProcesses implements Runnable
 //      				  System.out.println(errorLine4);
 //      				  System.out.println(errorLine5);
 //      				  error.printStackTrace();
+//  				      StringWriter errors = new StringWriter();
+//  				      error.printStackTrace(new PrintWriter(errors));
 //      				  String emailContents = errorLine1 + "<BR>" +
 //      										 errorLine2 + "<BR>" +
 //      										 errorLine3 + "<BR>" +
 //      										 errorLine4 + "<BR>" +
-//      										 errorLine5;
+//      										 errorLine5 + "<BR>" +
+//      		                                 errors.toString();
 //      				  SendMail caseCreationErrorEmail = new SendMail();
 //      				  try
 //      				  {
@@ -370,11 +388,14 @@ public class CreateCaseProcesses implements Runnable
 //      				  System.out.println(errorLine4);
 //      				  System.out.println(errorLine5);
 //      				  error.printStackTrace();
+//  				      StringWriter errors = new StringWriter();
+//  				      error.printStackTrace(new PrintWriter(errors));
 //      				  String emailContents = errorLine1 + "<BR>" +
 //      										 errorLine2 + "<BR>" +
 //      										 errorLine3 + "<BR>" +
 //      										 errorLine4 + "<BR>" +
-//      										 errorLine5;
+//      										 errorLine5 + "<BR>" +
+//      		                                 errors.toString();
 //      				  SendMail caseCreationErrorEmail = new SendMail();
 //      				  try
 //      				  {
@@ -407,7 +428,34 @@ public class CreateCaseProcesses implements Runnable
       					  twitterALLAccessTokenSecret);
       		     }
       		     catch(NullPointerException error){
-      			     System.out.println("Null Pointer Exception error sending ALL twitter message");
+    			      String errorLine1 = "";
+      				  String errorLine2 = "CreateCaseProcesses Failed - Null Pointer Exception error sending ALL twitter message";
+      				  String errorLine3 = "Date        : " + currentDate;
+      				  String errorLine4 = "LaganSystem : " + laganSystem;
+      				  String errorLine5 = "";
+      				  System.out.println(errorLine1);
+      				  System.out.println(errorLine2);
+      				  System.out.println(errorLine3);
+      				  System.out.println(errorLine4);
+      				  System.out.println(errorLine5);
+      				  error.printStackTrace();
+      				  StringWriter errors = new StringWriter();
+      				  error.printStackTrace(new PrintWriter(errors));
+      				  String emailContents = errorLine1 + "<BR>" +
+      										 errorLine2 + "<BR>" +
+      										 errorLine3 + "<BR>" +
+      										 errorLine4 + "<BR>" +
+      										 errorLine5 + "<BR>" +
+      										 errors.toString();
+      				  SendMail caseCreationErrorEmail = new SendMail();
+      				  try
+      				  {
+      					  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a tweet", emailContents, emailFrom, smtpHost, true);
+      				  }
+      				  catch (MessagingException emailError)
+      				  {
+      					  System.out.println("Email error : " + emailError.toString());
+      				  }
       		     }
       	      }
       		  //Post Entry to Sector twitter stream.
@@ -439,11 +487,14 @@ public class CreateCaseProcesses implements Runnable
       				  System.out.println(errorLine4);
       				  System.out.println(errorLine5);
       				  error.printStackTrace();
+      				  StringWriter errors = new StringWriter();
+      				  error.printStackTrace(new PrintWriter(errors));
       				  String emailContents = errorLine1 + "<BR>" +
       										 errorLine2 + "<BR>" +
       										 errorLine3 + "<BR>" +
       										 errorLine4 + "<BR>" +
-      										 errorLine5;
+      										 errorLine5 + "<BR>" +
+      										 errors.toString();
       				  SendMail caseCreationErrorEmail = new SendMail();
       				  try
       				  {
@@ -487,11 +538,14 @@ public class CreateCaseProcesses implements Runnable
       				  System.out.println(errorLine4);
       				  System.out.println(errorLine5);
       				  error.printStackTrace();
+      				  StringWriter errors = new StringWriter();
+      				  error.printStackTrace(new PrintWriter(errors));
       				  String emailContents = errorLine1 + "<BR>" +
       										 errorLine2 + "<BR>" +
       										 errorLine3 + "<BR>" +
       										 errorLine4 + "<BR>" +
-      										 errorLine5;
+      										 errorLine5 + "<BR>" +
+      										 errors.toString();
       				  SendMail caseCreationErrorEmail = new SendMail();
       				  try
       				  {
@@ -533,12 +587,16 @@ public class CreateCaseProcesses implements Runnable
     				  System.out.println(errorLine4);
     				  System.out.println(errorLine5);
     				  System.out.println(errorLine6);
+    				  confirmationError.printStackTrace();
+      				  StringWriter errors = new StringWriter();
+      				  confirmationError.printStackTrace(new PrintWriter(errors));
     				  String emailContents = errorLine1 + "<BR>" +
     										 errorLine2 + "<BR>" +
     										 errorLine3 + "<BR>" +
     										 errorLine4 + "<BR>" +
     										 errorLine5 + "<BR>" +
-    										 errorLine6;
+    										 errorLine6 + "<BR>" +
+    										 errors.toString();
     				  SendMail confirmationEmailError = new SendMail();
     				  try
     				  {
@@ -647,12 +705,16 @@ public class CreateCaseProcesses implements Runnable
     				  System.out.println(errorLine4);
     				  System.out.println(errorLine5);
     				  System.out.println(errorLine6);
+    				  textMessageError.printStackTrace();
+      				  StringWriter errors = new StringWriter();
+      				  textMessageError.printStackTrace(new PrintWriter(errors));
     				  String emailContents = errorLine1 + "<BR>" +
     										 errorLine2 + "<BR>" +
     										 errorLine3 + "<BR>" +
     										 errorLine4 + "<BR>" +
     										 errorLine5 + "<BR>" +
-    										 errorLine6;
+    										 errorLine6 + "<BR>" +
+    										 errors.toString();
     				  SendMail textMessageEmailError = new SendMail();
     				  try
     				  {
