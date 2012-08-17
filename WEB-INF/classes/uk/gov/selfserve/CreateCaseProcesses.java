@@ -64,6 +64,7 @@ public class CreateCaseProcesses implements Runnable
     boolean useImage;
     boolean imageApproved;
     String imageLocation;
+    boolean useTwitter;
 
 	public CreateCaseProcesses(String host,
 			                   String googleURLAPIKey,
@@ -113,7 +114,8 @@ public class CreateCaseProcesses implements Runnable
 			                   String smsFrom,
 			                   boolean useImage,
 			                   boolean imageApproved,
-			                   String imageLocation) {
+			                   String imageLocation,
+			                   Boolean useTwitter) {
 		this.googleURLAPIKey=googleURLAPIKey;
 		this.host=host;
 		this.laganCaseReference=laganCaseReference;
@@ -163,6 +165,7 @@ public class CreateCaseProcesses implements Runnable
 		this.useImage=useImage;
 		this.imageApproved=imageApproved;
 		this.imageLocation=imageLocation;
+		this.useTwitter=useTwitter;
 	}
 	
 	public void run() {
@@ -213,303 +216,305 @@ public class CreateCaseProcesses implements Runnable
           String currentDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
     	  String xmlWard=ward.replace(" ","");
     	  xmlWard=xmlWard.replace("&","");
-          //Post twitter messages.
-      	  String twitterMessage="";
-      	  if(descriptionEmail.equals("cleansing")){
-      		  twitterMessage="We'll be dealing with " + descriptionEmail + " " + slaDay + ". More details " + shortenedURLforTwitter;	  
-      	  }else{
-      		  twitterMessage="We'll be cleaning up " + descriptionEmail + " " + slaDay + ". More details " + shortenedURLforTwitter;			 
-      	  }
-      	  if (details.toLowerCase().contains("test")|(laganSystem.equals("test") && !twitterTESTConsumerKey.equals(""))){
-      		  //Test SocialMedia
-      		  //All stream TEST
-      		  TwitterEntry caseTwitterEntry = new TwitterEntry();
-      		  try
-      	      {
-        		    caseTwitterEntry.createTwitterEntry(
-      				  ward + " : " + twitterMessage,
-                        currentDate,
-                        strErrorEmailTo,
-                        strErrorEmailBCC,
-                        emailFrom,
-                        smtpHost,
-      				  twitterTESTConsumerKey,
-      				  twitterTESTConsumerSecret,
-      				  twitterTESTAccessTokenKey,
-      				  twitterTESTAccessTokenSecret);
-      		     }
-      		     catch(NullPointerException error){
-      				  String errorLine1 = "";
-      				  String errorLine2 = "CreateCaseProcesses Failed - Null Pointer Exception error sending ALL twitter message (TEST)";
-      				  String errorLine3 = "Date        : " + currentDate;
-      				  String errorLine4 = "LaganSystem : " + laganSystem;
-      				  String errorLine5 = "";
-      				  System.out.println(errorLine1);
-      				  System.out.println(errorLine2);
-      				  System.out.println(errorLine3);
-      				  System.out.println(errorLine4);
-      				  System.out.println(errorLine5);
-      				  error.printStackTrace();
-      				  StringWriter errors = new StringWriter();
-      				  error.printStackTrace(new PrintWriter(errors));
-      				  String emailContents = errorLine1 + "<BR>" +
-      										 errorLine2 + "<BR>" +
-      										 errorLine3 + "<BR>" +
-      										 errorLine4 + "<BR>" +
-      										 errorLine5 + "<BR>" +
-      										 errors.toString();
-      				  SendMail caseCreationErrorEmail = new SendMail();
-      				  try
-      				  {
-      					  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a tweet", emailContents, emailFrom, smtpHost, true);
-      				  }
-      				  catch (MessagingException emailError)
-      				  {
-      					  System.out.println("Email error : " + emailError.toString());
-      				  }
-      		     }		
-      		  //Sector stream TEST
-      		  caseTwitterEntry = new TwitterEntry();
-      		  try
-      	      {
-      		    caseTwitterEntry.createTwitterEntry(
-      		    	  thisLocation.getSectorHashtag().substring(1) + " : " + twitterMessage,
-      		    	  currentDate,
-                        strErrorEmailTo,
-                        strErrorEmailBCC,
-                        emailFrom,
-                        smtpHost,
-                        twitterTESTConsumerKey,
-                        twitterTESTConsumerSecret,
-                        twitterTESTAccessTokenKey,
-                        twitterTESTAccessTokenSecret);
-      		     }
-      		     catch(NullPointerException error){
-      			      String errorLine1 = "";
-      				  String errorLine2 = "CreateCaseProcesses Failed - Null Pointer Exception error sending Sector twitter message (TEST)";
-      				  String errorLine3 = "Date        : " + currentDate;
-      				  String errorLine4 = "LaganSystem : " + laganSystem;
-      				  String errorLine5 = "";
-      				  System.out.println(errorLine1);
-      				  System.out.println(errorLine2);
-      				  System.out.println(errorLine3);
-      				  System.out.println(errorLine4);
-      				  System.out.println(errorLine5);
-      				  error.printStackTrace();
-      				  StringWriter errors = new StringWriter();
-      				  error.printStackTrace(new PrintWriter(errors));
-      				  String emailContents = errorLine1 + "<BR>" +
-      										 errorLine2 + "<BR>" +
-      										 errorLine3 + "<BR>" +
-      										 errorLine4 + "<BR>" +
-      										 errorLine5 + "<BR>" +
-      										 errors.toString();
-      				  SendMail caseCreationErrorEmail = new SendMail();
-      				  try
-      				  {
-      					  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a tweet", emailContents, emailFrom, smtpHost, true);
-      				  }
-      				  catch (MessagingException emailError)
-      				  {
-      					  System.out.println("Email error : " + emailError.toString());
-      				  }
-      		     }		  
-      		  //Ward stream TEST  
-//      		  caseTwitterEntry = new TwitterEntry();
-//      		  try
-//      		      {
-//      			    caseTwitterEntry.createTwitterEntry(
-//      			    	  thisLocation.getWardHashtag() + " : " + twitterMessage,
-//      			    	  currentDate,
-//      	                  strErrorEmailTo,
-//      	                  strErrorEmailBCC,
-//      	                  emailFrom,
-//      	                  smtpHost,
-//                            twitterTESTConsumerKey,
-//                            twitterTESTConsumerSecret,
-//                            twitterTESTAccessTokenKey,
-//                            twitterTESTAccessTokenSecret);
-//      		     }
-//      		     catch(NullPointerException error){
-//    			      String errorLine1 = "";
-//      				  String errorLine2 = "CreateCaseProcesses Failed - Null Pointer Exception error sending Ward twitter message (TEST)";
-//      				  String errorLine3 = "Date        : " + currentDate;
-//      				  String errorLine4 = "LaganSystem : " + laganSystem;
-//      				  String errorLine5 = "";
-//      				  System.out.println(errorLine1);
-//      				  System.out.println(errorLine2);
-//      				  System.out.println(errorLine3);
-//      				  System.out.println(errorLine4);
-//      				  System.out.println(errorLine5);
-//      				  error.printStackTrace();
-//  				      StringWriter errors = new StringWriter();
-//  				      error.printStackTrace(new PrintWriter(errors));
-//      				  String emailContents = errorLine1 + "<BR>" +
-//      										 errorLine2 + "<BR>" +
-//      										 errorLine3 + "<BR>" +
-//      										 errorLine4 + "<BR>" +
-//      										 errorLine5 + "<BR>" +
-//      		                                 errors.toString();
-//      				  SendMail caseCreationErrorEmail = new SendMail();
-//      				  try
-//      				  {
-//      					  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a tweet", emailContents, emailFrom, smtpHost, true);
-//      				  }
-//      				  catch (MessagingException emailError)
-//      				  {
-//      					  System.out.println("Email error : " + emailError.toString());
-//      				  }
-//      		     }
-      		     //Temporary home for ward stream live
-//      		     try
-//      		      {
-//      		    	 caseTwitterEntry = new TwitterEntry();
-//      			     caseTwitterEntry.createTwitterEntry(
-//      			    	  thisLocation.getWardHashtag() + " : " + twitterMessage,
-//      			    	  currentDate,
-//      	                  strErrorEmailTo,
-//      	                  strErrorEmailBCC,
-//      	                  emailFrom,
-//      	                  smtpHost,
-//      					  thisLocation.getWardConsumerKey(),
-//      					  thisLocation.getWardConsumerSecret(),
-//      					  thisLocation.getWardAccessTokenKey(),
-//      					  thisLocation.getWardAccessTokenSecret());
-//      		     }
-//      		     catch(NullPointerException error){
-//      			      String errorLine1 = "";
-//      				  String errorLine2 = "CreateCaseProcesses Failed - Null Pointer Exception error sending WARD twitter message";
-//      				  String errorLine3 = "Date        : " + currentDate;
-//      				  String errorLine4 = "LaganSystem : " + laganSystem;
-//      				  String errorLine5 = "";
-//      				  System.out.println(errorLine1);
-//      				  System.out.println(errorLine2);
-//      				  System.out.println(errorLine3);
-//      				  System.out.println(errorLine4);
-//      				  System.out.println(errorLine5);
-//      				  error.printStackTrace();
-//  				      StringWriter errors = new StringWriter();
-//  				      error.printStackTrace(new PrintWriter(errors));
-//      				  String emailContents = errorLine1 + "<BR>" +
-//      										 errorLine2 + "<BR>" +
-//      										 errorLine3 + "<BR>" +
-//      										 errorLine4 + "<BR>" +
-//      										 errorLine5 + "<BR>" +
-//      		                                 errors.toString();
-//      				  SendMail caseCreationErrorEmail = new SendMail();
-//      				  try
-//      				  {
-//      					  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a tweet", emailContents, emailFrom, smtpHost, true);
-//      				  }
-//      				  catch (MessagingException emailError)
-//      				  {
-//      					  System.out.println("Email error : " + emailError.toString());
-//      				  }
-//      		     }		  
-      	  }
-      	  else
-      	  //Live SocialMedia
-      	  {
-      		  if(!twitterALLConsumerKey.equals(""))
-      		  {		     
-      		  try
-      	         {
-      			  TwitterEntry caseTwitterEntry = new TwitterEntry();
-      			  caseTwitterEntry.createTwitterEntry( 
-      					  ward + " : " + twitterMessage + " " + twitterALLHashtag,
-      	                  currentDate,
-      	                  strErrorEmailTo,
-      	                  strErrorEmailBCC,
-      	                  emailFrom,
-      	                  smtpHost,
-      					  twitterALLConsumerKey,
-      					  twitterALLConsumerSecret,
-      					  twitterALLAccessTokenKey,
-      					  twitterALLAccessTokenSecret);
-      		     }
-      		     catch(NullPointerException error){
-    			      String errorLine1 = "";
-      				  String errorLine2 = "CreateCaseProcesses Failed - Null Pointer Exception error sending ALL twitter message";
-      				  String errorLine3 = "Date        : " + currentDate;
-      				  String errorLine4 = "LaganSystem : " + laganSystem;
-      				  String errorLine5 = "";
-      				  System.out.println(errorLine1);
-      				  System.out.println(errorLine2);
-      				  System.out.println(errorLine3);
-      				  System.out.println(errorLine4);
-      				  System.out.println(errorLine5);
-      				  error.printStackTrace();
-      				  StringWriter errors = new StringWriter();
-      				  error.printStackTrace(new PrintWriter(errors));
-      				  String emailContents = errorLine1 + "<BR>" +
-      										 errorLine2 + "<BR>" +
-      										 errorLine3 + "<BR>" +
-      										 errorLine4 + "<BR>" +
-      										 errorLine5 + "<BR>" +
-      										 errors.toString();
-      				  SendMail caseCreationErrorEmail = new SendMail();
-      				  try
-      				  {
-      					  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a tweet", emailContents, emailFrom, smtpHost, true);
-      				  }
-      				  catch (MessagingException emailError)
-      				  {
-      					  System.out.println("Email error : " + emailError.toString());
-      				  }
-      		     }
-      	      }
-      		  //Post Entry to Sector twitter stream.
-      		  if(!laganSystem.equals("test")){
-      		     try
-      		      {
-      			     TwitterEntry caseTwitterEntry = new TwitterEntry();
-      			     caseTwitterEntry.createTwitterEntry(
-      			    	  thisLocation.getSectorHashtag() + " : " + twitterMessage + " " + twitterSectorHashtag,
-      			    	  currentDate,
-      	                  strErrorEmailTo,
-      	                  strErrorEmailBCC,
-      	                  emailFrom,
-      	                  smtpHost,
-      					  thisLocation.getSectorConsumerKey(),
-      					  thisLocation.getSectorConsumerSecret(),
-      					  thisLocation.getSectorAccessTokenKey(),
-      					  thisLocation.getSectorAccessTokenSecret());
-      		     }
-      		     catch(NullPointerException error){
-      			      String errorLine1 = "";
-      				  String errorLine2 = "CreateCaseProcesses Failed - Null Pointer Exception error sending SECTOR twitter message";
-      				  String errorLine3 = "Date        : " + currentDate;
-      				  String errorLine4 = "LaganSystem : " + laganSystem;
-      				  String errorLine5 = "";
-      				  System.out.println(errorLine1);
-      				  System.out.println(errorLine2);
-      				  System.out.println(errorLine3);
-      				  System.out.println(errorLine4);
-      				  System.out.println(errorLine5);
-      				  error.printStackTrace();
-      				  StringWriter errors = new StringWriter();
-      				  error.printStackTrace(new PrintWriter(errors));
-      				  String emailContents = errorLine1 + "<BR>" +
-      										 errorLine2 + "<BR>" +
-      										 errorLine3 + "<BR>" +
-      										 errorLine4 + "<BR>" +
-      										 errorLine5 + "<BR>" +
-      										 errors.toString();
-      				  SendMail caseCreationErrorEmail = new SendMail();
-      				  try
-      				  {
-      					  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a tweet", emailContents, emailFrom, smtpHost, true);
-      				  }
-      				  catch (MessagingException emailError)
-      				  {
-      					  System.out.println("Email error : " + emailError.toString());
-      				  }
-      		     }
-      		  }
-      		  //Post Entry to Ward twitter stream.
-//      		  if(continueProcessing && !laganSystem.equals("test")){
-//      		  }
-      	  }
+    	  if(useTwitter){
+	          //Post twitter messages.
+	      	  String twitterMessage="";
+	      	  if(descriptionEmail.equals("cleansing")){
+	      		  twitterMessage="We'll be dealing with " + descriptionEmail + " " + slaDay + ". More details " + shortenedURLforTwitter;	  
+	      	  }else{
+	      		  twitterMessage="We'll be cleaning up " + descriptionEmail + " " + slaDay + ". More details " + shortenedURLforTwitter;			 
+	      	  }
+	      	  if (details.toLowerCase().contains("test")|(laganSystem.equals("test") && !twitterTESTConsumerKey.equals(""))){
+	      		  //Test SocialMedia
+	      		  //All stream TEST
+	      		  TwitterEntry caseTwitterEntry = new TwitterEntry();
+	      		  try
+	      	      {
+	        		    caseTwitterEntry.createTwitterEntry(
+	      				  ward + " : " + twitterMessage,
+	                        currentDate,
+	                        strErrorEmailTo,
+	                        strErrorEmailBCC,
+	                        emailFrom,
+	                        smtpHost,
+	      				  twitterTESTConsumerKey,
+	      				  twitterTESTConsumerSecret,
+	      				  twitterTESTAccessTokenKey,
+	      				  twitterTESTAccessTokenSecret);
+	      		     }
+	      		     catch(NullPointerException error){
+	      				  String errorLine1 = "";
+	      				  String errorLine2 = "CreateCaseProcesses Failed - Null Pointer Exception error sending ALL twitter message (TEST)";
+	      				  String errorLine3 = "Date        : " + currentDate;
+	      				  String errorLine4 = "LaganSystem : " + laganSystem;
+	      				  String errorLine5 = "";
+	      				  System.out.println(errorLine1);
+	      				  System.out.println(errorLine2);
+	      				  System.out.println(errorLine3);
+	      				  System.out.println(errorLine4);
+	      				  System.out.println(errorLine5);
+	      				  error.printStackTrace();
+	      				  StringWriter errors = new StringWriter();
+	      				  error.printStackTrace(new PrintWriter(errors));
+	      				  String emailContents = errorLine1 + "<BR>" +
+	      										 errorLine2 + "<BR>" +
+	      										 errorLine3 + "<BR>" +
+	      										 errorLine4 + "<BR>" +
+	      										 errorLine5 + "<BR>" +
+	      										 errors.toString();
+	      				  SendMail caseCreationErrorEmail = new SendMail();
+	      				  try
+	      				  {
+	      					  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a tweet", emailContents, emailFrom, smtpHost, true);
+	      				  }
+	      				  catch (MessagingException emailError)
+	      				  {
+	      					  System.out.println("Email error : " + emailError.toString());
+	      				  }
+	      		     }		
+	      		  //Sector stream TEST
+	      		  caseTwitterEntry = new TwitterEntry();
+	      		  try
+	      	      {
+	      		    caseTwitterEntry.createTwitterEntry(
+	      		    	  thisLocation.getSectorHashtag().substring(1) + " : " + twitterMessage,
+	      		    	  currentDate,
+	                        strErrorEmailTo,
+	                        strErrorEmailBCC,
+	                        emailFrom,
+	                        smtpHost,
+	                        twitterTESTConsumerKey,
+	                        twitterTESTConsumerSecret,
+	                        twitterTESTAccessTokenKey,
+	                        twitterTESTAccessTokenSecret);
+	      		     }
+	      		     catch(NullPointerException error){
+	      			      String errorLine1 = "";
+	      				  String errorLine2 = "CreateCaseProcesses Failed - Null Pointer Exception error sending Sector twitter message (TEST)";
+	      				  String errorLine3 = "Date        : " + currentDate;
+	      				  String errorLine4 = "LaganSystem : " + laganSystem;
+	      				  String errorLine5 = "";
+	      				  System.out.println(errorLine1);
+	      				  System.out.println(errorLine2);
+	      				  System.out.println(errorLine3);
+	      				  System.out.println(errorLine4);
+	      				  System.out.println(errorLine5);
+	      				  error.printStackTrace();
+	      				  StringWriter errors = new StringWriter();
+	      				  error.printStackTrace(new PrintWriter(errors));
+	      				  String emailContents = errorLine1 + "<BR>" +
+	      										 errorLine2 + "<BR>" +
+	      										 errorLine3 + "<BR>" +
+	      										 errorLine4 + "<BR>" +
+	      										 errorLine5 + "<BR>" +
+	      										 errors.toString();
+	      				  SendMail caseCreationErrorEmail = new SendMail();
+	      				  try
+	      				  {
+	      					  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a tweet", emailContents, emailFrom, smtpHost, true);
+	      				  }
+	      				  catch (MessagingException emailError)
+	      				  {
+	      					  System.out.println("Email error : " + emailError.toString());
+	      				  }
+	      		     }		  
+	      		  //Ward stream TEST  
+	//      		  caseTwitterEntry = new TwitterEntry();
+	//      		  try
+	//      		      {
+	//      			    caseTwitterEntry.createTwitterEntry(
+	//      			    	  thisLocation.getWardHashtag() + " : " + twitterMessage,
+	//      			    	  currentDate,
+	//      	                  strErrorEmailTo,
+	//      	                  strErrorEmailBCC,
+	//      	                  emailFrom,
+	//      	                  smtpHost,
+	//                            twitterTESTConsumerKey,
+	//                            twitterTESTConsumerSecret,
+	//                            twitterTESTAccessTokenKey,
+	//                            twitterTESTAccessTokenSecret);
+	//      		     }
+	//      		     catch(NullPointerException error){
+	//    			      String errorLine1 = "";
+	//      				  String errorLine2 = "CreateCaseProcesses Failed - Null Pointer Exception error sending Ward twitter message (TEST)";
+	//      				  String errorLine3 = "Date        : " + currentDate;
+	//      				  String errorLine4 = "LaganSystem : " + laganSystem;
+	//      				  String errorLine5 = "";
+	//      				  System.out.println(errorLine1);
+	//      				  System.out.println(errorLine2);
+	//      				  System.out.println(errorLine3);
+	//      				  System.out.println(errorLine4);
+	//      				  System.out.println(errorLine5);
+	//      				  error.printStackTrace();
+	//  				      StringWriter errors = new StringWriter();
+	//  				      error.printStackTrace(new PrintWriter(errors));
+	//      				  String emailContents = errorLine1 + "<BR>" +
+	//      										 errorLine2 + "<BR>" +
+	//      										 errorLine3 + "<BR>" +
+	//      										 errorLine4 + "<BR>" +
+	//      										 errorLine5 + "<BR>" +
+	//      		                                 errors.toString();
+	//      				  SendMail caseCreationErrorEmail = new SendMail();
+	//      				  try
+	//      				  {
+	//      					  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a tweet", emailContents, emailFrom, smtpHost, true);
+	//      				  }
+	//      				  catch (MessagingException emailError)
+	//      				  {
+	//      					  System.out.println("Email error : " + emailError.toString());
+	//      				  }
+	//      		     }
+	      		     //Temporary home for ward stream live
+	//      		     try
+	//      		      {
+	//      		    	 caseTwitterEntry = new TwitterEntry();
+	//      			     caseTwitterEntry.createTwitterEntry(
+	//      			    	  thisLocation.getWardHashtag() + " : " + twitterMessage,
+	//      			    	  currentDate,
+	//      	                  strErrorEmailTo,
+	//      	                  strErrorEmailBCC,
+	//      	                  emailFrom,
+	//      	                  smtpHost,
+	//      					  thisLocation.getWardConsumerKey(),
+	//      					  thisLocation.getWardConsumerSecret(),
+	//      					  thisLocation.getWardAccessTokenKey(),
+	//      					  thisLocation.getWardAccessTokenSecret());
+	//      		     }
+	//      		     catch(NullPointerException error){
+	//      			      String errorLine1 = "";
+	//      				  String errorLine2 = "CreateCaseProcesses Failed - Null Pointer Exception error sending WARD twitter message";
+	//      				  String errorLine3 = "Date        : " + currentDate;
+	//      				  String errorLine4 = "LaganSystem : " + laganSystem;
+	//      				  String errorLine5 = "";
+	//      				  System.out.println(errorLine1);
+	//      				  System.out.println(errorLine2);
+	//      				  System.out.println(errorLine3);
+	//      				  System.out.println(errorLine4);
+	//      				  System.out.println(errorLine5);
+	//      				  error.printStackTrace();
+	//  				      StringWriter errors = new StringWriter();
+	//  				      error.printStackTrace(new PrintWriter(errors));
+	//      				  String emailContents = errorLine1 + "<BR>" +
+	//      										 errorLine2 + "<BR>" +
+	//      										 errorLine3 + "<BR>" +
+	//      										 errorLine4 + "<BR>" +
+	//      										 errorLine5 + "<BR>" +
+	//      		                                 errors.toString();
+	//      				  SendMail caseCreationErrorEmail = new SendMail();
+	//      				  try
+	//      				  {
+	//      					  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a tweet", emailContents, emailFrom, smtpHost, true);
+	//      				  }
+	//      				  catch (MessagingException emailError)
+	//      				  {
+	//      					  System.out.println("Email error : " + emailError.toString());
+	//      				  }
+	//      		     }		  
+	      	  }
+	      	  else
+	      	  //Live SocialMedia
+	      	  {
+	      		  if(!twitterALLConsumerKey.equals(""))
+	      		  {		     
+	      		  try
+	      	         {
+	      			  TwitterEntry caseTwitterEntry = new TwitterEntry();
+	      			  caseTwitterEntry.createTwitterEntry( 
+	      					  ward + " : " + twitterMessage + " " + twitterALLHashtag,
+	      	                  currentDate,
+	      	                  strErrorEmailTo,
+	      	                  strErrorEmailBCC,
+	      	                  emailFrom,
+	      	                  smtpHost,
+	      					  twitterALLConsumerKey,
+	      					  twitterALLConsumerSecret,
+	      					  twitterALLAccessTokenKey,
+	      					  twitterALLAccessTokenSecret);
+	      		     }
+	      		     catch(NullPointerException error){
+	    			      String errorLine1 = "";
+	      				  String errorLine2 = "CreateCaseProcesses Failed - Null Pointer Exception error sending ALL twitter message";
+	      				  String errorLine3 = "Date        : " + currentDate;
+	      				  String errorLine4 = "LaganSystem : " + laganSystem;
+	      				  String errorLine5 = "";
+	      				  System.out.println(errorLine1);
+	      				  System.out.println(errorLine2);
+	      				  System.out.println(errorLine3);
+	      				  System.out.println(errorLine4);
+	      				  System.out.println(errorLine5);
+	      				  error.printStackTrace();
+	      				  StringWriter errors = new StringWriter();
+	      				  error.printStackTrace(new PrintWriter(errors));
+	      				  String emailContents = errorLine1 + "<BR>" +
+	      										 errorLine2 + "<BR>" +
+	      										 errorLine3 + "<BR>" +
+	      										 errorLine4 + "<BR>" +
+	      										 errorLine5 + "<BR>" +
+	      										 errors.toString();
+	      				  SendMail caseCreationErrorEmail = new SendMail();
+	      				  try
+	      				  {
+	      					  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a tweet", emailContents, emailFrom, smtpHost, true);
+	      				  }
+	      				  catch (MessagingException emailError)
+	      				  {
+	      					  System.out.println("Email error : " + emailError.toString());
+	      				  }
+	      		     }
+	      	      }
+	      		  //Post Entry to Sector twitter stream.
+	      		  if(!laganSystem.equals("test")){
+	      		     try
+	      		      {
+	      			     TwitterEntry caseTwitterEntry = new TwitterEntry();
+	      			     caseTwitterEntry.createTwitterEntry(
+	      			    	  thisLocation.getSectorHashtag() + " : " + twitterMessage + " " + twitterSectorHashtag,
+	      			    	  currentDate,
+	      	                  strErrorEmailTo,
+	      	                  strErrorEmailBCC,
+	      	                  emailFrom,
+	      	                  smtpHost,
+	      					  thisLocation.getSectorConsumerKey(),
+	      					  thisLocation.getSectorConsumerSecret(),
+	      					  thisLocation.getSectorAccessTokenKey(),
+	      					  thisLocation.getSectorAccessTokenSecret());
+	      		     }
+	      		     catch(NullPointerException error){
+	      			      String errorLine1 = "";
+	      				  String errorLine2 = "CreateCaseProcesses Failed - Null Pointer Exception error sending SECTOR twitter message";
+	      				  String errorLine3 = "Date        : " + currentDate;
+	      				  String errorLine4 = "LaganSystem : " + laganSystem;
+	      				  String errorLine5 = "";
+	      				  System.out.println(errorLine1);
+	      				  System.out.println(errorLine2);
+	      				  System.out.println(errorLine3);
+	      				  System.out.println(errorLine4);
+	      				  System.out.println(errorLine5);
+	      				  error.printStackTrace();
+	      				  StringWriter errors = new StringWriter();
+	      				  error.printStackTrace(new PrintWriter(errors));
+	      				  String emailContents = errorLine1 + "<BR>" +
+	      										 errorLine2 + "<BR>" +
+	      										 errorLine3 + "<BR>" +
+	      										 errorLine4 + "<BR>" +
+	      										 errorLine5 + "<BR>" +
+	      										 errors.toString();
+	      				  SendMail caseCreationErrorEmail = new SendMail();
+	      				  try
+	      				  {
+	      					  caseCreationErrorEmail.postMail(strErrorEmailTo, strErrorEmailBCC, "MyCouncil has failed to send a tweet", emailContents, emailFrom, smtpHost, true);
+	      				  }
+	      				  catch (MessagingException emailError)
+	      				  {
+	      					  System.out.println("Email error : " + emailError.toString());
+	      				  }
+	      		     }
+	      		  }
+	      		  //Post Entry to Ward twitter stream.
+	//      		  if(continueProcessing && !laganSystem.equals("test")){
+	//      		  }
+	      	  }
+    	  }
     	  //Send the confirmation email.
     		  if (emailAddress.length() > 0)
     		  {

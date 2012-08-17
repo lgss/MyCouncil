@@ -37,6 +37,7 @@ public void doPost(final HttpServletRequest request,
 	  Boolean storeImage=false;
 	  Boolean deviceApproved=false;
 	  Boolean deviceBanned=false;
+	  Boolean useTwitter=false;
       DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	  DateFormat slaDateFormat = new SimpleDateFormat("EEEEEEEEE, d MMMMMMMMM yyyy 'at' HH:mm:ss");
 	  DateFormat voiceSlaDateFormat = new SimpleDateFormat("EEEEEEEEE, d MMMMMMMMM yyyy 'at' h mm a");
@@ -45,6 +46,7 @@ public void doPost(final HttpServletRequest request,
 	  String version = "v1.001";
       String currentDate = dateFormat.format(date);
 	  String laganSystem = getServletContext().getInitParameter("laganSystem");
+	  String useTwitterParam = getServletConfig().getInitParameter("useTwitter");
 	  String host = getServletContext().getInitParameter("host") + "/" + getServletContext().getServletContextName();
 	  String dbLocation = "jdbc:sqlite:" + getServletContext().getRealPath("/WEB-INF/mycouncil.db3");
 	  String errorEmailTo = getServletContext().getInitParameter("errorEmailTo");
@@ -70,6 +72,10 @@ public void doPost(final HttpServletRequest request,
 	  
 	  if(dataSource==null){
 		  dataSource="";
+	  }
+	  
+	  if(useTwitterParam.equals("true")){
+		 useTwitter=true; 
 	  }
 	  
 	  String deviceID="";
@@ -376,7 +382,8 @@ public void doPost(final HttpServletRequest request,
 					                             smsFrom,
 					                             storeImage,
 					                             deviceApproved,
-					                             getServletContext().getRealPath("/") + imageLocation + laganCaseReference + ".jpg"
+					                             getServletContext().getRealPath("/") + imageLocation + laganCaseReference + ".jpg",
+					                             useTwitter
 					                             )).start();
 		  }
 		  catch (Exception createCaseError)
