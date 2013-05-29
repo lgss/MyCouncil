@@ -1,0 +1,30 @@
+<html>
+<body>
+<div id="logo" style="width: 100%; background: #A52449; padding:.5em 0;">
+  <center>
+    <a href="http://www.northampton.gov.uk" title="Northampton Borough Council">
+      <img style="border: none;" src="http://selfserve.northampton.gov.uk/mycouncil/images/logo.gif" alt="Northampton Borough Council"/>
+    </a>
+  </center>
+</div>
+<div style="font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;background: #58686D;Color: #FFFFFF;font-size: 25px;text-align: center; padding:.5em"><span>Your Housing Application number is AAA</span></div>
+</div>
+<div style="font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;background: #808080;Color: #FFFFFF;font-size: 16px;text-align: center"> <span>Please ensure you keep this number safe and quote it on any correspondence</span></div>
+</div>
+<div style="font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;font-size: 13px;margin: 5px;text-align: left">
+<p>Thank you for applying for Housing with Northampton Borough Council, please use the application number <span style="font-weight:bold; color:#A52449;">CCC</span> when enquiring about your application.</p>
+<p>If you wish to check the current state of your application please <a href="EEE">log in to our website</a> using your username and password or telephone us on DDD and follow the options for Housing.</p>
+<p>Please bring or send your document copies in to us, we cannot process your application until we receive these.</p>
+<p>Your application may be <b>cancelled</b> if you do not provide document copies within 28 days.</p>
+<p>You can find out about the documents we need <a href ="http://www.northampton.gov.uk/downloads/file/5914/housing_support_document_checklist">here.</a></p>
+<p>You can bring in document copies to the One Stop Shop. Please remember to include your name, address and Application Reference Number (or your National Insurance number).</p>
+<p>Or you can send them to us at</p> 
+<p>Housing Services<br/>
+The Guildhall<br/>
+St Giles Square<br/>
+Northampton<br/>
+NN1 1DE</p>
+<p>We only need copies of your documents at this stage, please do not send us originals.</p>
+</div>
+</body>
+</html>

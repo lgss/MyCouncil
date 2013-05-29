@@ -179,10 +179,7 @@ Ext.onReady(function(){
     var collectionType = "";
     var collectionText = "";
     var collectionWeekNumber = "";
-    var collectionWeek = new Array();
-    var collectionDayRound = new Array();
-    var collectionDayPdf = new Array();
-    var collectionDayPdfUrl = "";
+    var collectionURL = "";
     var missedCollectionFormUrl = "";
     var replacementBinFormUrl = "";
     var useLite = false;
@@ -193,6 +190,8 @@ Ext.onReady(function(){
     var confirmCouncillor = -1;
     var submitFeedback = false;
     var showCalculatedLedBy = false;
+    var defaultEmail = "mycouncil@northampton.gov.uk";
+    var regExEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     
     Ext.MessageBox.wait('Please wait whilst MyCouncil loads...');
     
@@ -250,7 +249,7 @@ Ext.onReady(function(){
             binDay = Ext.urlDecode(location.search.substring(1)).day;
             collectionType = Ext.urlDecode(location.search.substring(1)).type;
             collectionWeekNumber = Ext.urlDecode(location.search.substring(1)).week;
-            binRound = binDay + collectionWeekNumber + "pdf";
+            collectionURL = Ext.urlDecode(location.search.substring(1)).url;
         }
     };
     
@@ -673,8 +672,8 @@ Ext.onReady(function(){
                         picHeight +
                         "\" src=\"images/" +
                         councillor_images_array[currentCouncillor] +
-                        ".jpg\" alt=\"Councillor" +
-                        candidate_names_array[currentCouncillor] +
+                        ".jpg\" alt=\"Councillor " +
+                        candidate_names_array[councillor_names_array[currentCouncillor]] +
                         "\"/></DIV></TD><TD width=\"50%\"></TD></TR></TABLE>" +
                         "<B>Councillor " +
                         candidate_names_array[councillor_names_array[currentCouncillor]] +
@@ -1433,11 +1432,11 @@ Ext.onReady(function(){
             '<td width="5%" ></td>' +
             '</tr>';
             
-            if(collectionDayPdfUrl !== ""){
+            if(collectionURL !== ""){
             bubbleMenu += '<tr>' +
             '<td width="5%" ></td>' +
-            '<td onClick="spawnWindow(\'' +
-            collectionDayPdfUrl +
+            '<td onClick="spawnWindow(\'https://docs.google.com/open?id=' + 
+            collectionURL +
             '\')" onmouseover="this.style.cursor=\'pointer\';this.className=\'reverseButton\'" onmouseout="this.style.cursor=\'auto\';this.className=\'button\'" style="text-align: centre" class="button">Download Calendar</td>' +
             '<td width="5%" ></td>' +
             '</tr>';
@@ -2168,73 +2167,79 @@ Ext.onReady(function(){
     		submitFeedback=false;
     	}
     	if(messageDetails==''||messageDetails=='Enter your message here'||messageDetails=='Enter your feedback here'){
-				Ext.MessageBox.alert('<CENTER>Hello</CENTER>',"No message entered");
-    	}else{
-	        if (!confirmed && (contactDetails == "Enter your contact details here" || contactDetails == "Enter your email address here" || contactDetails == "")) {
-	            contactDetails = "";
-	            Ext.MessageBox.confirm('<CENTER>Hello</CENTER>', 'Are you sure you want to report this anonymously? Please click \'No\' if you want to enter an email address.',testAnonymous);
-	            verifiedAnonymous = false;
-	        }
-	        else
-	        	{
-	        	if (contactDetails == "Enter your contact details here" || contactDetails == "Enter your email address here") {
-	        		contactDetails = "";
-	        	}
-	        	if (messageDetails != 'Enter your message here' && messageDetails != '') {
-	        		var emailAddress;
-	        		var messageType;
-	        		if (contact) {
-	        			if (councillor) {
-	        				messageType = 1;
-	        				var councillor_emails_array = councillor_emails[ward].toString().split(",");
-	        				if (selection == -1) {
-	        					emailAddress = councillor_emails_array;
-	        				}
-	        				else {
-	        					emailAddress = councillor_emails_array[selection];
-	        				}
-	        			}
-	        			else {
-	        				messageType = 2;
-	        				emailAddress = sectorEmails[wardSector[ward]];
-	        			}
-	        		}
-	        		else {
-	        			messageType = 3;
-	        			emailAddress = feedbackEmailAddress;
-	        		}
-	        		var encodedContactDetails = encodeURIComponent(contactDetails);
-	        		var encodedMessageDetails = encodeURIComponent(messageDetails);
-	        		var encodedEmailTo = encodeURIComponent(emailAddress);
-	        		var encodedSector = encodeURIComponent(sectorNames[wardSector[ward]]);
-	        		Ext.Ajax.request({
-	        			url: 'SendMessage?contact=' + encodedContactDetails + '&message=' + encodedMessageDetails + '&emailTo=' + encodedEmailTo + '&messageType=' + messageType + '&sector=' + encodedSector,
-	        			timeout: 30000,
-	        			method: 'POST',
-	        			success: function (response) {
-	        				var sendEmailResponse;
-	        				try {
-	        					sendEmailResponse = Ext.util.JSON.decode(response.responseText);
-	        					if (contact) {
-	        						redirectFromContact(councillor, sendEmailResponse.message);
-	        					}
-	        					else {
-	        						Ext.MessageBox.alert('<CENTER>Hello</CENTER>', sendEmailResponse.message);
-	        						MenuClick(false, false, true, false);
-	        					}
-	        				}
-	        				catch (err) {
-	        					Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
-	        					sendEmailResponse = Ext.util.JSON.decode(response.responseText);
-	        				}
-	        			},
-	        			failure: function (response) {
-	        				Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
-	        				sendEmailResponse = Ext.util.JSON.decode(response.responseText);
-	        			}
-	        		});
-	        	}
-        	}
+    		Ext.MessageBox.alert('<CENTER>Hello</CENTER>',"No message entered");
+    	}
+    	else{
+    		if (!confirmed && (contactDetails == "Enter your contact details here" || contactDetails == "Enter your email address here" || contactDetails == "")) {
+    			contactDetails = "";
+    			Ext.MessageBox.confirm('<CENTER>Hello</CENTER>', 'Are you sure you want to report this anonymously? Please click \'No\' if you want to enter an email address.',testAnonymous);
+    			verifiedAnonymous = false;
+    		}
+    		else
+    		{
+    			if (contactDetails == "Enter your contact details here" || contactDetails == "Enter your email address here" || contactDetails == "") {
+    				contactDetails = defaultEmail;
+    			}
+    			if(!regExEmail.test(contactDetails)){
+    				Ext.MessageBox.alert('<CENTER>Hello</CENTER>',"Please enter a valid email address");
+    			}else{
+    				if (messageDetails != 'Enter your message here' && messageDetails != '') {
+    					var emailAddress;
+    					var messageType;
+    					if (contact) {
+    						if (councillor) {
+    							messageType = 1;
+    							var councillor_emails_array = councillor_emails[ward].toString().split(",");
+    							if (selection == -1) {
+    								emailAddress = councillor_emails_array;
+    							}
+    							else {
+    								emailAddress = councillor_emails_array[selection];
+    							}
+    						}
+    						else {
+    							messageType = 2;
+    							emailAddress = sectorEmails[wardSector[ward]];
+    						}
+    					}
+    					else {
+    						messageType = 3;
+    						emailAddress = feedbackEmailAddress;
+    					}
+
+    					var encodedContactDetails = encodeURIComponent(contactDetails);
+    					var encodedMessageDetails = encodeURIComponent(messageDetails);
+    					var encodedEmailTo = encodeURIComponent(emailAddress);
+    					var encodedSector = encodeURIComponent(sectorNames[wardSector[ward]]);
+    					Ext.Ajax.request({
+    						url: 'SendMessage?contact=' + encodedContactDetails + '&message=' + encodedMessageDetails + '&emailTo=' + encodedEmailTo + '&messageType=' + messageType + '&sector=' + encodedSector,
+    						timeout: 30000,
+    						method: 'POST',
+    						success: function (response) {
+    							var sendEmailResponse;
+    							try {
+    								sendEmailResponse = Ext.util.JSON.decode(response.responseText);
+    								if (contact) {
+    									redirectFromContact(councillor, sendEmailResponse.message);
+    								}
+    								else {
+    									Ext.MessageBox.alert('<CENTER>Hello</CENTER>', sendEmailResponse.message);
+    									MenuClick(false, false, true, false);
+    								}
+    							}
+    							catch (err) {
+    								Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
+    								sendEmailResponse = Ext.util.JSON.decode(response.responseText);
+    							}
+    						},
+    						failure: function (response) {
+    							Ext.MessageBox.alert('<CENTER>Hello</CENTER>', 'Apologies, but there was an error sending your message. Please try again later.');
+    							sendEmailResponse = Ext.util.JSON.decode(response.responseText);
+    						}
+    					});
+    				}
+    			}
+    		}
     	}
     };
     
@@ -2660,7 +2665,7 @@ Ext.onReady(function(){
     
     function isCallNumber(searchString){
         var isCallNumber = false;
-        if (searchString.length == 6) {
+        if (searchString.length == 6 || searchString.length == 7) {
             var numbers = '0123456789';
             var isNumeric = true;
             for (currentNumber = 0; currentNumber < searchString.length; currentNumber++) {
@@ -2680,6 +2685,9 @@ Ext.onReady(function(){
         var viewItJson;
         var viewItForm;
         var bubbleMenu;
+        if(callReference.length == 6){
+        	callReference = "0" + callReference;
+        }
         Ext.Ajax.request({
             url: 'ViewCall?',
             params: {
@@ -3464,11 +3472,6 @@ Ext.onReady(function(){
                     document.getElementById("report_title").innerHTML = jsonData.electionCountMapTitle;
                 }
                 if (collectionDayMode){
-                	for (var currentCalendar = 0; currentCalendar < jsonData.refuseCalendars.length; currentCalendar++) {
-                		if(binRound == jsonData.refuseCalendars[currentCalendar].round ){
-                        	collectionDayPdfUrl=jsonData.refuseCalendars[currentCalendar].url;
-                        }
-                	}
                 	missedCollectionFormUrl = jsonData.missedCollectionURL;
                 	replacementBinFormUrl = jsonData.replacementBinURL;
                 }

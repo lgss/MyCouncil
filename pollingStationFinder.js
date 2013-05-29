@@ -10,8 +10,7 @@ $(function(){
 			return $.ajax({
 				url: "PollPropertyFinder?postcode=" + postcode,
 				dataType: "JSON",
-				type: "GET",
-				delay: 2
+				type: "GET"
 			});
 		};
 		
@@ -28,11 +27,13 @@ $(function(){
 			promise.done(function(d){
 				if(d.success && d.properties.length > 0){
 					self.addProperties($el, d);
-					self.modeManager(2);
 				} else{
 					//didn't get results - postcode error?
 					self.modeManager(1,true,postCodeError);
 				}
+			});
+			promise.fail(function(){
+				self.modeManager(1,true,postCodeError);
 			});
 		};
 		
@@ -56,30 +57,40 @@ $(function(){
 				$step2 = $('#step2'),
 				$step3 = $('#step3'),
 				$pc = $('#postCode'),
-				$error = $('#error');
+				$error = $('#error'),
+				$map = $('#map-container');
 			
 			switch (mode){
 			case 1:
 				$pc.val("postCode");
 				if(error){
 					$error.html(errMsg);
-					$error.show();
+					$error.fadeIn();
 				} else{
-					$error.hide();
+					$error.fadeOut();
 				}
 				$step1.show();
 				$step2.hide();
 				$step3.hide();
+				$map.hide();
 				break;
 			case 2:
 				$step1.hide();
 				$step2.show();
 				$step3.hide();
+				$map.hide();
 				break;
 			case 3:
 				$step1.hide();
 				$step2.hide();
 				$step3.show();
+				$map.hide();
+				break;
+			case 4:
+				$step1.hide();
+				$step2.hide();
+				$step3.hide();
+				$map.show();
 				break;
 			default:
 				self.modeManager(1,false);
@@ -99,6 +110,12 @@ $(function(){
 				case "#step3":
 					self.modeManager(3);
 					break;
+				case "#map":
+					self.modeManager(4);
+					break;
+				case "#map-closed":
+					self.modeManager(3);
+					break;
 				}
 			});
 		};
@@ -109,27 +126,55 @@ $(function(){
 				options += '<option value="'+data.properties[x].uprn+'">'+data.properties[x].address+'</option>';
 			}
 			$el.html(options);
+			self.modeManager(2);
 		};
 		
 		this.showPollingStations = function ($el,data){
 			var results = "";
+			
 			for(x = 0; x < data.pollStations.length; x += 1){
+				results += '<div class="pollingStation">';
 				if(data.pollStations[x].type == "district"){
 					results += '<p>Your polling station to vote in the Police and Crime Commissioner election is:</p>';
 				}
 				if(data.pollStations[x].type == "advisory"){
-					results += '<p>Your polling station to vote in the local advisory polls is:</p>';
+					results += '<p>Your polling station to vote in the Community Governance Review Local Advisory Poll is:</p>';
 				}
 				results += '<p class="redHighlight">'+data.pollStations[x].name+'</p>';
 				results += '<p>'+data.pollStations[x].fullAddress+'</p>';
 				results += '<div id="button">';
-				results += '<a class="button red" href="https://maps.google.co.uk/?q='+data.pollStations[x].fullAddress+'" target="_blank"><span>View Map</span></a>';
+				results += '<a class="button red show-map" id="show-map" href="#map" data-lat="'+data.pollStations[x].lat+'" data-lng="'+data.pollStations[x].lng+'" data-name="'+data.pollStations[x].name+'"><span>View Map</span></a>';
+				results += '</div>';
 				results += '</div>';
 			}
+			
 			$el.html(results);
 		};
 		
+		this.updateMap = function(map,lat,lng,addMarker,title) {
+			var center = new google.maps.LatLng(lat,lng),
+				mapOptions = {
+			          zoom: 16,
+			          center: center,
+			          mapTypeId: google.maps.MapTypeId.ROADMAP
+			        };
+			map = new google.maps.Map(map,mapOptions);
+			if(addMarker){
+				self.addMapMarker(map,lat,lng,title);
+			}
+		};
+		
+		this.addMapMarker = function(map,lat,lng,title){
+			var latLng = new google.maps.LatLng(lat,lng);
+			var marker = new google.maps.Marker({
+			      position: latLng,
+			      map: map,
+			      title: title
+			  });
+		};
+		
 		this.init = function(stepOneId,stepTwoId,stepThreeId,waitId,postCodeInputId,searchId,findItId,propNumbersId){
+			
 			var $stepOneCont = $(stepOneId),
 				$stepTwoCont = $(stepTwoId),
 				$stepThreeCont = $(stepThreeId),
@@ -137,7 +182,11 @@ $(function(){
 				$search = $(searchId),
 				$findIt = $(findItId),
 				$propNumber = $(propNumbersId),
-				$waitCont = $(waitId);
+				$waitCont = $(waitId),
+				$map = $('#map-container'),
+				map = $('#map')[0];
+			
+
 			
 			$.ajaxSetup({
 			    beforeSend:function(){
@@ -149,7 +198,7 @@ $(function(){
 			});
 			
 			self.historyManager(window);
-			self.modeManager(1,false);
+
 			$search.on('click',function(e){
 				//e.preventDefault();
 				self.searchProperties($propNumber,$postCode.val(),$stepOneCont,$stepTwoCont);
@@ -159,6 +208,20 @@ $(function(){
 				//e.preventDefault();
 				self.searchPollStations($stepThreeCont,$propNumber.val());
 			});
+			
+			self.updateMap(map,52.237178, -0.894635);
+			
+			$stepThreeCont.delegate('#show-map','click',function(e){
+				var $this = $(this);
+				self.modeManager(4,false);
+				self.updateMap(map, $this.data('lat'), $this.data('lng'), $this.data('name'));
+			});
+			
+			$map.delegate('#close-map','click',function(e){
+				self.modeManager(3, false);
+			});
+			
+			self.modeManager(1,false);
 		};	
 		
 	};

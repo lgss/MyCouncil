@@ -32,7 +32,7 @@ public class ViewLaganCase extends HttpServlet
 	  String errorEmailTo = getServletContext().getInitParameter("errorEmailTo");
 	  String errorEmailFrom = getServletContext().getInitParameter("emailFrom");
 	  String smtpHost = getServletContext().getInitParameter("smtpHost");
-	  String laganCaseReference = "101000" + request.getParameter("caseRef");
+	  String laganCaseReference = "10100" + request.getParameter("caseRef");
  	  PrintWriter ajaxResponse = response.getWriter();
 	  boolean continueProcessing = true;
 	  String[] strErrorEmailTo = { errorEmailTo };
@@ -181,7 +181,7 @@ public class ViewLaganCase extends HttpServlet
 			  ajaxResponse.print("{\"result\":\"failed\",\"reason\":\"Viewing case on Lagan\"}");
 			  continueProcessing = false;
 			  String errorLine1 = "";
-			  String errorLine2 = "CreateLaganCase " + version + " - Failed - Viewing case on Lagan";
+			  String errorLine2 = "ViewLaganCase " + version + " - Failed - Viewing case on Lagan";
 			  String errorLine3 = "Date        : " + currentDate;
 			  String errorLine4 = "LaganSystem : " + laganSystem;
 			  String errorLine5 = "Error       : " + viewCaseError.toString();

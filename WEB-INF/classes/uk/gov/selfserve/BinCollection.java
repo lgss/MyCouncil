@@ -12,6 +12,9 @@ public class BinCollection {
 	public String type; //type of collection
 	public String nextCollection; //date of next collection yyyyMMddhhmm
 	public String address; //first line of the address
+	public String url;
+	public String oldDay;
+	public int oldWeek;
 	
 	
 	public void getNextCollection(){
@@ -28,7 +31,6 @@ public class BinCollection {
 			
 			Date next = longDate.parse(this.nextCollection);
 			nextCollection.setTime(next);
-			System.out.println("Week Number: " + nextCollection.get(Calendar.WEEK_OF_YEAR));
 			if(nextCollection.get(Calendar.WEEK_OF_YEAR) % 2 == 0){
 				//get collection type for even weeks
 				this.type = getCollectionType(true, this.week);

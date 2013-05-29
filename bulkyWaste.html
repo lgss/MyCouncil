@@ -1,0 +1,361 @@
+
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bulky Waste</title>
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/bulkyWaste.css">
+
+</head>
+<body>
+	<div id="ajax-wait" align="center" class="hidden">
+			<p>Please Wait</p>
+			<img src="images/loading.gif" title="Loading..." alt="Loading">
+		</div>
+	<div id="mainform">
+		<form action="#" method="" id="form1">
+			<fieldset>
+				<label for="txtCustName">Name:</label> <input type="text"
+					id="txtCustName" placeholder="Name" class="form-text mandatory">
+				<p class="form-help error" id="validName">Please enter your
+					name.</p>
+			</fieldset>
+
+			<fieldset>
+				<label for="txtCustTel">Telephone Number:</label> <input
+					type="telephone" id="txtCustTel" placeholder="Telelphone Number"
+					class="form-text mandatory">
+				<p class="form-help error" id="validTel">Please enter a valid
+					telephone number.</p>
+			</fieldset>
+
+			<fieldset>
+				<label for="txtCustEmail">Email Address</label> <input type="email"
+					id="txtCustEmail" title="Your email address"
+					placeholder="you@email.co.uk" class="form-text mandatory">
+				<p class="form-help error" id="validEmail">Please enter valid
+					Email</p>
+			</fieldset>
+
+			<fieldset>
+				<label for="txtCustPostCode">Post Code:</label> <input type="text"
+					id="txtCustPostCode" placeholder="NN1 1DE"
+					class="form-text mandatory" value="">
+				<p class="form-help error" id="noPostCode">Please enter a post
+					code</p>
+				<p class="form-help error" id="nonNBCPostCode">Post Code not in
+					NBC Area</p>
+				<p class="form-help error" id="postCodeNotValid">Post Code not
+					valid</p>
+				<p class="form-help error" id="postCodeNotFound">No Results
+					Found</p>
+			</fieldset>
+
+			<fieldset class="form-actions-inform">
+				<button id="btnFindAddress" class="button grey">Find Address</button>
+			</fieldset>
+			<div class="loading" id="loading2">
+				<img src="images/loading.gif" title="Loading..." alt="Loading">
+			</div>
+
+			<div id="formdetails">
+
+				<fieldset id="houseNum">
+					<label for="cboHouseNmber">Select Address:</label> <select
+						id="cboHouseNumber"></select>
+					<p class="form-help error" id="noAddressSelected">Please select
+						your address.</p>
+				</fieldset>
+
+				<fieldset id="address">
+					<label for="txtCustAddress">Address:</label> <input type="text"
+						id="txtCustAddress" placeholder="Address" readonly="readonly"
+						class="form-text mandatory">
+				</fieldset>
+
+
+
+				<fieldset>
+					<label for="cboItem1">Item:</label> <select
+						id="cboItem1">
+						<option value="">Select Item</option>
+						<option>Baby Cot</option>
+						<option>Baby Bath</option>
+						<option>BBQ</option>
+						<option>Bed - Bedbase (Single/Double)</option>
+						<option>Bed - Headboard (Single/Double)</option>
+						<option>Bed - Mattress (Single/Double)</option>
+						<option>Bedside Cabinet</option>
+						<option>Bicycle</option>
+						<option>Bookcase</option>
+						<option>Cabinet</option>
+						<option>Carpet (Rolled up)</option>
+						<option>Carpet Underlay (Rolled up)</option>
+						<option>Chair - Dining Room (4 chairs = 1 item)</option>
+						<option>Chair - Office/Arm/Rocking etc.</option>
+						<option>Chest of Drawers</option>
+						<option>Coffee Table</option>
+						<option>Computer Monitor</option>
+						<option>Cooker/Oven</option>
+						<option>Curtain Rail/Blind</option>
+						<option>Desk</option>
+						<option>Dishwasher</option>
+						<option>Dressing Table</option>
+						<option>DVD/VCR Player</option>
+						<option>Exercise Bike</option>
+						<option>Fire (Gas/Electric, portable)</option>
+						<option>Fridge or Fridge/Freezer</option>
+						<option>Garden Bench</option>
+						<option>Garden Swing (dismantled)</option>
+						<option>Garden Table</option>
+						<option>Headboard</option>
+						<option>Heater (Gas/Electric, portable)</option>
+						<option>Lawnmower (Electric or Manual)</option>
+						<option>Mattress (Single/Double)</option>
+						<option>Microwave</option>
+						<option>Rowing Machine</option>
+						<option>Settee/Sofa Bed</option>
+						<option>Shelving Unit</option>
+						<option>Slide (dismantled)</option>
+						<option>Snooker Table (not full size)</option>
+						<option>Standard Lamp</option>
+						<option>Step Ladder</option>
+						<option>Stereo (including speakers)</option>
+						<option>Sunlounger</option>
+						<option>Table</option>
+						<option>Television</option>
+						<option>Trolley (excluding shopping trolley)
+						<option>Trunk</option>
+						<option>Tumble Dryer</option>
+						<option>Vacuum Cleaner</option>
+						<option>Wardrobe</option>
+						<option>Washing Machine</option>
+						<option>Water Butt</option>
+						<option>Wheelbarrow</option>
+						<option>Other - Please State Below</option>
+					</select>
+				</fieldset>
+
+				<fieldset>
+					<label for="cboItem2">Item:</label> <select
+						id="cboItem2">
+						<option value="">Select Item</option>
+						<option>Baby Cot</option>
+						<option>Baby Bath</option>
+						<option>BBQ</option>
+						<option>Bed - Bedbase (Single/Double)</option>
+						<option>Bed - Headboard (Single/Double)</option>
+						<option>Bed - Mattress (Single/Double)</option>
+						<option>Bedside Cabinet</option>
+						<option>Bicycle</option>
+						<option>Bookcase</option>
+						<option>Cabinet</option>
+						<option>Carpet (Rolled up)</option>
+						<option>Carpet Underlay (Rolled up)</option>
+						<option>Chair - Dining Room (4 chairs = 1 item)</option>
+						<option>Chair - Office/Arm/Rocking etc.</option>
+						<option>Chest of Drawers</option>
+						<option>Coffee Table</option>
+						<option>Computer Monitor</option>
+						<option>Cooker/Oven</option>
+						<option>Curtain Rail/Blind</option>
+						<option>Desk</option>
+						<option>Dishwasher</option>
+						<option>Dressing Table</option>
+						<option>DVD/VCR Player</option>
+						<option>Exercise Bike</option>
+						<option>Fire (Gas/Electric, portable)</option>
+						<option>Fridge or Fridge/Freezer</option>
+						<option>Garden Bench</option>
+						<option>Garden Swing (dismantled)</option>
+						<option>Garden Table</option>
+						<option>Headboard</option>
+						<option>Heater (Gas/Electric, portable)</option>
+						<option>Lawnmower (Electric or Manual)</option>
+						<option>Mattress (Single/Double)</option>
+						<option>Microwave</option>
+						<option>Rowing Machine</option>
+						<option>Settee/Sofa Bed</option>
+						<option>Shelving Unit</option>
+						<option>Slide (dismantled)</option>
+						<option>Snooker Table (not full size)</option>
+						<option>Standard Lamp</option>
+						<option>Step Ladder</option>
+						<option>Stereo (including speakers)</option>
+						<option>Sunlounger</option>
+						<option>Table</option>
+						<option>Television</option>
+						<option>Trolley (excluding shopping trolley)
+						<option>Trunk</option>
+						<option>Tumble Dryer</option>
+						<option>Vacuum Cleaner</option>
+						<option>Wardrobe</option>
+						<option>Washing Machine</option>
+						<option>Water Butt</option>
+						<option>Wheelbarrow</option>
+						<option>Other - Please State Below</option>
+					</select>
+				</fieldset>
+
+				<fieldset>
+					<label for="cboItem3">Item:</label> <select
+						id="cboItem3">
+						<option value="">Select Item</option>
+						<option>Baby Cot</option>
+						<option>Baby Bath</option>
+						<option>BBQ</option>
+						<option>Bed - Bedbase (Single/Double)</option>
+						<option>Bed - Headboard (Single/Double)</option>
+						<option>Bed - Mattress (Single/Double)</option>
+						<option>Bedside Cabinet</option>
+						<option>Bicycle</option>
+						<option>Bookcase</option>
+						<option>Cabinet</option>
+						<option>Carpet (Rolled up)</option>
+						<option>Carpet Underlay (Rolled up)</option>
+						<option>Chair - Dining Room (4 chairs = 1 item)</option>
+						<option>Chair - Office/Arm/Rocking etc.</option>
+						<option>Chest of Drawers</option>
+						<option>Coffee Table</option>
+						<option>Computer Monitor</option>
+						<option>Cooker/Oven</option>
+						<option>Curtain Rail/Blind</option>
+						<option>Desk</option>
+						<option>Dishwasher</option>
+						<option>Dressing Table</option>
+						<option>DVD/VCR Player</option>
+						<option>Exercise Bike</option>
+						<option>Fire (Gas/Electric, portable)</option>
+						<option>Fridge or Fridge/Freezer</option>
+						<option>Garden Bench</option>
+						<option>Garden Swing (dismantled)</option>
+						<option>Garden Table</option>
+						<option>Headboard</option>
+						<option>Heater (Gas/Electric, portable)</option>
+						<option>Lawnmower (Electric or Manual)</option>
+						<option>Mattress (Single/Double)</option>
+						<option>Microwave</option>
+						<option>Rowing Machine</option>
+						<option>Settee/Sofa Bed</option>
+						<option>Shelving Unit</option>
+						<option>Slide (dismantled)</option>
+						<option>Snooker Table (not full size)</option>
+						<option>Standard Lamp</option>
+						<option>Step Ladder</option>
+						<option>Stereo (including speakers)</option>
+						<option>Sunlounger</option>
+						<option>Table</option>
+						<option>Television</option>
+						<option>Trolley (excluding shopping trolley)
+						<option>Trunk</option>
+						<option>Tumble Dryer</option>
+						<option>Vacuum Cleaner</option>
+						<option>Wardrobe</option>
+						<option>Washing Machine</option>
+						<option>Water Butt</option>
+						<option>Wheelbarrow</option>
+						<option>Other - Please State Below</option>
+					</select>
+					<p class="form-help error" id="noItemSelected">Please select at
+						least one item for collection.</p>
+				</fieldset>
+
+				<fieldset>
+					<label for="cboSelectDate">Collection Date:</label> <select
+						id="cboSelectDate">
+						<option value="1">Select Collected Date</option>
+					</select>
+					<div class="loading" id="loading">
+						<img src="images/loading.gif" title="Loading..." alt="Loading">
+					</div>
+					<p class="form-help error" id="noDateSelected">Please select a
+						date for collection.</p>
+				</fieldset>
+
+				<fieldset>
+					<label for="txtAddInfo">Additional Information:</label>
+					<textarea id="txtAddInfo" cols="30" rows="3"
+						placeholder="Any Additional Information "></textarea>
+				</fieldset>
+
+				<fieldset class="check">
+					<label><input type="checkbox" id="tckTerms" /> I accept
+						the </label><a href="http://www.northampton.gov.uk/bulkywasteterms"
+						target="_blank">Terms and Conditions</a>
+					<p class="form-help error" id="agreeTerms">You must tick to
+						agree the terms and conditions</p>
+				</fieldset>
+
+				<fieldset class="form-actions">
+					<input type="submit" id="btnSubmit" value="Next" class="red">
+				</fieldset>
+
+				<fieldset class="hidden">
+					<input type="text" id="objRef">
+				</fieldset>
+
+				<fieldset class="hidden">
+					<input type="text" id="collectionDateHidden">
+				</fieldset>
+			</div>
+
+
+
+
+		</form>
+	</div>
+
+	<div id="confirmation">
+
+		<h3>Please Confirm</h3>
+
+		<p>Your items</p>
+		<div id="items">
+		</div>
+
+		<p>Your collection date (subject to availability and payment being received)</p>
+		<p id="date" class="redHighlight"></p>
+
+		<div id="sumAddDetails">
+			<p>Additional Information:</p>
+			<p id="SummaryDetails"></p>
+		</div>
+		<form action="#" method="">
+			<fieldset class="form-actions center-button">
+				<input type="submit" id="btnAmend" value="Amend Details"
+					class="grey">
+			</fieldset>
+			<fieldset class="form-actions center-button">
+				<input type="submit" id="btnSubmitCase" value="Book Collection"
+					class="red">
+			</fieldset>
+		</form>
+	</div>
+	<div id="formSubmitted">
+		<h3>Thank you</h3>
+		<br />
+
+		<p>A member of the Customer Service Team will contact you to
+			arrange payment.</p>
+		<p>Your booking reference number is</p>
+		<p id="caseRef" class="redHighlight">876543</p>
+	</div>
+
+
+
+</body>
+<!--<script src="http//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>-->
+<script>window.jQuery || document.write('<script src="js/jquery.min.1.8.js"><\/script>')</script>
+<script src="js/bulkyWaste.js"></script>
+
+
+
+
+
+</html>

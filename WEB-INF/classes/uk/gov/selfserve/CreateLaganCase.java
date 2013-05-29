@@ -234,7 +234,7 @@ public void doPost(final HttpServletRequest request,
 			  }  
 			  caseCreate.setDescription("Enquiry sent from IP: <" + request.getRemoteHost() + ">");
 			  laganFullCaseReference = webInterface.createCase(caseCreate);
-			  laganCaseReference = laganFullCaseReference.substring(laganFullCaseReference.length() - 6);
+			  laganCaseReference = laganFullCaseReference.substring(laganFullCaseReference.length() - 7);
 			  
 			  //Get sla date
 			  String[] options = { "all" };
@@ -295,7 +295,7 @@ public void doPost(final HttpServletRequest request,
 				  slaDay = "asap";
 			  }
 			  if(!fromApp){
-			     ajaxResponse.println("{\"result\":\"success\",\"callNumber\":\"" + laganCaseReference + "\",\"slaDate\":\"" + slaDate + "\"}");
+			     ajaxResponse.println("{\"result\":\"success\",\"callNumber\":\"" + laganCaseReference + "\",\"slaDate\":\"" + slaDay + "\"}");
 			  }else{
 				  if(slaDay.equals("asap")){
 					  ajaxResponse.println("<response><result>"+"success"+"</result>"+"<callNumber>"+ laganCaseReference +"</callNumber>"+"<slaDate>"+ slaDay +"</slaDate></response>");  

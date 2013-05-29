@@ -1,0 +1,149 @@
+#map_canvas {
+	width: 50%;
+	height: 300px;
+	padding: 2px;
+	margin-left:20%;
+	border:1px solid #ddd;
+	-webkit-border-radius:8px;
+	-moz-border-radius:8px;
+	border-radius:8px;
+	-webkit-transition:opacity .3s ease-in-out; 
+	-ms-transition:opacity .3s ease-in-out; 
+	-moz-transition:opacity .3s ease-in-out; 
+	transition:opacity .3s ease-in-out;
+}
+
+.transparent{opacity:0.2;}
+.opaque{opacity:1;}
+
+#address-results{
+	display:none;
+	width:50%;
+	background:#fff;
+	border:1px solid #ccc;
+	padding:3em 1em;
+	margin:0 auto;
+	position:fixed;
+	top:10%;
+	left:25%;
+	-webkit-border-radius:8px;
+	-moz-border-radius:8px;
+	border-radius:8px;
+	-webkit-box-shadow: 1px 1px 10px 2px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 1px 1px 10px 2px rgba(0, 0, 0, 0.2);
+	-ms-box-shadow: 1px 1px 10px 2px rgba(0, 0, 0, 0.2);
+	box-shadow: 1px 1px 10px 2px rgba(0, 0, 0, 0.2);
+	-webkit-transition:width .3s ease-in-out; 
+	-ms-transition:width .3s ease-in-out; 
+	-moz-transition:width .3s ease-in-out; 
+	transition:width .3s ease-in-out;
+	z-index:9999;	
+}
+#address-results label{
+	width:30%;	
+}
+#address-results select{
+	width:60%;	
+}
+form fieldset.receipt-options label{
+	margin-left:20%;	
+}
+form fieldset.receipt-options input{
+	width:30%;	
+}
+#confirmation {
+text-align: center;
+width: 40%;
+padding: 10px;
+margin-left: 30%;
+font-size: 25px;
+}
+
+
+fieldset .button.search {
+	margin-left: 20%;
+	margin-top: 1em;
+}
+
+.map_area {
+	margin-top: 16px;
+	
+}
+
+.error {
+	color: red;
+}
+
+.loading{
+	text-align:center;
+	margin:0;
+}
+.loading span{
+	display:block;
+	font-style:italic;	
+}
+
+.caseRef {
+	font-family;cursive;
+	font-size: 30px;
+	color: #A52449;
+	display:block;
+	margin-bottom:.8em;
+}
+
+.caseDate {
+	font-family;cursive;
+	font-size: 30px;
+	color: #A52449;
+	display:block;
+	margin-bottom:.8em;
+}
+
+/*span {
+	color: #A52449;
+}*/
+
+noscript {
+	color: red;
+	border: solid 2px black;
+	font-family: cursive;
+	font-size: 22px;
+}
+
+/*Small Screen Adjustments*/
+@media screen and (max-width: 600px) {
+	#map_canvas {
+		width: 100%;
+		margin: 0 auto;
+		height:250px;
+	}
+	fieldset .button.search {
+		margin-left: 0;
+	}
+	input[type="checkbox"]{
+		width:44px;
+		height:44px;
+		vertical-align:middle;
+	}
+	fieldset .button {
+		width:100%;
+	}
+	form fieldset.receipt-options label{
+	margin-left:0;	
+}
+form fieldset.receipt-options input{
+	width:100%;	
+}
+	
+	#address-results{
+	width:83%;
+	top:10%;
+	left:5%;	
+}
+#address-results label{
+	width:100%;	
+}
+	#address-results select{
+	width:100%;	
+}
+}

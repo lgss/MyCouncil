@@ -15,6 +15,7 @@ public class PollProperty implements Comparable<PollProperty>{
 	public PollProperty(){
 		//empty constructor for ease of use.
 	}
+	
 	public PollProperty(String uprn, int easting, int northing, 
 			String propName, String propNumber, String fullAddress, String district){
 		this.uprn = uprn;
@@ -34,7 +35,7 @@ public class PollProperty implements Comparable<PollProperty>{
 				this.propNumberInt = Integer.parseInt(propNumber);
 			}
 		}catch(NumberFormatException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 	}
@@ -78,11 +79,14 @@ public class PollProperty implements Comparable<PollProperty>{
 				this.propNumberInt = Integer.parseInt(propNumber);
 			}
 		}catch(NumberFormatException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	public String getFullAddress() {
-		return fullAddress;
+		if(!this.propName.isEmpty()){
+			return this.propName.trim() + ", " + fullAddress.trim();
+		}
+		return fullAddress.trim();
 	}
 	public void setFullAddress(String fullAddress) {
 		this.fullAddress = fullAddress;

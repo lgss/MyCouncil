@@ -24,27 +24,30 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import uk.me.jstott.jcoord.LatLng;
+import uk.me.jstott.jcoord.OSRef;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 public class PollStationFinder extends HttpServlet
-   {
+{
 	private static final long serialVersionUID = 1L;
 	private Connection dbConnection;
-	
+
 	public void doGet(HttpServletRequest request,
-                     HttpServletResponse response) 
-                    throws ServletException, IOException
-      {
-	  String uprn = request.getParameter("uprn");
-	  response.setContentType("text/json");
-	  PrintWriter output = response.getWriter();
-	  JsonArray pollStations = new JsonArray();
-	  JsonObject results = new JsonObject();
-	  
-      //get search results
-      List<PollStation> stations = getPollingStations(uprn);
-      
+			HttpServletResponse response) 
+	throws ServletException, IOException
+	{
+		String uprn = request.getParameter("uprn");
+		response.setContentType("text/json");
+		PrintWriter output = response.getWriter();
+		JsonArray pollStations = new JsonArray();
+		JsonObject results = new JsonObject();
+
+		//get search results
+		List<PollStation> stations = getPollingStations(uprn);
+
 		//loop through and create JSON output
 		for(int x = 0; x < stations.size(); x++){
 			JsonObject station = new JsonObject();
@@ -52,20 +55,22 @@ public class PollStationFinder extends HttpServlet
 			station.addProperty("name", stations.get(x).getName());
 			station.addProperty("address", stations.get(x).getAddress());
 			station.addProperty("fullAddress", stations.get(x).getFullAddress());
+			station.addProperty("lat", Double.toString(stations.get(x).getLat()));
+			station.addProperty("lng", Double.toString(stations.get(x).getLng()));
 			pollStations.add(station);
 		}
-		
+
 		if(pollStations.size() > 0){
 			results.addProperty("success", "true");
 		}else{
 			results.addProperty("success", "false");
 		}
 		results.add("pollStations", pollStations);
-		//System.out.println(results);
+		//System.out.println(results.toString());
 		output.write(results.toString());
-		output.flush();   
-}
-	
+		output.flush();
+	}
+
 	public List<PollStation> getPollingStations(String uprn){
 		List<PollStation> stations = new ArrayList<PollStation>();
 
@@ -74,21 +79,21 @@ public class PollStationFinder extends HttpServlet
 		}catch (ClassNotFoundException error){
 			System.out.println("SQL Class not found exception.");
 		}
-		
+
 		try{
-			
+
 			dbConnection = DriverManager.getConnection("jdbc:sqlite:" + getServletContext().getRealPath("/WEB-INF/mycouncil.db3"));
 			String selectProp = "SELECT * from properties where UPRN = ?";
 			PreparedStatement dbStatement1 = dbConnection.prepareStatement(selectProp);
 			dbStatement1.setString(1, uprn);
 			ResultSet dbResult = dbStatement1.executeQuery();;
-			
+
 			if(dbResult.next()){
-			//found property
-				
+				//found property
+
 				//get district
 				String district = dbResult.getString(15).toUpperCase();
-				
+
 				//get poll station for district
 				dbConnection = DriverManager.getConnection("jdbc:sqlite:" + getServletContext().getRealPath("/WEB-INF/mycouncil.db3"));
 				String selectDistrict = "SELECT * from pollingStations where District= ?";
@@ -96,32 +101,56 @@ public class PollStationFinder extends HttpServlet
 				dbStatement2.setString(1, district);
 				ResultSet dbPollStation = dbStatement2.executeQuery();
 				if(dbPollStation.next()){
-				//district found
+					//district found
 					PollStation districtStation = new PollStation();
 					districtStation.setType("district");
 					districtStation.setName(dbPollStation.getString(2));
 					districtStation.setAddress(dbPollStation.getString(3));
 					districtStation.setDistrict(dbPollStation.getString(1));
+					districtStation.setEasting(dbPollStation.getDouble("Easting"));
+					districtStation.setNorthing(dbPollStation.getDouble("Northing"));
 					stations.add(districtStation);
 				}else{
-				//district not found
+					//district not found
 				}
-				
-				//get easting
-				int easting = dbResult.getInt(2);
-				//get northing
-				int northing = dbResult.getInt(3);
+
+				//get poll station for advisory poll
+				String selectParishDistrict = "SELECT * from parishPollingRel where District= ?";
+				PreparedStatement dbStatement3 = dbConnection.prepareStatement(selectParishDistrict);
+				dbStatement3.setString(1, district);
+				ResultSet dbPollStationParish = dbStatement3.executeQuery();
+				if(dbPollStationParish.next()){
+					int parishStation = dbPollStationParish.getInt(2);
+					dbConnection = DriverManager.getConnection("jdbc:sqlite:" + getServletContext().getRealPath("/WEB-INF/mycouncil.db3"));
+					String selectParishStation = "SELECT * from parishPollingStations where station_id = ?";
+					PreparedStatement dbStatement4 = dbConnection.prepareStatement(selectParishStation);
+					dbStatement4.setInt(1, parishStation);
+					ResultSet dbParishStation = dbStatement4.executeQuery();
+					if(dbParishStation.next()){
+						PollStation advisoryStation = new PollStation();
+						advisoryStation.setType("advisory");
+						advisoryStation.setName(dbParishStation.getString("venue"));
+						advisoryStation.setAddress(dbParishStation.getString("address"));
+						advisoryStation.setDistrict(district);
+						advisoryStation.setEasting(dbParishStation.getDouble("easting"));
+						advisoryStation.setNorthing(dbParishStation.getDouble("northing"));
+						stations.add(advisoryStation);
+					}
+				}
 			}
-			else{
-				//didn't find property - a little worrying!
-			}
-       
-    }
-	catch (SQLException error){
-		error.printStackTrace();
-		System.out.println("Sql Exception.");
-	}
-	return stations;
+			dbStatement1.close();       
+		}
+		catch (SQLException error){
+			error.printStackTrace();
+			System.out.println("Sql Exception.");
+		}
+		try {
+			dbConnection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return stations;
 	}	
- }
-   
+}
+

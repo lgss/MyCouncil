@@ -1,0 +1,21 @@
+.hidden{
+	display:none;
+}
+.redHighlight{
+	margin-bottom:.67em;
+}
+#confirmation, #formSubmitted {
+    text-align: center;
+    background-color: whitesmoke;
+}
+form fieldset.center-button{
+	margin:0 auto;
+	margin-bottom:10px;
+}
+.tcs li{
+	font-size:.85em;
+	line-height:1.5em;	
+}
+#mainform {
+    background-color: whitesmoke;
+}

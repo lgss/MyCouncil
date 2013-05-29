@@ -172,9 +172,9 @@ public class CreateCaseProcesses implements Runnable
 		
 		//Get shortened URLs
 		URLShortener urlShortener = new URLShortener();
-		String shortenedURLforEmail = urlShortener.shortenURL(host + "/?search=" + laganCaseReference.substring(laganCaseReference.length() - 6) + "&url=1",googleURLAPIKey);
-		String shortenedURLforTwitter = urlShortener.shortenURL(host + "/?search=" + laganCaseReference.substring(laganCaseReference.length() - 6) + "&url=2",googleURLAPIKey);
-		String shortenedURLforFacebook = urlShortener.shortenURL(host + "/?search=" + laganCaseReference.substring(laganCaseReference.length() - 6) + "&url=3",googleURLAPIKey);
+		String shortenedURLforEmail = urlShortener.shortenURL(host + "/?search=" + laganCaseReference.substring(laganCaseReference.length() - 7) + "&url=1",googleURLAPIKey);
+		String shortenedURLforTwitter = urlShortener.shortenURL(host + "/?search=" + laganCaseReference.substring(laganCaseReference.length() - 7) + "&url=2",googleURLAPIKey);
+		String shortenedURLforFacebook = urlShortener.shortenURL(host + "/?search=" + laganCaseReference.substring(laganCaseReference.length() - 7) + "&url=3",googleURLAPIKey);
 		
 		ward=thisLocation.getWard();
 		sector=thisLocation.getSector();
@@ -212,7 +212,7 @@ public class CreateCaseProcesses implements Runnable
         		                              imageApproved,
         		                              imageLocation
                                               )){
-          laganCaseReference=laganCaseReference.substring(laganCaseReference.length() - 6);
+          laganCaseReference=laganCaseReference.substring(laganCaseReference.length() - 7);
           String currentDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
     	  String xmlWard=ward.replace(" ","");
     	  xmlWard=xmlWard.replace("&","");

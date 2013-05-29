@@ -3,15 +3,20 @@
 <head>
 <title>Check Your Polling Station</title>
 <link rel='stylesheet' type='text/css' href='nbc.css' />
+<link rel='stylesheet' type='text/css' href='css/pollingStation.css' />
 <meta name="HandheldFriendly" content="True">
 <meta name="MobileOptimized" content="320">
 <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0">
 <script type="text/javascript" src="lib/jquery.min.js"></script>
-<script type="text/javascript" src="lib/getUrlParam.js"></script>
 <script src="pollingStationFinder.js" type="text/javascript"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 </head>
 <body>
 	<div id="main" align="center">
+		<div id="ajax-wait" align="center" class="hide">
+			<p>Please Wait</p>
+			<img src="images/loading.gif" title="Loading..." alt="Loading">
+		</div>
 		<div id="step1">
 			<table>
 				<tr>
@@ -41,7 +46,7 @@
 				</a>
 			</div>
 		</div>
-		<div id="step2" align="center">
+		<div id="step2">
 			<table>
 				<tr>
 					<td>
@@ -59,11 +64,13 @@
 		</div>
 		<div id="step3" align="center">
 		</div>
-		<div id="ajax-wait" align="center" class="hide">
-			<p>Please Wait</p>
-			<img src="images/loading.gif" title="Loading..." alt="Loading">
+		<div id="map-container" class="map-container">
+		<div id="map" class="box map">
 		</div>
+		<a id="close-map" href="#map-closed" class="button red"><span>Close</span></a>
 	</div>
+	</div>
+	
 </body>
 </html>
 

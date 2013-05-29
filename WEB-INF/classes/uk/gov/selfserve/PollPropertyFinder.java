@@ -62,7 +62,7 @@ public class PollPropertyFinder extends HttpServlet
 			results.addProperty("success", "false");
 		}
 		results.add("properties", props);
-		System.out.println(results);
+		//System.out.println(results);
 		output.write(results.toString());
 		output.flush();
       }
@@ -102,9 +102,14 @@ public class PollPropertyFinder extends HttpServlet
 					prop.setDistrict(dbResult.getString(15));
 					properties.add(prop);
 				}
-				//close connection
-				dbStatement.close();
-				dbConnection.close();
+				try {
+					if(dbConnection!=null){
+						dbConnection.close();
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			catch (SQLException error){
 				error.printStackTrace();

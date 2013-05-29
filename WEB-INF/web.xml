@@ -23,7 +23,7 @@
   </context-param>
   <context-param>
     <param-name>smtpHost</param-name>
-    <param-value></param-value>
+    <param-value>nbcmail</param-value>
   </context-param>
   <context-param>
     <param-name>auditEmailTo</param-name>
@@ -41,7 +41,7 @@
     <param-name>textMessageFrom</param-name>
     <param-value>Northampton Borough Council</param-value>
   </context-param>
-   <context-param>
+  <context-param>
     <param-name>social-feed-filelocation</param-name>
     <param-value>C:\mynbc\</param-value>
   </context-param>
@@ -86,20 +86,28 @@
     <param-value></param-value>
   </context-param>
   <context-param>
-    <param-name>twitter-sector-North-Consumer-Key</param-name>
+    <param-name>twitter-ward-nn-Consumer-Key</param-name>
     <param-value></param-value>
   </context-param>
   <context-param>
-    <param-name>twitter-sector-North-Consumer-Secret</param-name>
+    <param-name>twitter-ward-nn-Consumer-Secret</param-name>
     <param-value></param-value>
   </context-param>
   <context-param>
-    <param-name>twitter-sector-North-Access-Token-Key</param-name>
+    <param-name>twitter-ward-nn-Access-Token-Key</param-name>
     <param-value></param-value>
   </context-param>
   <context-param>
-    <param-name>twitter-sector-North-Access-Token-Secret</param-name>
+    <param-name>twitter-ward-nn-Access-Token-Secret</param-name>
     <param-value></param-value>
+  </context-param>
+  <context-param>
+    <param-name>twitter-ward-nn-Hashtag</param-name>
+    <param-value>#nn</param-value>
+  </context-param>
+  <context-param>
+      <param-name>bccEmailAddress</param-name>
+      <param-value>kwhite@northampton.gov.uk</param-value>
   </context-param>
   <servlet>
     <servlet-name>CreateCall</servlet-name>
@@ -109,8 +117,16 @@
       <param-value>kwhite@northampton.gov.uk</param-value>
     </init-param>
     <init-param>
-    <param-name>useTwitter</param-name>
-    <param-value>false</param-value>
+      <param-name>useTwitter</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>twitterAllHashTag</param-name>
+      <param-value>#northampton</param-value>
+    </init-param>
+    <init-param>
+      <param-name>twitterSectorHashTag</param-name>
+      <param-value>#lovenorthampton</param-value>
     </init-param>
   </servlet>
   <servlet>
@@ -138,12 +154,12 @@
     <servlet-class>uk.gov.selfserve.PollingStationLocationLoader</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>ConfigFinder</servlet-name>
-    <servlet-class>uk.gov.selfserve.ConfigFinder</servlet-class>
+    <servlet-name>BinRoundLoader</servlet-name>
+    <servlet-class>uk.gov.selfserve.BinRoundLoader</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>QnomyTest</servlet-name>
-    <servlet-class>uk.gov.selfserve.QnomyTest</servlet-class>
+    <servlet-name>ConfigFinder</servlet-name>
+    <servlet-class>uk.gov.selfserve.ConfigFinder</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>ClosedCalls</servlet-name>
@@ -166,8 +182,9 @@
     </init-param>
     <init-param>
       <param-name>slaEmailAddress</param-name>
-      <param-value>dhorton@northampton.gov.uk</param-value>
+      <param-value>dblundelln@northampton.gov.uk</param-value>
     </init-param>
+    <load-on-startup>-1</load-on-startup>
   </servlet>
   <servlet>
     <servlet-name>SendMessage</servlet-name>
@@ -217,8 +234,130 @@
     <servlet-name>BinRoundFinder</servlet-name>
     <servlet-class>uk.gov.selfserve.BinRoundFinder</servlet-class>
     <init-param>
-      <param-name>phoneNumber</param-name>
-      <param-value>0300 330 7000</param-value>
+      <param-name>postCodeFinderURL</param-name>
+      <param-value>http://www.royalmail.com/postcode-finder</param-value>
+    </init-param>
+    <init-param>
+      <param-name>useMap</param-name>
+      <param-value>false</param-value>
+    </init-param>
+  </servlet>
+  <servlet>
+    <servlet-name>CreateContact</servlet-name>
+    <servlet-class>uk.gov.selfserve.CreateContact</servlet-class>
+    <init-param>
+      <param-name>classificationCode-myNBC-test</param-name>
+      <param-value>2200435</param-value>
+    </init-param>
+    <init-param>
+      <param-name>classificationCode-mycouncil-test</param-name>
+      <param-value>2200111</param-value>
+    </init-param>
+    <init-param>
+      <param-name>classificationCode-myNBC-live</param-name>
+      <param-value>2002074</param-value>
+    </init-param>
+    <init-param>
+      <param-name>classificationCode-mycouncil-live</param-name>
+      <param-value>2001211</param-value>
+    </init-param>
+  </servlet>
+  <servlet>
+    <servlet-name>PostToSocial</servlet-name>
+    <servlet-class>uk.gov.selfserve.PostToSocial</servlet-class>
+    <init-param>
+      <param-name>localhostip</param-name>
+      <param-value>127.0.0.1</param-value>
+    </init-param>
+    <init-param>
+      <param-name>bpmserverip</param-name>
+      <param-value></param-value>
+    </init-param>
+    <init-param>
+      <param-name>useproxy</param-name>
+      <param-value>false</param-value>
+    </init-param>
+  </servlet>
+  <servlet>
+    <servlet-name>CreateMyNBCCase</servlet-name>
+    <servlet-class>uk.gov.selfserve.CreateMyNBCCase</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>WardLoader</servlet-name>
+    <servlet-class>uk.gov.selfserve.WardLoader</servlet-class>
+  </servlet>
+  <servlet>
+    <description></description>
+    <display-name>GetSocialFeed</display-name>
+    <servlet-name>GetSocialFeed</servlet-name>
+    <servlet-class>uk.gov.selfserve.GetSocialFeed</servlet-class>
+  </servlet>
+  <servlet>
+    <description></description>
+    <display-name>PollPropertyFinder</display-name>
+    <servlet-name>PollPropertyFinder</servlet-name>
+    <servlet-class>uk.gov.selfserve.PollPropertyFinder</servlet-class>
+  </servlet>
+  <servlet>
+    <description></description>
+    <display-name>PollStationFinder</display-name>
+    <servlet-name>PollStationFinder</servlet-name>
+    <servlet-class>uk.gov.selfserve.PollStationFinder</servlet-class>
+  </servlet>
+  <servlet>
+    <description></description>
+    <display-name>CreateLaganBulky</display-name>
+    <servlet-name>CreateLaganBulky</servlet-name>
+    <servlet-class>uk.gov.selfserve.CreateLaganBulky</servlet-class>
+    <init-param>
+      <param-name>bulkyEventCode</param-name>
+      <param-value>2002226</param-value>
+    </init-param>
+    <init-param>
+      <param-name>bulkyEformName</param-name>
+      <param-value>ajaxBulkyWaste</param-value>
+    </init-param>
+        <init-param>
+      <param-name>bulkyEventCode-test</param-name>
+      <param-value>2200886</param-value>
+    </init-param>
+    <init-param>
+      <param-name>bulkyEformName-test</param-name>
+      <param-value>ajaxBulkyWaste</param-value>
+    </init-param>
+  </servlet>
+  <servlet>
+    <description></description>
+    <display-name>GetBulkyCollectionDates</display-name>
+    <servlet-name>GetBulkyCollectionDates</servlet-name>
+    <servlet-class>uk.gov.selfserve.GetBulkyCollectionDates</servlet-class>
+    <init-param>
+        <param-name>eventId</param-name>
+        <param-value>2001874</param-value>
+    </init-param>
+    <init-param>
+        <param-name>eventId-test</param-name>
+        <param-value>2200119</param-value>
+    </init-param>
+  </servlet>
+    <servlet>
+    <description></description>
+    <display-name>GetPropertyList</display-name>
+    <servlet-name>GetPropertyList</servlet-name>
+    <servlet-class>uk.gov.selfserve.GetPropertyList</servlet-class>
+  </servlet>
+  <servlet>
+    <description></description>
+    <display-name>HousingAppReceipt</display-name>
+    <servlet-name>HousingAppReceipt</servlet-name>
+    <servlet-class>uk.gov.selfserve.HousingAppReceipt</servlet-class>
+    <init-param>
+      <param-name>housingLoginUrl</param-name>
+      <param-value>https://homechoice.northampton.gov.uk/scripts/cgiip.exe/WService=OELIVE/ibsxmlpr.p?docid=NBCLogin</param-value>
+    </init-param>
+    <init-param>
+      <param-name>bccEmailAddress</param-name>
+      <param-value>kwhite@northampton.gov.uk</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
@@ -250,12 +389,12 @@
     <url-pattern>/PollingStationLocationLoader</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>ConfigFinder</servlet-name>
-    <url-pattern>/ConfigFinder</url-pattern>
+    <servlet-name>BinRoundLoader</servlet-name>
+    <url-pattern>/BinRoundLoader</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>QnomyTest</servlet-name>
-    <url-pattern>/QnomyTest</url-pattern>
+    <servlet-name>ConfigFinder</servlet-name>
+    <url-pattern>/ConfigFinder</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>SendMessage</servlet-name>
@@ -265,7 +404,51 @@
     <servlet-name>BinRoundFinder</servlet-name>
     <url-pattern>/BinRoundFinder</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CreateContact</servlet-name>
+    <url-pattern>/CreateContact</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>PostToSocial</servlet-name>
+    <url-pattern>/PostToSocial</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CreateMyNBCCase</servlet-name>
+    <url-pattern>/CreateMyNBCCase</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>WardLoader</servlet-name>
+    <url-pattern>/WardLoader</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetSocialFeed</servlet-name>
+    <url-pattern>/GetSocialFeed</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>PollPropertyFinder</servlet-name>
+    <url-pattern>/PollPropertyFinder</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>PollStationFinder</servlet-name>
+    <url-pattern>/PollStationFinder</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CreateLaganBulky</servlet-name>
+    <url-pattern>/CreateLaganBulky</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetBulkyCollectionDates</servlet-name>
+    <url-pattern>/GetBulkyCollectionDates</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetPropertyList</servlet-name>
+    <url-pattern>/GetPropertyList</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>HousingAppReceipt</servlet-name>
+    <url-pattern>/HousingAppReceipt</url-pattern>
+  </servlet-mapping>
   <welcome-file-list>
     <welcome-file>mycouncil.html</welcome-file>
-  </welcome-file-list>    
+  </welcome-file-list>
 </web-app>
