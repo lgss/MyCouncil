@@ -147,7 +147,7 @@ Ext.onReady(function(){
     var feedbackEmailAddress;
     var menuLocation;
     var clickSearch = false;
-    var jsonMeetingData;
+    var jsonMeetingData=false;
     var streetView;
     var sectorName;
     var sectorID;
@@ -394,7 +394,7 @@ Ext.onReady(function(){
     function load_messages(){
         if (!preElectionMode && !electionCountMode) {
             Ext.Ajax.request({
-                url: 'meetings.json',
+                url: 'json/meetings.json',
                 timeout: 30000,
                 method: 'GET',
                 success: function(meetingData){
@@ -3520,6 +3520,7 @@ Ext.onReady(function(){
                     partyColours[partyID] = jsonData.parties[currentParty].partyColour;
                     partyTextColour[partyID] = jsonData.parties[currentParty].partyTextColour;
                     partyWardDescriptions[partyID] = jsonData.parties[currentParty].partyWardDescription;
+                    partyCount[partyID]=0;
                 }
                 for (var currentSector = 0; currentSector < jsonData.sectors.length; currentSector++) {
                     var sectorID = jsonData.sectors[currentSector].sectorID;

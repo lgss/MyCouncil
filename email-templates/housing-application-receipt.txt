@@ -13,7 +13,7 @@
 </div>
 <div style="font-family:'Lucida grande', 'Lucida Sans Unicode', 'lucida sans', Verdana, Helvetica, Arial, sans-serif;font-size: 13px;margin: 5px;text-align: left">
 <p>Thank you for applying for Housing with Northampton Borough Council, please use the application number <span style="font-weight:bold; color:#A52449;">CCC</span> when enquiring about your application.</p>
-<p>If you wish to check the current state of your application please <a href="EEE">log in to our website</a> using your username and password or telephone us on DDD and follow the options for Housing.</p>
+<!-- <p>If you wish to check the current state of your application please <a href="EEE">log in to our website</a> using your username and password or telephone us on DDD and follow the options for Housing.</p> -->
 <p>Please bring or send your document copies in to us, we cannot process your application until we receive these.</p>
 <p>Your application may be <b>cancelled</b> if you do not provide document copies within 28 days.</p>
 <p>You can find out about the documents we need <a href ="http://www.northampton.gov.uk/downloads/file/5914/housing_support_document_checklist">here.</a></p>

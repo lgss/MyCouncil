@@ -67,7 +67,7 @@
             {"partyID":"8","name":"Northampton - Save Our Services","ledByDescription":"Northampton - Our Services","cssPartyButton":"","partyColour":"#FFCCFF","partyTextColour":"black","partyWardDescription":"Northampton - Save Our Services"},
             {"partyID":"9","name":"Christian Peoples Alliance","ledByDescription":"Christian Peoples Alliance","cssPartyButton":"","partyColour":"#993399","partyTextColour":"white","partyWardDescription":"Christian Peoples Alliance"},
             {"partyID":"10","name":"Trade Unionists and Socialists Against Cuts","ledByDescription":"Trade Unionists and Socialists Against Cuts","cssPartyButton":"","partyColour":"#E62E8A","partyTextColour":"white","partyWardDescription":"Trade Unionists and Socialists Against Cuts"},
-            {"partyID":"11","name":"United Kingdom Independence Party","ledByDescription":"United Kingdom Independence Party","cssPartyButton":"","partyColour":"#CC0099","partyTextColour":"white","partyWardDescription":"United Kingdom Independence Party"}
+            {"partyID":"11","name":"UKIP","ledByDescription":"United Kingdom Independence Party","cssPartyButton":"","partyColour":"#CC0099","partyTextColour":"white","partyWardDescription":"United Kingdom Independence Party"}          
            ],             
  "sectors":[{"name":"North","sectorID":"0","email":"yourvoice@northampton.gov.uk","political":"true","backgroundColour":"blue","textColour":"white","subSectorOf":"-1","coOrdinators":[{"name":"Lee Owens","image":"TBC","telephone":"01604 838000","fax":"01604 838755"},{"name":"Jeanette Pidgen","image":"TBC","telephone":"01604 838000","fax":"01604 838755"}],"url":"http://docs.google.com/leaf?id=0B4K22xhfTJLSNjBiY2YwNzEtMjZiOS00M2Y0LTg3MTQtZDg5ZGU3MTM5OTY1&hl=en"},
             {"name":"East","sectorID":"1","email":"yourvoice@northampton.gov.uk","political":"true","backgroundColour":"yellow","textColour":"black","subSectorOf":"-1","coOrdinators":[{"name":"Peter Strachan","image":"TBC","telephone":"01604 838000","fax":"01604 838755"}],"url":"http://docs.google.com/leaf?id=0B4K22xhfTJLSY2RlOTIxZmEtMjVhMC00M2IyLTk1YTYtZDJkN2I5YTVlZDUy&hl=en"},
@@ -4161,7 +4161,7 @@
 	"elector_count":[4026],
 	"spoiled_count":[13],
       "candidate_names":["Fitzy Fitzpatrick","Vikkie Maloney","Beverley-Anne Mennell","Del Pickup","Michael Benjamin Quinn"],
-      "candidate_parties":[4,1,3,10,2],
+      "candidate_parties":[4,1,11,10,2],
       "candidate_votes":["00169","00454","00477","00058","00363"], 
       "points":[new google.maps.LatLng(52.26024823901297,-0.8701473517297984),
 				new google.maps.LatLng(52.260003768956466,-0.8703986056409596),
