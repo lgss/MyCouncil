@@ -31,15 +31,28 @@ public class BinCollection {
 			
 			Date next = longDate.parse(this.nextCollection);
 			nextCollection.setTime(next);
-			if(nextCollection.get(Calendar.WEEK_OF_YEAR) % 2 == 0){
-				//get collection type for even weeks
-				this.type = getCollectionType(true, this.week);
+			if(day.equals(oldDay)&&week==oldWeek){
+				if(nextCollection.get(Calendar.WEEK_OF_YEAR) % 2 == 0){
+					//get collection type for even weeks
+					this.type = getCollectionType(true, this.week);
+				}
+				//otherwise the week of the year is odd
+				else{
+					//get collection type for odd weeks
+					this.type = getCollectionType(false, this.week);
+				}
+			}else{
+				if(nextCollection.get(Calendar.WEEK_OF_YEAR) % 2 == 0){
+					//get collection type for even weeks
+					this.type = getCollectionType(false, this.week);
+				}
+				//otherwise the week of the year is odd
+				else{
+					//get collection type for odd weeks
+					this.type = getCollectionType(true, this.week);
+				}				
 			}
-			//otherwise the week of the year is odd
-			else{
-				//get collection type for odd weeks
-				this.type = getCollectionType(false, this.week);
-			}			
+			
 		}catch(NumberFormatException e){
 			System.out.println("Not a number.");
 		} catch (ParseException e) {

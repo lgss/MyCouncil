@@ -4,7 +4,7 @@
 //Ensure Wards are in alphabetical order.
 //
 {"debug":"false",
- "version":"v3.26",
+ "version":"v3.27",
  "showOperationalInformation":"false",
  "showContactScreen":"true",
  "showReportIt":"true",

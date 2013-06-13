@@ -122,6 +122,7 @@ public class BinRoundFinder extends HttpServlet
 		String day = "";
 		int week;
 		String url = "";
+		String oldUrl = "";
 		String oldDay = "";
 		int oldWeek;
 		
@@ -168,9 +169,9 @@ public class BinRoundFinder extends HttpServlet
 				String selectCols = null;
 
 				if(postCode.equals("")){
-				   selectCols = "SELECT DISTINCT HouseNumber,HouseName,Street,PostCode,binRounds.NewDay,binRounds.NewWeek,url,OldDay,OldWeek from binRounds,collectionCalendars where uprn = ? AND binRounds.NewDay=collectionCalendars.Day AND binRounds.NewWeek=collectionCalendars.Week ORDER BY HouseNumber ASC";
+				   selectCols = "SELECT DISTINCT HouseNumber,HouseName,Street,PostCode,binRounds.NewDay,binRounds.NewWeek,url,OldDay,OldWeek,oldUrl from binRounds,collectionCalendars where uprn = ? AND binRounds.NewDay=collectionCalendars.Day AND binRounds.NewWeek=collectionCalendars.Week ORDER BY HouseNumber ASC";
 				}else{
-					selectCols = "SELECT DISTINCT HouseNumber,HouseName,Street,PostCode,binRounds.NewDay,binRounds.NewWeek,url,OldDay,OldWeek from binRounds,collectionCalendars where Postcode = ? AND binRounds.NewDay=collectionCalendars.Day AND binRounds.NewWeek=collectionCalendars.Week ORDER BY HouseNumber ASC";					
+					selectCols = "SELECT DISTINCT HouseNumber,HouseName,Street,PostCode,binRounds.NewDay,binRounds.NewWeek,url,OldDay,OldWeek,oldUrl from binRounds,collectionCalendars where Postcode = ? AND binRounds.NewDay=collectionCalendars.Day AND binRounds.NewWeek=collectionCalendars.Week ORDER BY HouseNumber ASC";					
 				}
 				PreparedStatement dbStatementFields = dbConnection.prepareStatement(selectCols);
 				if(postCode.equals("")){
@@ -200,12 +201,20 @@ public class BinRoundFinder extends HttpServlet
 						url=dbResult.getString(7);
 						oldDay=dbResult.getString(8);
 						oldWeek=dbResult.getInt(9);
+						oldUrl=dbResult.getString(10);
 
 						BinCollection collection = new BinCollection();
 						collection.day = day;
 						collection.week = week;
 						collection.address = address;
-						collection.url = url;
+						
+						if(day.equals(oldDay)&&week==oldWeek){
+							System.out.println("No Change");
+							collection.url = oldUrl;
+						}else{
+							System.out.println("Change");
+							collection.url = url;
+						}
 						collection.oldDay = oldDay;
 						collection.oldWeek = oldWeek;
 						binCollections.add(collection);
@@ -231,12 +240,17 @@ public class BinRoundFinder extends HttpServlet
 						url=dbResult.getString(7);
 						oldDay=dbResult.getString(8);
 						oldWeek=dbResult.getInt(9);
+						oldUrl=dbResult.getString(10);
 
 						BinCollection collection = new BinCollection();
 						collection.day = day;
 						collection.week = week;
 						collection.address = address;
-						collection.url = url;
+						if(day.equals(oldDay)&&week==oldWeek){
+							collection.url = oldUrl;
+						}else{
+							collection.url = url;
+						}
 						collection.oldDay = oldDay;
 						collection.oldWeek = oldWeek;
 						
