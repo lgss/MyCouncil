@@ -44,12 +44,12 @@ public class BinCollection {
 			}else{
 				if(nextCollection.get(Calendar.WEEK_OF_YEAR) % 2 == 0){
 					//get collection type for even weeks
-					this.type = getCollectionType(false, this.week);
+					this.type = getCollectionType(true, this.week);
 				}
 				//otherwise the week of the year is odd
 				else{
 					//get collection type for odd weeks
-					this.type = getCollectionType(true, this.week);
+					this.type = getCollectionType(false, this.week);
 				}				
 			}
 			

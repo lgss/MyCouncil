@@ -209,10 +209,8 @@ public class BinRoundFinder extends HttpServlet
 						collection.address = address;
 						
 						if(day.equals(oldDay)&&week==oldWeek){
-							System.out.println("No Change");
 							collection.url = oldUrl;
 						}else{
-							System.out.println("Change");
 							collection.url = url;
 						}
 						collection.oldDay = oldDay;
