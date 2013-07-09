@@ -160,7 +160,7 @@ public class GetBulkyCollectionDates extends HttpServlet {
 		  for(int n = 0; n < bulkyList.size(); n++){
 			  Calendar tomorrow = Calendar.getInstance();
 			  tomorrow.setTime(today);
-			  tomorrow.add(Calendar.DATE, 2);
+			  tomorrow.add(Calendar.DATE, 8);
 			  if(bulkyList.get(n).collectionDate.before(tomorrow.getTime()) || bulkyList.get(n).collectionCount > 14){
 				  bulkyList.remove(n);
 			  }
@@ -184,7 +184,7 @@ public class GetBulkyCollectionDates extends HttpServlet {
 				xmasEnd.set(2013, 3, 1, 0, 0, 0);
 				
 				//avoid bookings for the next x number of days
-				now.add(Calendar.DATE, 5);
+				now.add(Calendar.DATE, 8);
 				
 				while(bulkyList.size() < 4){
 					index = (now.get(Calendar.DAY_OF_WEEK))-1;
